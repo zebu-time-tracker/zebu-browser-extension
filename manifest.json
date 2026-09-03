@@ -1,0 +1,48 @@
+{
+    "manifest_version": 3,
+    "name": "__MSG_ext_name__",
+    "short_name": "Zebu",
+    "description": "__MSG_ext_description__",
+    "default_locale": "en",
+    "version": "0.1.0",
+    "minimum_chrome_version": "120",
+    "icons": {
+        "16": "icons/16.png",
+        "32": "icons/32.png",
+        "48": "icons/48.png",
+        "128": "icons/128.png"
+    },
+    "action": {
+        "default_title": "Zebu",
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/16.png",
+            "32": "icons/32.png"
+        }
+    },
+    "options_page": "options.html",
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": ["storage", "alarms", "scripting"],
+    "host_permissions": ["https://*.zebu.work/*"],
+    "optional_host_permissions": ["http://*/*", "https://*/*"],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://github.com/*",
+                "https://gitlab.com/*",
+                "https://*.atlassian.net/*",
+                "https://linear.app/*",
+                "https://app.asana.com/*",
+                "https://trello.com/*",
+                "https://bitbucket.org/*",
+                "https://app.clickup.com/*",
+                "https://*.basecamp.com/*"
+            ],
+            "js": ["content.js"],
+            "css": ["content.css"],
+            "run_at": "document_idle"
+        }
+    ]
+}

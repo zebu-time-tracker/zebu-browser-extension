@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu Time Tracking"
+    },
+    "ext_description": {
+        "message": "Start a Zebu timer from GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp — issue details filled in, project suggested."
+    },
+    "button_track": {
+        "message": "Track time"
+    },
+    "button_track_title": {
+        "message": "Start a Zebu timer for this issue"
+    },
+    "button_stop": {
+        "message": "Stop"
+    },
+    "button_stop_title": {
+        "message": "Stop the timer running on $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "Track time"
+    },
+    "button_switch_title": {
+        "message": "A timer is running on $1 — starting one here stops it",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Connect Zebu"
+    },
+    "button_connect_title": {
+        "message": "Connect the extension to your Zebu workspace first"
+    },
+    "popup_not_connected": {
+        "message": "Connect the extension to your Zebu workspace to start timers from here."
+    },
+    "popup_connect": {
+        "message": "Connect workspace"
+    },
+    "popup_running": {
+        "message": "Running"
+    },
+    "popup_started": {
+        "message": "started $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "Stop timer"
+    },
+    "popup_open_zebu": {
+        "message": "Open in Zebu"
+    },
+    "popup_new_timer": {
+        "message": "New timer"
+    },
+    "popup_for_issue": {
+        "message": "For this issue"
+    },
+    "popup_project": {
+        "message": "Project"
+    },
+    "popup_project_search": {
+        "message": "Search projects…"
+    },
+    "popup_suggested": {
+        "message": "Suggested"
+    },
+    "popup_all_projects": {
+        "message": "All projects"
+    },
+    "popup_no_projects": {
+        "message": "No projects match."
+    },
+    "popup_task": {
+        "message": "Task"
+    },
+    "popup_task_none": {
+        "message": "No task"
+    },
+    "popup_notes": {
+        "message": "Notes"
+    },
+    "popup_start": {
+        "message": "Start timer"
+    },
+    "popup_starting": {
+        "message": "Starting…"
+    },
+    "popup_switch_note": {
+        "message": "This stops the timer running on $1.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "Remembered from last time"
+    },
+    "popup_error_generic": {
+        "message": "Something went wrong: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "Zebu can’t be reached right now."
+    },
+    "popup_settings": {
+        "message": "Settings"
+    },
+    "popup_today": {
+        "message": "Today: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Zebu for Chrome"
+    },
+    "options_workspace_heading": {
+        "message": "Your workspace"
+    },
+    "options_workspace_hint": {
+        "message": "The address you log in at, e.g. studio.app.zebu.work — or just “studio”."
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "Connect"
+    },
+    "options_connecting": {
+        "message": "Approve the request in the tab that just opened…"
+    },
+    "options_connected_as": {
+        "message": "Connected as $1 ($2)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "Disconnect"
+    },
+    "options_error_workspace": {
+        "message": "That doesn’t look like a workspace address."
+    },
+    "options_error_unreachable": {
+        "message": "That workspace can’t be reached. Check the address."
+    },
+    "options_error_denied": {
+        "message": "The request was denied in Zebu."
+    },
+    "options_error_expired": {
+        "message": "The request expired. Try again."
+    },
+    "options_notes_heading": {
+        "message": "Timer notes"
+    },
+    "options_notes_hint": {
+        "message": "What a timer started from an issue is labelled with."
+    },
+    "options_notes_identifier_title_url": {
+        "message": "Identifier, title and link (e.g. “#123 Fix login” + URL)"
+    },
+    "options_notes_title_url": {
+        "message": "Title and link"
+    },
+    "options_notes_title": {
+        "message": "Title only"
+    },
+    "options_sites_heading": {
+        "message": "Self-hosted trackers"
+    },
+    "options_sites_hint": {
+        "message": "Run GitLab, Jira or another tracker on your own domain? Add its address and pick the tracker type."
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "Add site"
+    },
+    "options_sites_remove": {
+        "message": "Remove"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chrome didn’t grant access to that site."
+    },
+    "options_sites_none": {
+        "message": "None yet — the public GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp sites work out of the box."
+    },
+    "options_forget_heading": {
+        "message": "Suggestions"
+    },
+    "options_forget_hint": {
+        "message": "The extension remembers which project you pick for each repo or board and suggests it next time."
+    },
+    "options_forget": {
+        "message": "Forget remembered choices"
+    },
+    "options_saved": {
+        "message": "Saved."
+    },
+    "popup_waiting": {
+        "message": "$1 min waiting on agent",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ waiting for agent…"
+    }
+}

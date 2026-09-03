@@ -1,0 +1,229 @@
+:root {
+    --ink: #14532d;
+    --muted: #4f7c5f;
+    --accent: #197300;
+    --bg: #f4f8f5;
+    --card: #ffffff;
+    --line: #cfe0d4;
+    --danger: #9a2a2a;
+    color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #dbeee0;
+        --muted: #8fb69b;
+        --accent: #4fb33d;
+        --bg: #0f1a13;
+        --card: #16241b;
+        --line: #274332;
+        --danger: #e07070;
+    }
+}
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+}
+body {
+    width: 400px;
+    min-height: 200px;
+}
+body.window {
+    width: auto;
+    min-height: 100vh;
+}
+.app {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+}
+.brand strong {
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.brand a {
+    color: var(--muted);
+    text-decoration: underline;
+}
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+}
+.card h2 {
+    margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.issue {
+    display: grid;
+    gap: 2px;
+}
+.issue .id {
+    color: var(--muted);
+    font-size: 12px;
+}
+.issue .title {
+    font-weight: 600;
+}
+.issue .where {
+    color: var(--muted);
+    font-size: 12px;
+}
+label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin: 10px 0 4px;
+}
+input[type='text'],
+input[type='search'],
+select,
+textarea {
+    width: 100%;
+    padding: 7px 9px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg);
+    color: var(--ink);
+    font: inherit;
+}
+textarea {
+    min-height: 64px;
+    resize: vertical;
+}
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+.projects {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    margin-top: 6px;
+    background: var(--bg);
+}
+.projects .group {
+    padding: 6px 9px 2px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.projects button {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 9px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.projects button:hover,
+.projects button[aria-selected='true'] {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.projects button .client {
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+.projects .empty {
+    padding: 10px;
+    color: var(--muted);
+}
+.pill {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 999px;
+    font-size: 11px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--accent);
+}
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+}
+.btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+.btn.secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--line);
+}
+.btn.danger {
+    background: transparent;
+    color: var(--danger);
+    border-color: var(--danger);
+}
+.running .elapsed {
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin: 4px 0;
+}
+.running .meta {
+    color: var(--muted);
+    font-size: 12px;
+}
+.running .notes {
+    margin-top: 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.notice {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 8px;
+}
+.error {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 8px;
+}
+.row {
+    display: flex;
+    gap: 8px;
+}
+.row .btn {
+    margin-top: 12px;
+}

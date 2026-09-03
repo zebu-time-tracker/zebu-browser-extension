@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu Control de tiempo"
+    },
+    "ext_description": {
+        "message": "Inicia un temporizador de Zebu desde GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp y Basecamp — con los detalles de la incidencia completados y el proyecto sugerido."
+    },
+    "button_track": {
+        "message": "Registrar tiempo"
+    },
+    "button_track_title": {
+        "message": "Iniciar un temporizador de Zebu para esta incidencia"
+    },
+    "button_stop": {
+        "message": "Detener"
+    },
+    "button_stop_title": {
+        "message": "Detener el temporizador en marcha en $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "Registrar tiempo"
+    },
+    "button_switch_title": {
+        "message": "Hay un temporizador en marcha en $1 — si inicias uno aquí, se detendrá",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Conectar Zebu"
+    },
+    "button_connect_title": {
+        "message": "Conecta primero la extensión a tu espacio de trabajo de Zebu"
+    },
+    "popup_not_connected": {
+        "message": "Conecta la extensión a tu espacio de trabajo de Zebu para iniciar temporizadores desde aquí."
+    },
+    "popup_connect": {
+        "message": "Conectar espacio de trabajo"
+    },
+    "popup_running": {
+        "message": "En marcha"
+    },
+    "popup_started": {
+        "message": "iniciado $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "Detener temporizador"
+    },
+    "popup_open_zebu": {
+        "message": "Abrir en Zebu"
+    },
+    "popup_new_timer": {
+        "message": "Nuevo temporizador"
+    },
+    "popup_for_issue": {
+        "message": "Para esta incidencia"
+    },
+    "popup_project": {
+        "message": "Proyecto"
+    },
+    "popup_project_search": {
+        "message": "Buscar proyectos…"
+    },
+    "popup_suggested": {
+        "message": "Sugerido"
+    },
+    "popup_all_projects": {
+        "message": "Todos los proyectos"
+    },
+    "popup_no_projects": {
+        "message": "Ningún proyecto coincide."
+    },
+    "popup_task": {
+        "message": "Tarea"
+    },
+    "popup_task_none": {
+        "message": "Sin tarea"
+    },
+    "popup_notes": {
+        "message": "Notas"
+    },
+    "popup_start": {
+        "message": "Iniciar temporizador"
+    },
+    "popup_starting": {
+        "message": "Iniciando…"
+    },
+    "popup_switch_note": {
+        "message": "Esto detiene el temporizador en marcha en $1.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "Recordado de la última vez"
+    },
+    "popup_error_generic": {
+        "message": "Algo salió mal: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "Zebu no se puede contactar ahora mismo."
+    },
+    "popup_settings": {
+        "message": "Configuración"
+    },
+    "popup_today": {
+        "message": "Hoy: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Zebu para Chrome"
+    },
+    "options_workspace_heading": {
+        "message": "Tu espacio de trabajo"
+    },
+    "options_workspace_hint": {
+        "message": "La dirección con la que inicias sesión, p. ej. studio.app.zebu.work — o simplemente «studio»."
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "Conectar"
+    },
+    "options_connecting": {
+        "message": "Aprueba la solicitud en la pestaña que se acaba de abrir…"
+    },
+    "options_connected_as": {
+        "message": "Conectado como $1 ($2)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "Desconectar"
+    },
+    "options_error_workspace": {
+        "message": "Eso no parece una dirección de espacio de trabajo."
+    },
+    "options_error_unreachable": {
+        "message": "No se puede contactar con ese espacio de trabajo. Comprueba la dirección."
+    },
+    "options_error_denied": {
+        "message": "La solicitud fue rechazada en Zebu."
+    },
+    "options_error_expired": {
+        "message": "La solicitud caducó. Inténtalo de nuevo."
+    },
+    "options_notes_heading": {
+        "message": "Notas del temporizador"
+    },
+    "options_notes_hint": {
+        "message": "Con qué se etiqueta un temporizador iniciado desde una incidencia."
+    },
+    "options_notes_identifier_title_url": {
+        "message": "Identificador, título y enlace (p. ej. «#123 Arreglar login» + URL)"
+    },
+    "options_notes_title_url": {
+        "message": "Título y enlace"
+    },
+    "options_notes_title": {
+        "message": "Solo título"
+    },
+    "options_sites_heading": {
+        "message": "Trackers autoalojados"
+    },
+    "options_sites_hint": {
+        "message": "¿Usas GitLab, Jira u otro tracker en tu propio dominio? Añade su dirección y elige el tipo de tracker."
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "Añadir sitio"
+    },
+    "options_sites_remove": {
+        "message": "Quitar"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chrome no concedió acceso a ese sitio."
+    },
+    "options_sites_none": {
+        "message": "Aún ninguno — los sitios públicos de GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp y Basecamp funcionan de inmediato."
+    },
+    "options_forget_heading": {
+        "message": "Sugerencias"
+    },
+    "options_forget_hint": {
+        "message": "La extensión recuerda qué proyecto eliges para cada repositorio o tablero y lo sugiere la próxima vez."
+    },
+    "options_forget": {
+        "message": "Olvidar las elecciones recordadas"
+    },
+    "options_saved": {
+        "message": "Guardado."
+    },
+    "popup_waiting": {
+        "message": "$1 min esperando al agente",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ esperando al agente…"
+    }
+}

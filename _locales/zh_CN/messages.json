@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu 时间追踪"
+    },
+    "ext_description": {
+        "message": "从 GitHub、GitLab、Jira、Linear、Asana、Trello、Bitbucket、ClickUp 和 Basecamp 启动 Zebu 计时器 —— 自动填写议题详情并建议项目。"
+    },
+    "button_track": {
+        "message": "记录时间"
+    },
+    "button_track_title": {
+        "message": "为此议题启动 Zebu 计时器"
+    },
+    "button_stop": {
+        "message": "停止"
+    },
+    "button_stop_title": {
+        "message": "停止在 $1 上运行的计时器",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "记录时间"
+    },
+    "button_switch_title": {
+        "message": "$1 上有一个正在运行的计时器 —— 在此处启动会将其停止",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "连接 Zebu"
+    },
+    "button_connect_title": {
+        "message": "请先将扩展程序连接到您的 Zebu 工作区"
+    },
+    "popup_not_connected": {
+        "message": "将扩展程序连接到您的 Zebu 工作区，即可在此处启动计时器。"
+    },
+    "popup_connect": {
+        "message": "连接工作区"
+    },
+    "popup_running": {
+        "message": "运行中"
+    },
+    "popup_started": {
+        "message": "已开始 $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "停止计时器"
+    },
+    "popup_open_zebu": {
+        "message": "在 Zebu 中打开"
+    },
+    "popup_new_timer": {
+        "message": "新建计时器"
+    },
+    "popup_for_issue": {
+        "message": "针对此议题"
+    },
+    "popup_project": {
+        "message": "项目"
+    },
+    "popup_project_search": {
+        "message": "搜索项目…"
+    },
+    "popup_suggested": {
+        "message": "建议"
+    },
+    "popup_all_projects": {
+        "message": "所有项目"
+    },
+    "popup_no_projects": {
+        "message": "没有匹配的项目。"
+    },
+    "popup_task": {
+        "message": "任务"
+    },
+    "popup_task_none": {
+        "message": "无任务"
+    },
+    "popup_notes": {
+        "message": "备注"
+    },
+    "popup_start": {
+        "message": "开始计时"
+    },
+    "popup_starting": {
+        "message": "正在启动…"
+    },
+    "popup_switch_note": {
+        "message": "这将停止在 $1 上运行的计时器。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "已记住上次的选择"
+    },
+    "popup_error_generic": {
+        "message": "出了点问题：$1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "目前无法连接到 Zebu。"
+    },
+    "popup_settings": {
+        "message": "设置"
+    },
+    "popup_today": {
+        "message": "今天：$1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "适用于 Chrome 的 Zebu"
+    },
+    "options_workspace_heading": {
+        "message": "您的工作区"
+    },
+    "options_workspace_hint": {
+        "message": "您登录所用的地址，例如 studio.app.zebu.work —— 或者直接输入“studio”。"
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "连接"
+    },
+    "options_connecting": {
+        "message": "请在刚打开的标签页中批准该请求…"
+    },
+    "options_connected_as": {
+        "message": "已以 $1（$2）身份连接",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "断开连接"
+    },
+    "options_error_workspace": {
+        "message": "这看起来不像是工作区地址。"
+    },
+    "options_error_unreachable": {
+        "message": "无法连接到该工作区，请检查地址。"
+    },
+    "options_error_denied": {
+        "message": "该请求已在 Zebu 中被拒绝。"
+    },
+    "options_error_expired": {
+        "message": "该请求已过期，请重试。"
+    },
+    "options_notes_heading": {
+        "message": "计时器备注"
+    },
+    "options_notes_hint": {
+        "message": "从议题启动的计时器将以此方式标注。"
+    },
+    "options_notes_identifier_title_url": {
+        "message": "标识符、标题和链接（例如“#123 修复登录”+ URL）"
+    },
+    "options_notes_title_url": {
+        "message": "标题和链接"
+    },
+    "options_notes_title": {
+        "message": "仅标题"
+    },
+    "options_sites_heading": {
+        "message": "自托管跟踪工具"
+    },
+    "options_sites_hint": {
+        "message": "在您自己的域名上运行 GitLab、Jira 或其他跟踪工具？添加其地址并选择跟踪工具类型。"
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "添加站点"
+    },
+    "options_sites_remove": {
+        "message": "移除"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chrome 未授予该站点访问权限。"
+    },
+    "options_sites_none": {
+        "message": "尚无站点 —— 公共的 GitHub、GitLab、Jira Cloud、Linear、Asana、Trello、Bitbucket、ClickUp 和 Basecamp 站点开箱即用。"
+    },
+    "options_forget_heading": {
+        "message": "建议"
+    },
+    "options_forget_hint": {
+        "message": "扩展程序会记住您为每个仓库或看板选择的项目，并在下次提供建议。"
+    },
+    "options_forget": {
+        "message": "忘记已记住的选择"
+    },
+    "options_saved": {
+        "message": "已保存。"
+    },
+    "popup_waiting": {
+        "message": "等待智能体 $1 分钟",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ 等待智能体…"
+    }
+}

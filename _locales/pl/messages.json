@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu Śledzenie czasu"
+    },
+    "ext_description": {
+        "message": "Uruchom stoper Zebu z GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp i Basecamp — z uzupełnionymi danymi zgłoszenia i zaproponowanym projektem."
+    },
+    "button_track": {
+        "message": "Śledź czas"
+    },
+    "button_track_title": {
+        "message": "Uruchom stoper Zebu dla tego zgłoszenia"
+    },
+    "button_stop": {
+        "message": "Zatrzymaj"
+    },
+    "button_stop_title": {
+        "message": "Zatrzymaj stoper uruchomiony na $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "Śledź czas"
+    },
+    "button_switch_title": {
+        "message": "Na $1 działa stoper — uruchomienie go tutaj go zatrzyma",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Połącz Zebu"
+    },
+    "button_connect_title": {
+        "message": "Najpierw połącz rozszerzenie ze swoją przestrzenią Zebu"
+    },
+    "popup_not_connected": {
+        "message": "Połącz rozszerzenie ze swoją przestrzenią Zebu, aby uruchamiać stopery stąd."
+    },
+    "popup_connect": {
+        "message": "Połącz przestrzeń"
+    },
+    "popup_running": {
+        "message": "Działa"
+    },
+    "popup_started": {
+        "message": "uruchomiono $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "Zatrzymaj stoper"
+    },
+    "popup_open_zebu": {
+        "message": "Otwórz w Zebu"
+    },
+    "popup_new_timer": {
+        "message": "Nowy stoper"
+    },
+    "popup_for_issue": {
+        "message": "Dla tego zgłoszenia"
+    },
+    "popup_project": {
+        "message": "Projekt"
+    },
+    "popup_project_search": {
+        "message": "Szukaj projektów…"
+    },
+    "popup_suggested": {
+        "message": "Proponowane"
+    },
+    "popup_all_projects": {
+        "message": "Wszystkie projekty"
+    },
+    "popup_no_projects": {
+        "message": "Brak pasujących projektów."
+    },
+    "popup_task": {
+        "message": "Zadanie"
+    },
+    "popup_task_none": {
+        "message": "Brak zadania"
+    },
+    "popup_notes": {
+        "message": "Notatki"
+    },
+    "popup_start": {
+        "message": "Uruchom stoper"
+    },
+    "popup_starting": {
+        "message": "Uruchamianie…"
+    },
+    "popup_switch_note": {
+        "message": "To zatrzyma stoper uruchomiony na $1.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "Zapamiętane z ostatniego razu"
+    },
+    "popup_error_generic": {
+        "message": "Coś poszło nie tak: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "Zebu jest teraz niedostępne."
+    },
+    "popup_settings": {
+        "message": "Ustawienia"
+    },
+    "popup_today": {
+        "message": "Dziś: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Zebu dla Chrome"
+    },
+    "options_workspace_heading": {
+        "message": "Twoja przestrzeń"
+    },
+    "options_workspace_hint": {
+        "message": "Adres, pod którym się logujesz, np. studio.app.zebu.work — albo po prostu „studio”."
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "Połącz"
+    },
+    "options_connecting": {
+        "message": "Zatwierdź żądanie na karcie, która właśnie się otworzyła…"
+    },
+    "options_connected_as": {
+        "message": "Połączono jako $1 ($2)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "Rozłącz"
+    },
+    "options_error_workspace": {
+        "message": "To nie wygląda na adres przestrzeni."
+    },
+    "options_error_unreachable": {
+        "message": "Nie można połączyć się z tą przestrzenią. Sprawdź adres."
+    },
+    "options_error_denied": {
+        "message": "Żądanie zostało odrzucone w Zebu."
+    },
+    "options_error_expired": {
+        "message": "Żądanie wygasło. Spróbuj ponownie."
+    },
+    "options_notes_heading": {
+        "message": "Notatki stopera"
+    },
+    "options_notes_hint": {
+        "message": "Czym jest opisywany stoper uruchomiony ze zgłoszenia."
+    },
+    "options_notes_identifier_title_url": {
+        "message": "Identyfikator, tytuł i link (np. „#123 Napraw logowanie” + URL)"
+    },
+    "options_notes_title_url": {
+        "message": "Tytuł i link"
+    },
+    "options_notes_title": {
+        "message": "Tylko tytuł"
+    },
+    "options_sites_heading": {
+        "message": "Trackery self-hosted"
+    },
+    "options_sites_hint": {
+        "message": "Uruchamiasz GitLab, Jira lub inny tracker na własnej domenie? Dodaj jego adres i wybierz typ trackera."
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "Dodaj witrynę"
+    },
+    "options_sites_remove": {
+        "message": "Usuń"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chrome nie przyznał dostępu do tej witryny."
+    },
+    "options_sites_none": {
+        "message": "Jeszcze żadnych — publiczne witryny GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp i Basecamp działają od razu."
+    },
+    "options_forget_heading": {
+        "message": "Sugestie"
+    },
+    "options_forget_hint": {
+        "message": "Rozszerzenie zapamiętuje, jaki projekt wybierasz dla każdego repozytorium lub tablicy, i proponuje go następnym razem."
+    },
+    "options_forget": {
+        "message": "Zapomnij zapamiętane wybory"
+    },
+    "options_saved": {
+        "message": "Zapisano."
+    },
+    "popup_waiting": {
+        "message": "$1 min oczekiwania na agenta",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ oczekiwanie na agenta…"
+    }
+}

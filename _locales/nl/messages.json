@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu Tijdregistratie"
+    },
+    "ext_description": {
+        "message": "Start een Zebu-timer vanuit GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp en Basecamp — issuedetails ingevuld, project voorgesteld."
+    },
+    "button_track": {
+        "message": "Tijd registreren"
+    },
+    "button_track_title": {
+        "message": "Start een Zebu-timer voor deze issue"
+    },
+    "button_stop": {
+        "message": "Stop"
+    },
+    "button_stop_title": {
+        "message": "Stop de timer die op $1 loopt",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "Tijd registreren"
+    },
+    "button_switch_title": {
+        "message": "Er loopt een timer op $1 — als je er hier een start, wordt die gestopt",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Zebu verbinden"
+    },
+    "button_connect_title": {
+        "message": "Verbind de extensie eerst met je Zebu-werkruimte"
+    },
+    "popup_not_connected": {
+        "message": "Verbind de extensie met je Zebu-werkruimte om hier timers te starten."
+    },
+    "popup_connect": {
+        "message": "Werkruimte verbinden"
+    },
+    "popup_running": {
+        "message": "Actief"
+    },
+    "popup_started": {
+        "message": "gestart $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "Timer stoppen"
+    },
+    "popup_open_zebu": {
+        "message": "Openen in Zebu"
+    },
+    "popup_new_timer": {
+        "message": "Nieuwe timer"
+    },
+    "popup_for_issue": {
+        "message": "Voor deze issue"
+    },
+    "popup_project": {
+        "message": "Project"
+    },
+    "popup_project_search": {
+        "message": "Projecten zoeken…"
+    },
+    "popup_suggested": {
+        "message": "Voorgesteld"
+    },
+    "popup_all_projects": {
+        "message": "Alle projecten"
+    },
+    "popup_no_projects": {
+        "message": "Geen projecten gevonden."
+    },
+    "popup_task": {
+        "message": "Taak"
+    },
+    "popup_task_none": {
+        "message": "Geen taak"
+    },
+    "popup_notes": {
+        "message": "Notities"
+    },
+    "popup_start": {
+        "message": "Timer starten"
+    },
+    "popup_starting": {
+        "message": "Bezig met starten…"
+    },
+    "popup_switch_note": {
+        "message": "Dit stopt de timer die op $1 loopt.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "Onthouden van de vorige keer"
+    },
+    "popup_error_generic": {
+        "message": "Er ging iets mis: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "Zebu is op dit moment niet bereikbaar."
+    },
+    "popup_settings": {
+        "message": "Instellingen"
+    },
+    "popup_today": {
+        "message": "Vandaag: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Zebu voor Chrome"
+    },
+    "options_workspace_heading": {
+        "message": "Je werkruimte"
+    },
+    "options_workspace_hint": {
+        "message": "Het adres waarmee je inlogt, bijv. studio.app.zebu.work — of gewoon “studio”."
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "Verbinden"
+    },
+    "options_connecting": {
+        "message": "Keur het verzoek goed in het tabblad dat zojuist is geopend…"
+    },
+    "options_connected_as": {
+        "message": "Verbonden als $1 ($2)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "Verbinding verbreken"
+    },
+    "options_error_workspace": {
+        "message": "Dat lijkt geen werkruimte-adres te zijn."
+    },
+    "options_error_unreachable": {
+        "message": "Die werkruimte is niet bereikbaar. Controleer het adres."
+    },
+    "options_error_denied": {
+        "message": "Het verzoek is geweigerd in Zebu."
+    },
+    "options_error_expired": {
+        "message": "Het verzoek is verlopen. Probeer het opnieuw."
+    },
+    "options_notes_heading": {
+        "message": "Timernotities"
+    },
+    "options_notes_hint": {
+        "message": "Waarmee een timer die vanuit een issue is gestart, wordt gelabeld."
+    },
+    "options_notes_identifier_title_url": {
+        "message": "Kenmerk, titel en link (bijv. “#123 Login repareren” + URL)"
+    },
+    "options_notes_title_url": {
+        "message": "Titel en link"
+    },
+    "options_notes_title": {
+        "message": "Alleen titel"
+    },
+    "options_sites_heading": {
+        "message": "Self-hosted trackers"
+    },
+    "options_sites_hint": {
+        "message": "Draai je GitLab, Jira of een andere tracker op je eigen domein? Voeg het adres toe en kies het type tracker."
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "Site toevoegen"
+    },
+    "options_sites_remove": {
+        "message": "Verwijderen"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chrome heeft geen toegang tot die site verleend."
+    },
+    "options_sites_none": {
+        "message": "Nog geen — de publieke GitHub-, GitLab-, Jira Cloud-, Linear-, Asana-, Trello-, Bitbucket-, ClickUp- en Basecamp-sites werken meteen."
+    },
+    "options_forget_heading": {
+        "message": "Suggesties"
+    },
+    "options_forget_hint": {
+        "message": "De extensie onthoudt welk project je kiest voor elke repo of elk board en stelt dat de volgende keer voor."
+    },
+    "options_forget": {
+        "message": "Onthouden keuzes vergeten"
+    },
+    "options_saved": {
+        "message": "Opgeslagen."
+    },
+    "popup_waiting": {
+        "message": "$1 min wachten op agent",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ wacht op agent…"
+    }
+}

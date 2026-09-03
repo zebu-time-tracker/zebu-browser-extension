@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu 時間トラッキング"
+    },
+    "ext_description": {
+        "message": "GitHub、GitLab、Jira、Linear、Asana、Trello、Bitbucket、ClickUp、BasecampからZebuのタイマーを開始できます。課題の詳細が入力され、プロジェクトも提案されます。"
+    },
+    "button_track": {
+        "message": "時間を記録"
+    },
+    "button_track_title": {
+        "message": "この課題用にZebuのタイマーを開始"
+    },
+    "button_stop": {
+        "message": "停止"
+    },
+    "button_stop_title": {
+        "message": "$1 で実行中のタイマーを停止",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "時間を記録"
+    },
+    "button_switch_title": {
+        "message": "$1 でタイマーが実行中です — ここで開始すると停止します",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Zebuを接続"
+    },
+    "button_connect_title": {
+        "message": "まず拡張機能をZebuのワークスペースに接続してください"
+    },
+    "popup_not_connected": {
+        "message": "拡張機能をZebuのワークスペースに接続すると、ここからタイマーを開始できます。"
+    },
+    "popup_connect": {
+        "message": "ワークスペースを接続"
+    },
+    "popup_running": {
+        "message": "実行中"
+    },
+    "popup_started": {
+        "message": "$1 に開始",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "タイマーを停止"
+    },
+    "popup_open_zebu": {
+        "message": "Zebuで開く"
+    },
+    "popup_new_timer": {
+        "message": "新しいタイマー"
+    },
+    "popup_for_issue": {
+        "message": "この課題の場合"
+    },
+    "popup_project": {
+        "message": "プロジェクト"
+    },
+    "popup_project_search": {
+        "message": "プロジェクトを検索…"
+    },
+    "popup_suggested": {
+        "message": "提案"
+    },
+    "popup_all_projects": {
+        "message": "すべてのプロジェクト"
+    },
+    "popup_no_projects": {
+        "message": "一致するプロジェクトがありません。"
+    },
+    "popup_task": {
+        "message": "タスク"
+    },
+    "popup_task_none": {
+        "message": "タスクなし"
+    },
+    "popup_notes": {
+        "message": "メモ"
+    },
+    "popup_start": {
+        "message": "タイマーを開始"
+    },
+    "popup_starting": {
+        "message": "開始しています…"
+    },
+    "popup_switch_note": {
+        "message": "これにより、$1 で実行中のタイマーが停止します。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "前回の選択を記憶"
+    },
+    "popup_error_generic": {
+        "message": "問題が発生しました: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "現在Zebuに接続できません。"
+    },
+    "popup_settings": {
+        "message": "設定"
+    },
+    "popup_today": {
+        "message": "今日: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Chrome版Zebu"
+    },
+    "options_workspace_heading": {
+        "message": "ワークスペース"
+    },
+    "options_workspace_hint": {
+        "message": "ログインに使うアドレスです。例: studio.app.zebu.work — または単に「studio」でも構いません。"
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "接続"
+    },
+    "options_connecting": {
+        "message": "開いたタブでリクエストを承認してください…"
+    },
+    "options_connected_as": {
+        "message": "$1 ($2) として接続済み",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "切断"
+    },
+    "options_error_workspace": {
+        "message": "ワークスペースのアドレスとして正しくないようです。"
+    },
+    "options_error_unreachable": {
+        "message": "そのワークスペースに接続できません。アドレスを確認してください。"
+    },
+    "options_error_denied": {
+        "message": "Zebu側でリクエストが拒否されました。"
+    },
+    "options_error_expired": {
+        "message": "リクエストの有効期限が切れました。もう一度お試しください。"
+    },
+    "options_notes_heading": {
+        "message": "タイマーのメモ"
+    },
+    "options_notes_hint": {
+        "message": "課題から開始したタイマーに何が表示されるかを設定します。"
+    },
+    "options_notes_identifier_title_url": {
+        "message": "識別子・タイトル・リンク（例: 「#123 ログインを修正」＋URL）"
+    },
+    "options_notes_title_url": {
+        "message": "タイトルとリンク"
+    },
+    "options_notes_title": {
+        "message": "タイトルのみ"
+    },
+    "options_sites_heading": {
+        "message": "セルフホストのトラッカー"
+    },
+    "options_sites_hint": {
+        "message": "GitLab、Jiraなどのトラッカーを自社ドメインで運用していますか？ アドレスを追加してトラッカーの種類を選んでください。"
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "サイトを追加"
+    },
+    "options_sites_remove": {
+        "message": "削除"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chromeがそのサイトへのアクセスを許可しませんでした。"
+    },
+    "options_sites_none": {
+        "message": "まだありません — 公開のGitHub、GitLab、Jira Cloud、Linear、Asana、Trello、Bitbucket、ClickUp、Basecampのサイトはそのまま利用できます。"
+    },
+    "options_forget_heading": {
+        "message": "候補"
+    },
+    "options_forget_hint": {
+        "message": "拡張機能は、各リポジトリやボードで選んだプロジェクトを記憶し、次回それを候補として表示します。"
+    },
+    "options_forget": {
+        "message": "記憶した選択を忘れる"
+    },
+    "options_saved": {
+        "message": "保存しました。"
+    },
+    "popup_waiting": {
+        "message": "エージェント待ち $1 分",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ エージェント待ち…"
+    }
+}

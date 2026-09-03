@@ -1,0 +1,23 @@
+{
+    "name": "zebu-chrome-extension",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Track time in Zebu from GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp.",
+    "type": "module",
+    "scripts": {
+        "build": "node build.mjs",
+        "watch": "node build.mjs --watch",
+        "icons": "node scripts/icons.mjs",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "i18n:check": "node scripts/i18n-check.mjs",
+        "zip": "npm run build && cd dist && zip -qr ../zebu-chrome-extension.zip . && cd .. && echo zebu-chrome-extension.zip"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.287",
+        "esbuild": "^0.24.2",
+        "jsdom": "^25.0.1",
+        "typescript": "^5.7.2",
+        "vitest": "^2.1.8"
+    }
+}

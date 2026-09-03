@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu Suivi du temps"
+    },
+    "ext_description": {
+        "message": "Démarrez un minuteur Zebu depuis GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp et Basecamp — les détails du ticket sont renseignés, un projet est suggéré."
+    },
+    "button_track": {
+        "message": "Suivre le temps"
+    },
+    "button_track_title": {
+        "message": "Démarrer un minuteur Zebu pour ce ticket"
+    },
+    "button_stop": {
+        "message": "Arrêter"
+    },
+    "button_stop_title": {
+        "message": "Arrêter le minuteur en cours sur $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "Suivre le temps"
+    },
+    "button_switch_title": {
+        "message": "Un minuteur est en cours sur $1 — en démarrer un ici l'arrêtera",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Connecter Zebu"
+    },
+    "button_connect_title": {
+        "message": "Connectez d'abord l'extension à votre espace de travail Zebu"
+    },
+    "popup_not_connected": {
+        "message": "Connectez l'extension à votre espace de travail Zebu pour démarrer des minuteurs depuis ici."
+    },
+    "popup_connect": {
+        "message": "Connecter l'espace de travail"
+    },
+    "popup_running": {
+        "message": "En cours"
+    },
+    "popup_started": {
+        "message": "démarré $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "Arrêter le minuteur"
+    },
+    "popup_open_zebu": {
+        "message": "Ouvrir dans Zebu"
+    },
+    "popup_new_timer": {
+        "message": "Nouveau minuteur"
+    },
+    "popup_for_issue": {
+        "message": "Pour ce ticket"
+    },
+    "popup_project": {
+        "message": "Projet"
+    },
+    "popup_project_search": {
+        "message": "Rechercher des projets…"
+    },
+    "popup_suggested": {
+        "message": "Suggéré"
+    },
+    "popup_all_projects": {
+        "message": "Tous les projets"
+    },
+    "popup_no_projects": {
+        "message": "Aucun projet ne correspond."
+    },
+    "popup_task": {
+        "message": "Tâche"
+    },
+    "popup_task_none": {
+        "message": "Aucune tâche"
+    },
+    "popup_notes": {
+        "message": "Notes"
+    },
+    "popup_start": {
+        "message": "Démarrer le minuteur"
+    },
+    "popup_starting": {
+        "message": "Démarrage…"
+    },
+    "popup_switch_note": {
+        "message": "Cela arrête le minuteur en cours sur $1.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "Mémorisé depuis la dernière fois"
+    },
+    "popup_error_generic": {
+        "message": "Une erreur s'est produite : $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "Zebu est actuellement injoignable."
+    },
+    "popup_settings": {
+        "message": "Paramètres"
+    },
+    "popup_today": {
+        "message": "Aujourd'hui : $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Zebu pour Chrome"
+    },
+    "options_workspace_heading": {
+        "message": "Votre espace de travail"
+    },
+    "options_workspace_hint": {
+        "message": "L'adresse où vous vous connectez, par ex. studio.app.zebu.work — ou simplement « studio »."
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "Connecter"
+    },
+    "options_connecting": {
+        "message": "Approuvez la demande dans l'onglet qui vient de s'ouvrir…"
+    },
+    "options_connected_as": {
+        "message": "Connecté en tant que $1 ($2)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "Déconnecter"
+    },
+    "options_error_workspace": {
+        "message": "Cela ne ressemble pas à une adresse d'espace de travail."
+    },
+    "options_error_unreachable": {
+        "message": "Cet espace de travail est injoignable. Vérifiez l'adresse."
+    },
+    "options_error_denied": {
+        "message": "La demande a été refusée dans Zebu."
+    },
+    "options_error_expired": {
+        "message": "La demande a expiré. Réessayez."
+    },
+    "options_notes_heading": {
+        "message": "Notes du minuteur"
+    },
+    "options_notes_hint": {
+        "message": "Ce avec quoi est libellé un minuteur démarré depuis un ticket."
+    },
+    "options_notes_identifier_title_url": {
+        "message": "Identifiant, titre et lien (ex. « #123 Corriger la connexion » + URL)"
+    },
+    "options_notes_title_url": {
+        "message": "Titre et lien"
+    },
+    "options_notes_title": {
+        "message": "Titre uniquement"
+    },
+    "options_sites_heading": {
+        "message": "Trackers auto-hébergés"
+    },
+    "options_sites_hint": {
+        "message": "Vous utilisez GitLab, Jira ou un autre tracker sur votre propre domaine ? Ajoutez son adresse et choisissez le type de tracker."
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "Ajouter le site"
+    },
+    "options_sites_remove": {
+        "message": "Supprimer"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chrome n'a pas accordé l'accès à ce site."
+    },
+    "options_sites_none": {
+        "message": "Aucun pour l'instant — les sites publics GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp et Basecamp fonctionnent d'emblée."
+    },
+    "options_forget_heading": {
+        "message": "Suggestions"
+    },
+    "options_forget_hint": {
+        "message": "L'extension mémorise le projet choisi pour chaque dépôt ou tableau et le suggère la fois suivante."
+    },
+    "options_forget": {
+        "message": "Oublier les choix mémorisés"
+    },
+    "options_saved": {
+        "message": "Enregistré."
+    },
+    "popup_waiting": {
+        "message": "$1 min d’attente de l’agent",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ en attente de l’agent…"
+    }
+}

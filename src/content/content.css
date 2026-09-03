@@ -1,0 +1,89 @@
+/* The in-page "Track time" button. Namespaced and low-specificity so host
+   sites' resets don't fight it; colours follow Zebu's one-ink green. */
+.zebu-track {
+    all: initial;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px 0 8px;
+    border: 1px solid #197300;
+    border-radius: 6px;
+    background: #fff;
+    color: #14532d;
+    font: 500 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+    cursor: pointer;
+    vertical-align: middle;
+    white-space: nowrap;
+    user-select: none;
+    margin: 0 6px;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+.zebu-track:hover {
+    background: #197300;
+    color: #fff;
+}
+.zebu-track:focus-visible {
+    outline: 2px solid #197300;
+    outline-offset: 2px;
+}
+.zebu-track__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #197300;
+    flex: none;
+}
+.zebu-track:hover .zebu-track__dot {
+    background: #fff;
+}
+.zebu-track--running {
+    background: #197300;
+    color: #fff;
+}
+.zebu-track--running .zebu-track__dot {
+    background: #fff;
+    animation: zebu-pulse 1.4s ease-in-out infinite;
+}
+.zebu-track--running:hover {
+    background: #14532d;
+}
+.zebu-track--floating {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2147483000;
+    height: 36px;
+    padding: 0 14px 0 12px;
+    font-size: 13px;
+    box-shadow: 0 6px 20px rgba(20, 83, 45, 0.25);
+    margin: 0;
+}
+.zebu-track--disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+@keyframes zebu-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.35;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .zebu-track {
+        background: #0f1a13;
+        color: #b9d9c2;
+        border-color: #3c9a2f;
+    }
+    .zebu-track:hover,
+    .zebu-track--running {
+        background: #197300;
+        color: #fff;
+    }
+}

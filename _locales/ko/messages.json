@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu 시간 추적"
+    },
+    "ext_description": {
+        "message": "GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp, Basecamp에서 Zebu 타이머를 시작하세요 — 이슈 세부 정보가 채워지고 프로젝트가 제안됩니다."
+    },
+    "button_track": {
+        "message": "시간 기록"
+    },
+    "button_track_title": {
+        "message": "이 이슈에 대한 Zebu 타이머 시작"
+    },
+    "button_stop": {
+        "message": "정지"
+    },
+    "button_stop_title": {
+        "message": "$1 에서 실행 중인 타이머 정지",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "시간 기록"
+    },
+    "button_switch_title": {
+        "message": "$1 에서 타이머가 실행 중입니다 — 여기서 시작하면 정지됩니다",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Zebu 연결"
+    },
+    "button_connect_title": {
+        "message": "먼저 확장 프로그램을 Zebu 워크스페이스에 연결하세요"
+    },
+    "popup_not_connected": {
+        "message": "확장 프로그램을 Zebu 워크스페이스에 연결하면 여기서 타이머를 시작할 수 있습니다."
+    },
+    "popup_connect": {
+        "message": "워크스페이스 연결"
+    },
+    "popup_running": {
+        "message": "실행 중"
+    },
+    "popup_started": {
+        "message": "$1 시작됨",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "타이머 정지"
+    },
+    "popup_open_zebu": {
+        "message": "Zebu에서 열기"
+    },
+    "popup_new_timer": {
+        "message": "새 타이머"
+    },
+    "popup_for_issue": {
+        "message": "이 이슈용"
+    },
+    "popup_project": {
+        "message": "프로젝트"
+    },
+    "popup_project_search": {
+        "message": "프로젝트 검색…"
+    },
+    "popup_suggested": {
+        "message": "제안됨"
+    },
+    "popup_all_projects": {
+        "message": "모든 프로젝트"
+    },
+    "popup_no_projects": {
+        "message": "일치하는 프로젝트가 없습니다."
+    },
+    "popup_task": {
+        "message": "작업"
+    },
+    "popup_task_none": {
+        "message": "작업 없음"
+    },
+    "popup_notes": {
+        "message": "메모"
+    },
+    "popup_start": {
+        "message": "타이머 시작"
+    },
+    "popup_starting": {
+        "message": "시작하는 중…"
+    },
+    "popup_switch_note": {
+        "message": "이렇게 하면 $1 에서 실행 중인 타이머가 정지됩니다.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "지난번 선택을 기억함"
+    },
+    "popup_error_generic": {
+        "message": "문제가 발생했습니다: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "지금은 Zebu에 연결할 수 없습니다."
+    },
+    "popup_settings": {
+        "message": "설정"
+    },
+    "popup_today": {
+        "message": "오늘: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Chrome용 Zebu"
+    },
+    "options_workspace_heading": {
+        "message": "내 워크스페이스"
+    },
+    "options_workspace_hint": {
+        "message": "로그인할 때 사용하는 주소입니다. 예: studio.app.zebu.work — 또는 그냥 “studio”만 입력해도 됩니다."
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "연결"
+    },
+    "options_connecting": {
+        "message": "방금 열린 탭에서 요청을 승인하세요…"
+    },
+    "options_connected_as": {
+        "message": "$1 ($2)(으)로 연결됨",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "연결 해제"
+    },
+    "options_error_workspace": {
+        "message": "워크스페이스 주소처럼 보이지 않습니다."
+    },
+    "options_error_unreachable": {
+        "message": "해당 워크스페이스에 연결할 수 없습니다. 주소를 확인하세요."
+    },
+    "options_error_denied": {
+        "message": "Zebu에서 요청이 거부되었습니다."
+    },
+    "options_error_expired": {
+        "message": "요청이 만료되었습니다. 다시 시도하세요."
+    },
+    "options_notes_heading": {
+        "message": "타이머 메모"
+    },
+    "options_notes_hint": {
+        "message": "이슈에서 시작한 타이머에 어떤 이름이 붙는지 설정합니다."
+    },
+    "options_notes_identifier_title_url": {
+        "message": "식별자, 제목, 링크 (예: “#123 로그인 수정” + URL)"
+    },
+    "options_notes_title_url": {
+        "message": "제목과 링크"
+    },
+    "options_notes_title": {
+        "message": "제목만"
+    },
+    "options_sites_heading": {
+        "message": "자체 호스팅 트래커"
+    },
+    "options_sites_hint": {
+        "message": "GitLab, Jira 또는 다른 트래커를 자체 도메인에서 운영하시나요? 주소를 추가하고 트래커 종류를 선택하세요."
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "사이트 추가"
+    },
+    "options_sites_remove": {
+        "message": "제거"
+    },
+    "options_sites_permission_denied": {
+        "message": "Chrome이 해당 사이트에 대한 접근 권한을 허용하지 않았습니다."
+    },
+    "options_sites_none": {
+        "message": "아직 없습니다 — 공개 GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp, Basecamp 사이트는 바로 작동합니다."
+    },
+    "options_forget_heading": {
+        "message": "제안"
+    },
+    "options_forget_hint": {
+        "message": "확장 프로그램은 각 저장소나 보드에서 선택한 프로젝트를 기억했다가 다음에 제안합니다."
+    },
+    "options_forget": {
+        "message": "기억된 선택 잊기"
+    },
+    "options_saved": {
+        "message": "저장되었습니다."
+    },
+    "popup_waiting": {
+        "message": "에이전트 대기 $1분",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ 에이전트 대기 중…"
+    }
+}

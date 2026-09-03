@@ -1,0 +1,237 @@
+{
+    "ext_name": {
+        "message": "Zebu Controle de tempo"
+    },
+    "ext_description": {
+        "message": "Inicie um timer do Zebu a partir do GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp — com os detalhes da issue preenchidos e o projeto sugerido."
+    },
+    "button_track": {
+        "message": "Registrar tempo"
+    },
+    "button_track_title": {
+        "message": "Iniciar um timer do Zebu para esta issue"
+    },
+    "button_stop": {
+        "message": "Parar"
+    },
+    "button_stop_title": {
+        "message": "Parar o timer em execução em $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_switch": {
+        "message": "Registrar tempo"
+    },
+    "button_switch_title": {
+        "message": "Um timer está em execução em $1 — iniciar um aqui vai pará-lo",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "button_connect": {
+        "message": "Conectar Zebu"
+    },
+    "button_connect_title": {
+        "message": "Conecte a extensão ao seu workspace do Zebu primeiro"
+    },
+    "popup_not_connected": {
+        "message": "Conecte a extensão ao seu workspace do Zebu para iniciar timers a partir daqui."
+    },
+    "popup_connect": {
+        "message": "Conectar workspace"
+    },
+    "popup_running": {
+        "message": "Em execução"
+    },
+    "popup_started": {
+        "message": "iniciado $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_stop": {
+        "message": "Parar timer"
+    },
+    "popup_open_zebu": {
+        "message": "Abrir no Zebu"
+    },
+    "popup_new_timer": {
+        "message": "Novo timer"
+    },
+    "popup_for_issue": {
+        "message": "Para esta issue"
+    },
+    "popup_project": {
+        "message": "Projeto"
+    },
+    "popup_project_search": {
+        "message": "Buscar projetos…"
+    },
+    "popup_suggested": {
+        "message": "Sugerido"
+    },
+    "popup_all_projects": {
+        "message": "Todos os projetos"
+    },
+    "popup_no_projects": {
+        "message": "Nenhum projeto encontrado."
+    },
+    "popup_task": {
+        "message": "Tarefa"
+    },
+    "popup_task_none": {
+        "message": "Sem tarefa"
+    },
+    "popup_notes": {
+        "message": "Notas"
+    },
+    "popup_start": {
+        "message": "Iniciar timer"
+    },
+    "popup_starting": {
+        "message": "Iniciando…"
+    },
+    "popup_switch_note": {
+        "message": "Isso vai parar o timer em execução em $1.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_remembered": {
+        "message": "Lembrado da última vez"
+    },
+    "popup_error_generic": {
+        "message": "Algo deu errado: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_error_unreachable": {
+        "message": "O Zebu não pode ser acessado no momento."
+    },
+    "popup_settings": {
+        "message": "Configurações"
+    },
+    "popup_today": {
+        "message": "Hoje: $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "options_title": {
+        "message": "Zebu para Chrome"
+    },
+    "options_workspace_heading": {
+        "message": "Seu workspace"
+    },
+    "options_workspace_hint": {
+        "message": "O endereço com o qual você faz login, ex.: studio.app.zebu.work — ou apenas “studio”."
+    },
+    "options_workspace_placeholder": {
+        "message": "studio"
+    },
+    "options_connect": {
+        "message": "Conectar"
+    },
+    "options_connecting": {
+        "message": "Aprove a solicitação na aba que acabou de abrir…"
+    },
+    "options_connected_as": {
+        "message": "Conectado como $1 ($2)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            },
+            "2": {
+                "content": "$2"
+            }
+        }
+    },
+    "options_disconnect": {
+        "message": "Desconectar"
+    },
+    "options_error_workspace": {
+        "message": "Isso não parece um endereço de workspace."
+    },
+    "options_error_unreachable": {
+        "message": "Não é possível acessar esse workspace. Verifique o endereço."
+    },
+    "options_error_denied": {
+        "message": "A solicitação foi negada no Zebu."
+    },
+    "options_error_expired": {
+        "message": "A solicitação expirou. Tente novamente."
+    },
+    "options_notes_heading": {
+        "message": "Notas do timer"
+    },
+    "options_notes_hint": {
+        "message": "Com o que um timer iniciado a partir de uma issue é rotulado."
+    },
+    "options_notes_identifier_title_url": {
+        "message": "Identificador, título e link (ex.: “#123 Corrigir login” + URL)"
+    },
+    "options_notes_title_url": {
+        "message": "Título e link"
+    },
+    "options_notes_title": {
+        "message": "Somente título"
+    },
+    "options_sites_heading": {
+        "message": "Trackers self-hosted"
+    },
+    "options_sites_hint": {
+        "message": "Usa o GitLab, Jira ou outro tracker no seu próprio domínio? Adicione o endereço dele e escolha o tipo de tracker."
+    },
+    "options_sites_origin_placeholder": {
+        "message": "https://git.example.com"
+    },
+    "options_sites_add": {
+        "message": "Adicionar site"
+    },
+    "options_sites_remove": {
+        "message": "Remover"
+    },
+    "options_sites_permission_denied": {
+        "message": "O Chrome não concedeu acesso a esse site."
+    },
+    "options_sites_none": {
+        "message": "Nenhum ainda — os sites públicos do GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp funcionam sem configuração."
+    },
+    "options_forget_heading": {
+        "message": "Sugestões"
+    },
+    "options_forget_hint": {
+        "message": "A extensão lembra qual projeto você escolhe para cada repositório ou quadro e o sugere na próxima vez."
+    },
+    "options_forget": {
+        "message": "Esquecer escolhas lembradas"
+    },
+    "options_saved": {
+        "message": "Salvo."
+    },
+    "popup_waiting": {
+        "message": "$1 min esperando o agente",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_waiting_now": {
+        "message": "⏳ aguardando o agente…"
+    }
+}
