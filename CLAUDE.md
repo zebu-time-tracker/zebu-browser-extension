@@ -33,3 +33,5 @@ Columns: **To Do → In Progress → Review → Done**.
   finished work to Review, add follow-ups as new cards.
 - **If the server fails to connect,** say so once, keep working, and list the
   pending Alan-tasks at the end of the final message so nothing is lost.
+- **`/board`** (skill in the suite root, `.claude/skills/board`) does one such
+  pass on demand; `/loop 10m /board` keeps it running in a session.
