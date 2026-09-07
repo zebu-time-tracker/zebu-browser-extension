@@ -13,17 +13,23 @@ npm run zip             # dist -> zebu-chrome-extension.zip for the store
 
 The MCP server `lite-kan` (https://board.alanwoo.ca) is the task list shared
 between Alan and Claude. Alan is the user; assign Claude's items to Claude.
+Columns: **To Do → In Progress → Review → Done**.
 
-- **Start of every run:** read the board. Act on cards assigned to Claude or
-  moved to In progress; treat new comments on those cards as instructions.
+- **Start of every run:** read the board. Act on cards assigned to Claude in
+  To Do or In Progress and on cards in Review assigned to Claude; treat new
+  comments on those cards as instructions. Move a card to In Progress when
+  starting on it.
 - **Anything only Alan can do** (secrets, env keys, DNS, accounts, signing
-  keys, manual server edits, purchases) becomes a TODO card assigned to Alan,
-  with the exact commands or steps in the description. In chat, point to the
-  card instead of repeating the steps.
-- **When Alan moves a card to Done,** verify the outcome (test, probe, server
-  check), then comment with what was checked. If it did not work, comment and
-  move it back to In progress.
+  keys, manual server edits, purchases) becomes a To Do card assigned to
+  Alan, with the exact commands or steps in the description. In chat, point
+  to the card instead of repeating the steps.
+- **Review flow:** whoever finishes a card moves it to Review and assigns it
+  to the other person with a comment saying what to check and how. The
+  reviewer verifies (test, probe, server check, trying the feature), then
+  either moves it to Done with a comment on what was checked, or comments
+  with what is wrong and assigns it back to In Progress. Nothing goes
+  straight to Done.
 - **After each batch of work,** update the cards: comment progress, move
-  shipped-and-verified work to Done, add follow-ups as new cards.
+  finished work to Review, add follow-ups as new cards.
 - **If the server fails to connect,** say so once, keep working, and list the
   pending Alan-tasks at the end of the final message so nothing is lost.
