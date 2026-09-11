@@ -11,12 +11,23 @@ const app = document.getElementById('app')!;
 const isWindow = new URLSearchParams(location.search).has('window');
 if (isWindow) document.body.classList.add('window');
 
-let state: State = { connected: false, running: null, projects: [], fetchedAt: 0 };
+let state: State = { connected: false, running: null, projects: [], fetchedAt: 0, pulseToken: '', skewMs: 0 };
 let issue: Issue | null = null;
 let workspace = '';
 let noteFormat: 'identifier_title_url' | 'title_url' | 'title' = 'identifier_title_url';
 let recent: string[] = [];
 let tick: number | undefined;
+let watch: number | undefined;
+
+/**
+ * How often this page asks the service worker whether the timer changed. The
+ * detached window stays open all day, so it used to sit there counting a timer
+ * that had been stopped somewhere else hours before (board #49). Two seconds
+ * while a clock is running, half a minute when none is — the question costs one
+ * aggregate query and about forty bytes.
+ */
+const WATCH_MS = 2_000;
+const WATCH_IDLE_MS = 30_000;
 
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string, string> = {}, children: (Node | string)[] = []): HTMLElementTagNameMap[K] => {
     const node = document.createElement(tag);
@@ -30,7 +41,10 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string,
 };
 
 const elapsed = (entry: Entry): string => {
-    const secs = Math.max(0, Math.floor((Date.now() - new Date(entry.timer_started_at!).getTime()) / 1000)) + entry.minutes * 60;
+    // Against the server's clock: the start time came from the server, so a
+    // browser running fast would otherwise show work nobody did.
+    const now = Date.now() - state.skewMs;
+    const secs = Math.max(0, Math.floor((now - new Date(entry.timer_started_at!).getTime()) / 1000)) + entry.minutes * 60;
     return `${Math.floor(secs / 3600)}:${String(Math.floor((secs % 3600) / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`;
 };
 
@@ -197,7 +211,37 @@ async function renderForm(force = false): Promise<void> {
     if (!selected) search.focus();
 }
 
+/**
+ * Re-ask the service worker whether the timer changed, and redraw when it did.
+ * Rescheduled after each answer rather than on a fixed interval, so a slow
+ * reply cannot stack requests, and paused while the window is hidden.
+ */
+function watchTimer(): void {
+    window.clearTimeout(watch);
+    if (document.hidden) return;
+
+    watch = window.setTimeout(async () => {
+        try {
+            const next = await call<State>({ type: 'state:pulse' });
+            const changed = next.running?.id !== state.running?.id || next.running?.timer_started_at !== state.running?.timer_started_at;
+            state = next;
+            // Only redraw on a real change: the form holds what the user is
+            // half way through typing, and the running card has its own ticker.
+            if (changed) render();
+            else watchTimer();
+        } catch {
+            watchTimer();
+        }
+    }, state.running ? WATCH_MS : WATCH_IDLE_MS);
+}
+
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) watchTimer();
+    else window.clearTimeout(watch);
+});
+
 function render(): void {
+    watchTimer();
     if (!state.connected) return renderNotConnected();
     // A page handed us an issue: go straight to the form, unless this very
     // issue is what's already running (then show it so it can be stopped).

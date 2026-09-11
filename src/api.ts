@@ -9,6 +9,16 @@ export interface Timesheet {
     entries: Entry[];
     running: Entry | null;
     projects: ProjectOption[];
+    /** The pulse token this payload answers to; see `api.pulse()`. */
+    pulse_token?: string;
+    /** The server's clock at this response, for correcting the browser's. */
+    server_time?: string;
+}
+
+/** "Has my active timer changed?" — a token and whether a clock is running. */
+export interface Pulse {
+    token: string;
+    running: boolean;
 }
 
 export class ApiError extends Error {
@@ -95,6 +105,12 @@ export const api = {
 
     me: () => request<{ name: string; email: string }>('GET', '/me'),
     timesheet: () => request<Timesheet>('GET', `/timesheet?date=${today()}`),
+    /**
+     * One aggregate query and about forty bytes: the version of the answer to
+     * "which timer is active". Polled instead of refetching the timesheet, so
+     * a timer started elsewhere shows up in seconds rather than a minute.
+     */
+    pulse: () => request<Pulse>('GET', '/timer/pulse'),
     startTimer: (payload: { project_id: string; task_id?: string | null; notes?: string | null }) =>
         request<{ entry: Entry }>('POST', '/timer/start', payload),
     stopTimer: () => request<{ entry: Entry | null }>('POST', '/timer/stop', {}),

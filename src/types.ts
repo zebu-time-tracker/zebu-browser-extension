@@ -69,12 +69,25 @@ export interface State {
     running: Entry | null;
     projects: ProjectOption[];
     fetchedAt: number;
+    /**
+     * The pulse token this state is the answer to. Poll /api/timer/pulse and
+     * only refetch the timesheet when it differs (board #49).
+     */
+    pulseToken: string;
+    /**
+     * How far this browser's clock is ahead of the server's, in milliseconds.
+     * A running timer is elapsed time measured from a server timestamp, so a
+     * browser that is five minutes fast would otherwise show five minutes of
+     * work nobody did.
+     */
+    skewMs: number;
 }
 
 /** Messages between the pieces of the extension. */
 export type Message =
     | { type: 'state:get' }
     | { type: 'state:refresh' }
+    | { type: 'state:pulse' }
     | { type: 'timer:open'; issue: Issue }
     | { type: 'timer:start'; issue: Issue | null; projectId: string; taskId: string | null; notes: string }
     | { type: 'timer:stop' }
