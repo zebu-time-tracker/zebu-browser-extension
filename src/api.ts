@@ -19,12 +19,42 @@ export interface Timesheet {
 export interface Pulse {
     token: string;
     running: boolean;
+    /**
+     * An outage the server announced ahead of time. Present only while one is
+     * announced and not yet over; never on a self-hosted workspace, which has
+     * no operator to announce one (board #216).
+     */
+    maintenance?: MaintenanceWindow | null;
 }
+
+/** A planned outage. Both times are ISO 8601, as the server writes them. */
+export interface MaintenanceWindow {
+    starts_at: string;
+    ends_at: string;
+}
+
+/**
+ * The seconds a `Retry-After` header asks for, or null when it says nothing
+ * usable — missing, junk, zero, or the HTTP-date form, which this server does
+ * not send. Null means "unknown"; reading any of those as zero would mean
+ * coming straight back at a box that is deliberately down.
+ */
+export const retryAfterSeconds = (header: string | null): number | null => {
+    const seconds = Number(header);
+
+    return header !== null && header.trim() !== '' && Number.isFinite(seconds) && seconds > 0 ? seconds : null;
+};
 
 export class ApiError extends Error {
     constructor(
         message: string,
         public status: number,
+        /**
+         * On a 503, the server's own `Retry-After` in seconds — or null when
+         * it did not send a usable one, which means "unknown", never "come
+         * straight back".
+         */
+        public retryAfter: number | null = null,
     ) {
         super(message);
     }
@@ -71,6 +101,12 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     if (response.status === 401) {
         await saveSettings({ token: '', user: null });
         throw new ApiError('unauthenticated', 401);
+    }
+    // Deliberately down, not broken: kept apart so the caller waits as the
+    // server asked rather than falling back to the expensive refetch, which
+    // would be refused too (board #216).
+    if (response.status === 503) {
+        throw new ApiError('maintenance', 503, retryAfterSeconds(response.headers.get('Retry-After')));
     }
     if (!response.ok) {
         const data = await response.json().catch(() => null);

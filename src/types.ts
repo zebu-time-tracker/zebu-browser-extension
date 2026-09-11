@@ -81,6 +81,12 @@ export interface State {
      * work nobody did.
      */
     skewMs: number;
+    /**
+     * While a planned outage is being waited out: the instant (epoch ms) before
+     * which nothing should be asked of the server. Null the rest of the time.
+     * See src/maintenance.ts (board #216).
+     */
+    downUntil: number | null;
 }
 
 /** Messages between the pieces of the extension. */

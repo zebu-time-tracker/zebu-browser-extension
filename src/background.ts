@@ -3,6 +3,7 @@
 // and the popup, opens the timer window for a page's issue, and shows a
 // badge while a timer runs.
 import { api, ApiError } from './api';
+import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
 import { getMappings, getPendingIssue, getSettings, saveMappings, setPendingIssue } from './storage';
 import { composeNotes, remember } from './suggest';
 import type { Message, State } from './types';
@@ -16,7 +17,7 @@ import type { Message, State } from './types';
  */
 const CACHE_MS = 15 * 1000;
 
-const empty = (): State => ({ connected: false, running: null, projects: [], fetchedAt: Date.now(), pulseToken: '', skewMs: 0 });
+const empty = (): State => ({ connected: false, running: null, projects: [], fetchedAt: Date.now(), pulseToken: '', skewMs: 0, downUntil: null });
 
 let cache: State = { ...empty(), fetchedAt: 0 };
 
@@ -40,6 +41,8 @@ export async function refresh(force = false): Promise<State> {
             // Measured the moment the reply lands, so the round trip is not
             // counted as drift. Only a real difference survives.
             skewMs: sheet.server_time ? Date.now() - new Date(sheet.server_time).getTime() : 0,
+            // The server answered, so whatever hold was in force is over.
+            downUntil: null,
         };
     } catch (error) {
         if (error instanceof ApiError && error.status === 401) {
@@ -64,12 +67,23 @@ export async function refresh(force = false): Promise<State> {
 export async function pulse(): Promise<State> {
     const settings = await getSettings();
     if (!settings.workspace || !settings.token) return refresh();
+
+    // Down for the announced window: do not ask, and above all do not fall
+    // through to the refetch — the timesheet is refused too, and asking for it
+    // is the hammering Retry-After exists to stop (board #216).
+    if (isHeld(cache.downUntil, Date.now())) return cache;
+
     if (!cache.connected || !cache.pulseToken) return refresh(true);
 
     try {
-        const { token } = await api.pulse();
+        const { token, maintenance } = await api.pulse();
+        cache = { ...cache, downUntil: holdUntil(maintenance, Date.now(), POLL.running) };
         if (token === cache.pulseToken) return cache;
-    } catch {
+    } catch (e) {
+        if (e instanceof ApiError && e.status === 503) {
+            cache = { ...cache, downUntil: holdAfterRefusal(e.retryAfter, Date.now(), POLL.idle) };
+            return cache;
+        }
         // No pulse (old workspace, network blip): fall back to the refetch.
     }
     return refresh(true);

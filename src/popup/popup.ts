@@ -6,12 +6,13 @@ import { call, CallError, t } from '../messaging';
 import { getMappings, getSettings } from '../storage';
 import { composeNotes, entryMatchesIssue, suggest, type Suggestion } from '../suggest';
 import type { Entry, Issue, ProjectOption, State } from '../types';
+import { isHeld, POLL } from '../maintenance';
 
 const app = document.getElementById('app')!;
 const isWindow = new URLSearchParams(location.search).has('window');
 if (isWindow) document.body.classList.add('window');
 
-let state: State = { connected: false, running: null, projects: [], fetchedAt: 0, pulseToken: '', skewMs: 0 };
+let state: State = { connected: false, running: null, projects: [], fetchedAt: 0, pulseToken: '', skewMs: 0, downUntil: null };
 let issue: Issue | null = null;
 let workspace = '';
 let noteFormat: 'identifier_title_url' | 'title_url' | 'title' = 'identifier_title_url';
@@ -26,8 +27,7 @@ let watch: number | undefined;
  * while a clock is running, half a minute when none is — the question costs one
  * aggregate query and about forty bytes.
  */
-const WATCH_MS = 2_000;
-const WATCH_IDLE_MS = 30_000;
+
 
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string, string> = {}, children: (Node | string)[] = []): HTMLElementTagNameMap[K] => {
     const node = document.createElement(tag);
@@ -232,7 +232,19 @@ function watchTimer(): void {
         } catch {
             watchTimer();
         }
-    }, state.running ? WATCH_MS : WATCH_IDLE_MS);
+    }, nextWatchIn(state, Date.now()));
+}
+
+/**
+ * How long until the next ask. While an announced outage is being waited out,
+ * that is what is left of the hold rather than the running cadence — the
+ * service worker will not ask the server either way, so polling it every two
+ * seconds only spins this window (board #216).
+ */
+export function nextWatchIn(state: Pick<State, 'running' | 'downUntil'>, now: number): number {
+    if (isHeld(state.downUntil, now)) return Math.max(state.downUntil! - now, POLL.idle);
+
+    return state.running ? POLL.running : POLL.idle;
 }
 
 document.addEventListener('visibilitychange', () => {
