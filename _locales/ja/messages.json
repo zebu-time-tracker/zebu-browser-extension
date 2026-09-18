@@ -233,5 +233,14 @@
     },
     "popup_waiting_now": {
         "message": "⏳ エージェント待ち…"
+    },
+    "context_track_page": {
+        "message": "このページの時間を記録"
+    },
+    "context_track_selection": {
+        "message": "時間を記録: 「%s」"
+    },
+    "popup_for_page": {
+        "message": "このページ"
     }
 }

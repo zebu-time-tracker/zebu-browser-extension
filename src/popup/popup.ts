@@ -3,6 +3,7 @@
 // time" button (form prefilled with that issue, project suggested). Vanilla
 // DOM on purpose — it's a few hundred lines and starts instantly.
 import { call, CallError, t } from '../messaging';
+import { pageIssue, withSelection } from '../page';
 import { getMappings, getSettings } from '../storage';
 import { composeNotes, entryMatchesIssue, suggest, type Suggestion } from '../suggest';
 import type { Entry, Issue, ProjectOption, State } from '../types';
@@ -14,6 +15,9 @@ if (isWindow) document.body.classList.add('window');
 
 let state: State = { connected: false, running: null, projects: [], fetchedAt: 0, pulseToken: '', skewMs: 0, downUntil: null };
 let issue: Issue | null = null;
+// True when `issue` is only the page the toolbar popup was opened over: it
+// prefills a new timer but does not force the form open over a running one.
+let ambient = false;
 let workspace = '';
 let noteFormat: 'identifier_title_url' | 'title_url' | 'title' = 'identifier_title_url';
 let recent: string[] = [];
@@ -60,6 +64,31 @@ function header(): HTMLElement {
         void chrome.runtime.openOptionsPage();
     });
     return el('div', { class: 'brand' }, [el('strong', { text: 'Zebu' }), settings]);
+}
+
+/**
+ * The page under the toolbar popup: its title and link, and the selection,
+ * read with the activeTab grant the click gave us. A tracker page answers
+ * with its adapter's issue instead; pages that cannot be read (chrome://,
+ * the store) give nothing.
+ */
+async function capturePage(): Promise<Issue | null> {
+    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true }).catch(() => []);
+    if (!tab?.id || !tab.url) return null;
+    let selection = '';
+    try {
+        const [hit] = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: () => window.getSelection()?.toString() ?? '' });
+        selection = typeof hit?.result === 'string' ? hit.result : '';
+    } catch {
+        // not injectable
+    }
+    let known: Issue | null = null;
+    try {
+        known = ((await chrome.tabs.sendMessage(tab.id, { type: 'page:issue' })) as { issue?: Issue | null } | undefined)?.issue ?? null;
+    } catch {
+        // no content script here
+    }
+    return withSelection(known ?? pageIssue({ url: tab.url, title: tab.title ?? '', selection }), selection);
 }
 
 function renderNotConnected(): void {
@@ -188,7 +217,7 @@ async function renderForm(force = false): Promise<void> {
     renderTasks();
 
     const card = el('div', { class: 'card' }, [
-        el('h2', { text: issue ? t('popup_for_issue') : t('popup_new_timer') }),
+        el('h2', { text: issue ? t(issue.site === 'page' ? 'popup_for_page' : 'popup_for_issue') : t('popup_new_timer') }),
         issue
             ? el('div', { class: 'issue' }, [
                   issue.identifier ? el('span', { class: 'id', text: issue.identifier }) : '',
@@ -257,7 +286,7 @@ function render(): void {
     if (!state.connected) return renderNotConnected();
     // A page handed us an issue: go straight to the form, unless this very
     // issue is what's already running (then show it so it can be stopped).
-    if (issue && !(state.running && entryMatchesIssue(state.running.notes, issue))) return void renderForm();
+    if (issue && !ambient && !(state.running && entryMatchesIssue(state.running.notes, issue))) return void renderForm();
     if (state.running) return renderRunning(state.running);
     void renderForm();
 }
@@ -269,7 +298,12 @@ function render(): void {
     try {
         state = await call<State>({ type: 'state:get' });
         issue = await call<Issue | null>({ type: 'issue:pending:get' });
-        if (!isWindow) issue = null; // the toolbar popup is context-free
+        if (!isWindow) {
+            // The toolbar popup is handed no issue, but it has the page it was
+            // opened over: title, link and selection prefill a new timer.
+            issue = await capturePage();
+            ambient = true;
+        }
         const mappings = await getMappings();
         recent = Object.values(mappings)
             .sort((a, b) => b.lastUsed - a.lastUsed)

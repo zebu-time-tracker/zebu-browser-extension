@@ -4,7 +4,7 @@
     "short_name": "Zebu",
     "description": "__MSG_ext_description__",
     "default_locale": "en",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "minimum_chrome_version": "120",
     "icons": {
         "16": "icons/16.png",
@@ -24,7 +24,7 @@
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["storage", "alarms", "scripting"],
+    "permissions": ["storage", "alarms", "scripting", "activeTab", "contextMenus"],
     "host_permissions": ["https://*.zebu.work/*"],
     "optional_host_permissions": ["http://*/*", "https://*/*"],
     "content_scripts": [

@@ -233,5 +233,14 @@
     },
     "popup_waiting_now": {
         "message": "⏳ 에이전트 대기 중…"
+    },
+    "context_track_page": {
+        "message": "이 페이지에서 시간 기록"
+    },
+    "context_track_selection": {
+        "message": "시간 기록: “%s”"
+    },
+    "popup_for_page": {
+        "message": "이 페이지"
     }
 }

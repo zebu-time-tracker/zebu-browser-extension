@@ -233,5 +233,14 @@
     },
     "popup_waiting_now": {
         "message": "⏳ wacht op agent…"
+    },
+    "context_track_page": {
+        "message": "Tijd registreren op deze pagina"
+    },
+    "context_track_selection": {
+        "message": "Tijd registreren: ‘%s’"
+    },
+    "popup_for_page": {
+        "message": "Deze pagina"
     }
 }

@@ -233,5 +233,14 @@
     },
     "popup_waiting_now": {
         "message": "⏳ esperando al agente…"
+    },
+    "context_track_page": {
+        "message": "Registrar tiempo en esta página"
+    },
+    "context_track_selection": {
+        "message": "Registrar tiempo: «%s»"
+    },
+    "popup_for_page": {
+        "message": "Esta página"
     }
 }

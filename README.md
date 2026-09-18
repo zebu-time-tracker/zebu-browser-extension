@@ -7,6 +7,11 @@ identifier, title and link already in the notes and the most likely Zebu project
 pick a task if you use them and start. The button turns into a running clock, and the toolbar
 icon shows a dot while any timer runs.
 
+On any other page the toolbar popup starts a timer with the page's title and link in the notes,
+and selected text becomes the description. The right-click menu offers **Track time on this
+page** and, with a selection, **Track time: "…"**. A tracker page keeps its issue identity when
+tracked from either.
+
 Manifest V3, TypeScript, no framework. Talks to the same workspace API as the desktop app.
 
 ## Install (development)

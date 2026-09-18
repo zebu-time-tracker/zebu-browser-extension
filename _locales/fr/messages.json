@@ -233,5 +233,14 @@
     },
     "popup_waiting_now": {
         "message": "⏳ en attente de l’agent…"
+    },
+    "context_track_page": {
+        "message": "Suivre le temps sur cette page"
+    },
+    "context_track_selection": {
+        "message": "Suivre le temps : « %s »"
+    },
+    "popup_for_page": {
+        "message": "Cette page"
     }
 }

@@ -4,9 +4,11 @@
 // badge while a timer runs.
 import { api, ApiError } from './api';
 import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
+import { t } from './messaging';
+import { pageIssue, withSelection } from './page';
 import { getMappings, getPendingIssue, getSettings, saveMappings, setPendingIssue } from './storage';
 import { composeNotes, remember } from './suggest';
-import type { Message, State } from './types';
+import type { Issue, Message, State } from './types';
 
 /**
  * How long a cached timesheet is served without asking again. It used to be
@@ -121,6 +123,36 @@ async function openTimerWindow(): Promise<void> {
     await chrome.storage.session.set({ timerWindowId: created?.id });
 }
 
+// Any page can be tracked from the right-click menu: the page itself, or a
+// selection that becomes the timer's description (board #266). Chrome fills
+// %s in the selection entry's title with the selected text.
+async function installContextMenus(): Promise<void> {
+    await chrome.contextMenus.removeAll();
+    chrome.contextMenus.create({ id: 'zebu-page', title: t('context_track_page'), contexts: ['page'] });
+    chrome.contextMenus.create({ id: 'zebu-selection', title: t('context_track_selection'), contexts: ['selection'] });
+}
+
+/** What a tab's content script says the page is, when there is one (tracker pages); null elsewhere. */
+async function issueFromTab(tabId: number): Promise<Issue | null> {
+    try {
+        const reply = (await chrome.tabs.sendMessage(tabId, { type: 'page:issue' })) as { issue?: Issue | null } | undefined;
+        return reply?.issue ?? null;
+    } catch {
+        return null; // no content script on this page
+    }
+}
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    void (async () => {
+        const url = info.pageUrl ?? tab?.url ?? '';
+        const known = tab?.id ? await issueFromTab(tab.id) : null;
+        const issue = withSelection(known ?? pageIssue({ url, title: tab?.title ?? '', selection: info.selectionText }), info.selectionText);
+        if (!issue) return;
+        await setPendingIssue(issue);
+        await openTimerWindow();
+    })();
+});
+
 chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) => {
     (async () => {
         switch (message.type) {
@@ -186,6 +218,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === 'install') await chrome.runtime.openOptionsPage();
     await registerCustomSites();
+    await installContextMenus();
 });
 chrome.runtime.onStartup.addListener(() => void refresh(true));
 

@@ -233,5 +233,14 @@
     },
     "popup_waiting_now": {
         "message": "⏳ 等待智能体…"
+    },
+    "context_track_page": {
+        "message": "在此页面记录时间"
+    },
+    "context_track_selection": {
+        "message": "记录时间：“%s”"
+    },
+    "popup_for_page": {
+        "message": "此页面"
     }
 }

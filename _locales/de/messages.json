@@ -233,5 +233,14 @@
     },
     "popup_waiting_now": {
         "message": "⏳ wartet auf Agenten…"
+    },
+    "context_track_page": {
+        "message": "Zeit auf dieser Seite erfassen"
+    },
+    "context_track_selection": {
+        "message": "Zeit erfassen: „%s“"
+    },
+    "popup_for_page": {
+        "message": "Diese Seite"
     }
 }

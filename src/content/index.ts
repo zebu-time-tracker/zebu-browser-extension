@@ -143,11 +143,14 @@ async function refreshState(): Promise<void> {
     }).observe(document.querySelector('title') ?? document.documentElement, { childList: true, subtree: true, characterData: true });
 
     // The service worker broadcasts when the running timer changes elsewhere.
-    chrome.runtime.onMessage.addListener((message: { type: string; state?: State }) => {
+    chrome.runtime.onMessage.addListener((message: { type: string; state?: State }, _sender, sendResponse) => {
         if (message.type === 'state:changed' && message.state) {
             state = message.state;
             render();
         }
+        // The popup and the context menu ask what this page is about, so a
+        // tracker page keeps its adapter's identity when tracked from there.
+        if (message.type === 'page:issue') sendResponse({ issue: current });
     });
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') void refreshState();

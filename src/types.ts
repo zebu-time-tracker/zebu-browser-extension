@@ -98,7 +98,8 @@ export type Message =
     | { type: 'timer:start'; issue: Issue | null; projectId: string; taskId: string | null; notes: string }
     | { type: 'timer:stop' }
     | { type: 'issue:pending:get' }
-    | { type: 'issue:pending:clear' };
+    | { type: 'issue:pending:clear' }
+    | { type: 'page:issue' };
 
 export const DEFAULT_SETTINGS: Settings = {
     workspace: '',
