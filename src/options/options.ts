@@ -161,6 +161,20 @@ function sitesCard(settings: Settings): HTMLElement {
     ]);
 }
 
+// The three commands and what they are bound to. Chrome owns the bindings
+// (board #268): the button opens its shortcuts page, the only place they change.
+function shortcutsCard(): HTMLElement {
+    const list = el('ul', { class: 'sites' });
+    void chrome.commands.getAll().then((commands) => {
+        for (const command of commands) {
+            list.append(el('li', {}, [el('span', { text: command.description ?? command.name ?? '' }), el('span', { class: 'shortcut', text: command.shortcut || t('options_shortcut_unbound') })]));
+        }
+    });
+    const open = el('button', { class: 'btn secondary', text: t('options_shortcuts_open') });
+    open.addEventListener('click', () => void chrome.tabs.create({ url: 'chrome://extensions/shortcuts' }));
+    return el('section', { class: 'card' }, [el('h2', { text: t('options_shortcuts_heading') }), el('p', { class: 'hint', text: t('options_shortcuts_hint') }), list, open]);
+}
+
 function forgetCard(): HTMLElement {
     const button = el('button', { class: 'btn secondary', text: t('options_forget') });
     const status = el('p', { class: 'status ok' });
@@ -173,5 +187,5 @@ function forgetCard(): HTMLElement {
 
 (async () => {
     const settings = await getSettings();
-    app.replaceChildren(el('h1', { text: t('options_title') }), workspaceCard(settings), notesCard(settings), sitesCard(settings), forgetCard());
+    app.replaceChildren(el('h1', { text: t('options_title') }), workspaceCard(settings), notesCard(settings), shortcutsCard(), sitesCard(settings), forgetCard());
 })();

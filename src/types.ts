@@ -132,7 +132,9 @@ export type Message =
     | { type: 'timer:resume'; entryId: string; projectId: string }
     | { type: 'entry:add'; issue: Issue | null; projectId: string; taskId: string | null; date: string; minutes: number; notes: string }
     | { type: 'entry:update'; id: string; projectId: string; taskId: string | null; notes: string; minutes: number | null }
-    | { type: 'entry:delete'; id: string };
+    | { type: 'entry:delete'; id: string }
+    // the last timer, resumed (board #268)
+    | { type: 'timer:resume-last' };
 
 export const DEFAULT_SETTINGS: Settings = {
     workspace: '',

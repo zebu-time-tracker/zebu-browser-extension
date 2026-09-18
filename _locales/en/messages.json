@@ -295,5 +295,78 @@
     },
     "popup_cancel": {
         "message": "Cancel"
+    },
+    "popup_resume": {
+        "message": "Resume"
+    },
+    "popup_resume_fresh_title": {
+        "message": "That entry is from $1 — a fresh timer starts today with the same project, task and notes.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_presets": {
+        "message": "Presets"
+    },
+    "popup_presets_search": {
+        "message": "Search presets…"
+    },
+    "popup_presets_none": {
+        "message": "No presets yet. Save one from a new timer."
+    },
+    "popup_presets_no_match": {
+        "message": "No matching preset."
+    },
+    "popup_preset_save": {
+        "message": "Save as preset"
+    },
+    "popup_preset_saved": {
+        "message": "Saved as preset"
+    },
+    "popup_preset_start": {
+        "message": "Start $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_preset_rename": {
+        "message": "Rename"
+    },
+    "popup_preset_done": {
+        "message": "Done"
+    },
+    "popup_preset_delete": {
+        "message": "Delete"
+    },
+    "popup_preset_confirm_delete": {
+        "message": "Delete?"
+    },
+    "popup_preset_missing": {
+        "message": "That project is no longer in this workspace."
+    },
+    "command_open_popup": {
+        "message": "Open the Zebu popup"
+    },
+    "command_toggle_timer": {
+        "message": "Start or stop the timer"
+    },
+    "command_new_timer": {
+        "message": "New timer for this page"
+    },
+    "options_shortcuts_heading": {
+        "message": "Keyboard shortcuts"
+    },
+    "options_shortcuts_hint": {
+        "message": "Toggle the timer, start one for the page you are on, or open this popup from the keyboard. Chrome sets the keys."
+    },
+    "options_shortcuts_open": {
+        "message": "Change shortcuts in Chrome"
+    },
+    "options_shortcut_unbound": {
+        "message": "Not set"
     }
 }

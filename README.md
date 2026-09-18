@@ -18,6 +18,13 @@ log a finished block (a duration such as `1:30`, `1.5` or `90m`). Click an entry
 project, task, notes or duration, or delete it. Invoiced entries and approved weeks are read-only,
 as the workspace requires.
 
+Also from the desktop: ☆ **presets** (a saved project and task, started with one click, renamed
+or deleted in place; stored locally per workspace), a **Resume** bar for the last timer when
+nothing runs, and the toolbar badge showing the running timer's `h:mm`. Three **keyboard
+shortcuts** are suggested — Alt+Shift+Z opens the popup, Alt+Shift+S starts or stops the timer,
+Alt+Shift+N starts a timer for the page you are on — and can be changed at
+`chrome://extensions/shortcuts` (the options page links there).
+
 Manifest V3, TypeScript, no framework. Talks to the same workspace API as the desktop app.
 
 ## Install (development)

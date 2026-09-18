@@ -295,5 +295,78 @@
     },
     "popup_cancel": {
         "message": "Annuleren"
+    },
+    "popup_resume": {
+        "message": "Hervatten"
+    },
+    "popup_resume_fresh_title": {
+        "message": "Die registratie is van $1 — er start vandaag een nieuwe timer met hetzelfde project, dezelfde taak en notities.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_presets": {
+        "message": "Sjablonen"
+    },
+    "popup_presets_search": {
+        "message": "Sjablonen zoeken…"
+    },
+    "popup_presets_none": {
+        "message": "Nog geen sjablonen. Sla er een op vanuit een nieuwe timer."
+    },
+    "popup_presets_no_match": {
+        "message": "Geen passend sjabloon."
+    },
+    "popup_preset_save": {
+        "message": "Opslaan als sjabloon"
+    },
+    "popup_preset_saved": {
+        "message": "Opgeslagen als sjabloon"
+    },
+    "popup_preset_start": {
+        "message": "$1 starten",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_preset_rename": {
+        "message": "Naam wijzigen"
+    },
+    "popup_preset_done": {
+        "message": "Klaar"
+    },
+    "popup_preset_delete": {
+        "message": "Verwijderen"
+    },
+    "popup_preset_confirm_delete": {
+        "message": "Verwijderen?"
+    },
+    "popup_preset_missing": {
+        "message": "Dat project staat niet meer in deze werkruimte."
+    },
+    "command_open_popup": {
+        "message": "Zebu-pop-up openen"
+    },
+    "command_toggle_timer": {
+        "message": "Timer starten of stoppen"
+    },
+    "command_new_timer": {
+        "message": "Nieuwe timer voor deze pagina"
+    },
+    "options_shortcuts_heading": {
+        "message": "Sneltoetsen"
+    },
+    "options_shortcuts_hint": {
+        "message": "Schakel de timer, start er een voor de huidige pagina of open deze pop-up via het toetsenbord. Chrome bepaalt de toetsen."
+    },
+    "options_shortcuts_open": {
+        "message": "Sneltoetsen wijzigen in Chrome"
+    },
+    "options_shortcut_unbound": {
+        "message": "Niet ingesteld"
     }
 }

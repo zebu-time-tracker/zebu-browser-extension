@@ -3,13 +3,15 @@
 // and the popup, opens the timer window for a page's issue, and shows a
 // badge while a timer runs.
 import { api, ApiError } from './api';
-import { inWeek } from './dates';
+import { inWeek, toDateString } from './dates';
+import { elapsedMinutes, formatMinutes } from './duration';
+import { lastTimerFor, lastTimerFrom } from './lastTimer';
 import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
 import { t } from './messaging';
 import { pageIssue, withSelection } from './page';
-import { getMappings, getPendingIssue, getSettings, saveMappings, setPendingIssue } from './storage';
+import { getLastTimer, getMappings, getPendingIssue, getSettings, saveMappings, setLastTimer, setPendingIssue } from './storage';
 import { composeNotes, remember } from './suggest';
-import type { Issue, Message, State, WeekSheet } from './types';
+import type { Entry, Issue, Message, State, WeekSheet } from './types';
 
 /**
  * How long a cached timesheet is served without asking again. It used to be
@@ -50,6 +52,11 @@ export async function refresh(force = false): Promise<State> {
             // The server answered, so whatever hold was in force is over.
             downUntil: null,
         };
+        // The server's own "current timer" is what Resume offers (board #268):
+        // the running one, else the entry touched last. Older workspaces do
+        // not send `active`; the running entry is the next best answer.
+        const current = sheet.active ?? sheet.running;
+        if (current) await setLastTimer(lastTimerFrom(current, settings.workspace));
     } catch (error) {
         if (error instanceof ApiError && error.status === 401) {
             cache = empty();
@@ -58,7 +65,7 @@ export async function refresh(force = false): Promise<State> {
             cache = { ...cache, fetchedAt: 0 };
         }
     }
-    await badge(cache.running ? '●' : null);
+    await badge(cache.running);
     return cache;
 }
 
@@ -84,7 +91,10 @@ export async function pulse(): Promise<State> {
     try {
         const { token, maintenance } = await api.pulse();
         cache = { ...cache, downUntil: holdUntil(maintenance, Date.now(), POLL.running) };
-        if (token === cache.pulseToken) return cache;
+        if (token === cache.pulseToken) {
+            await badge(cache.running);
+            return cache;
+        }
     } catch (e) {
         if (e instanceof ApiError && e.status === 503) {
             cache = { ...cache, downUntil: holdAfterRefusal(e.retryAfter, Date.now(), POLL.idle) };
@@ -115,9 +125,25 @@ async function changed(): Promise<State> {
     return state;
 }
 
-async function badge(text: string | null): Promise<void> {
-    await chrome.action.setBadgeText({ text: text ?? '' });
+/** The badge is the running timer's clock, h:mm, as the menubar shows it (board #268); blank when nothing runs. */
+async function badge(running: Entry | null): Promise<void> {
+    const text = running ? formatMinutes(elapsedMinutes(running, Date.now() - cache.skewMs)) : '';
+    await chrome.action.setBadgeText({ text });
     if (text) await chrome.action.setBadgeBackgroundColor({ color: '#197300' });
+}
+
+/**
+ * Resume the last timer (board #268). Today's entry is resumed as itself; an
+ * older one starts a fresh timer today with the same project, task and notes,
+ * never back-dated onto the old day. Nothing remembered: nothing happens.
+ */
+export async function resumeLast(): Promise<State> {
+    const settings = await getSettings();
+    const last = lastTimerFor(await getLastTimer(), settings.workspace);
+    if (!last) return refresh();
+    if (last.date === toDateString(new Date())) await api.startTimer({ project_id: last.project_id, entry_id: last.entry_id });
+    else await api.startTimer({ project_id: last.project_id, task_id: last.task_id, notes: last.notes });
+    return changed();
 }
 
 async function broadcast(state: State): Promise<void> {
@@ -217,6 +243,8 @@ chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) =
                 await api.startTimer({ project_id: message.projectId, entry_id: message.entryId });
                 return changed();
             }
+            case 'timer:resume-last':
+                return resumeLast();
             case 'entry:add': {
                 const settings = await getSettings();
                 const notes = message.notes || (message.issue ? composeNotes(message.issue, settings.noteFormat) : '');
@@ -275,6 +303,31 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     await installContextMenus();
 });
 chrome.runtime.onStartup.addListener(() => void refresh(true));
+
+// Keyboard shortcuts (manifest `commands`, rebindable at
+// chrome://extensions/shortcuts). The popup itself is `_execute_action`,
+// which Chrome opens without asking us. A shortcut press grants activeTab, so
+// the page under the cursor can be read for a new timer.
+chrome.commands.onCommand.addListener((command, tab) => {
+    void (async () => {
+        if (command === 'toggle-timer') {
+            const state = await refresh();
+            if (!state.connected) return chrome.runtime.openOptionsPage();
+            if (state.running) {
+                await api.stopTimer();
+                await changed();
+                return;
+            }
+            const last = lastTimerFor(await getLastTimer(), (await getSettings()).workspace);
+            if (last) await resumeLast();
+            else await openTimerWindow();
+        } else if (command === 'new-timer') {
+            const known = tab?.id ? await issueFromTab(tab.id) : null;
+            await setPendingIssue(known ?? (tab?.url ? pageIssue({ url: tab.url, title: tab.title ?? '' }) : null));
+            await openTimerWindow();
+        }
+    })();
+});
 
 // Self-hosted trackers added on the options page get the same content script.
 export async function registerCustomSites(): Promise<void> {

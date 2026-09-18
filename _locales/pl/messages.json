@@ -295,5 +295,78 @@
     },
     "popup_cancel": {
         "message": "Anuluj"
+    },
+    "popup_resume": {
+        "message": "Wznów"
+    },
+    "popup_resume_fresh_title": {
+        "message": "Ten wpis pochodzi z $1 — nowy stoper wystartuje dziś z tym samym projektem, zadaniem i notatkami.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_presets": {
+        "message": "Szablony"
+    },
+    "popup_presets_search": {
+        "message": "Szukaj szablonów…"
+    },
+    "popup_presets_none": {
+        "message": "Nie ma jeszcze szablonów. Zapisz jeden z nowego stopera."
+    },
+    "popup_presets_no_match": {
+        "message": "Brak pasującego szablonu."
+    },
+    "popup_preset_save": {
+        "message": "Zapisz jako szablon"
+    },
+    "popup_preset_saved": {
+        "message": "Zapisano jako szablon"
+    },
+    "popup_preset_start": {
+        "message": "Uruchom $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_preset_rename": {
+        "message": "Zmień nazwę"
+    },
+    "popup_preset_done": {
+        "message": "Gotowe"
+    },
+    "popup_preset_delete": {
+        "message": "Usuń"
+    },
+    "popup_preset_confirm_delete": {
+        "message": "Usunąć?"
+    },
+    "popup_preset_missing": {
+        "message": "Tego projektu już nie ma w tej przestrzeni."
+    },
+    "command_open_popup": {
+        "message": "Otwórz okno Zebu"
+    },
+    "command_toggle_timer": {
+        "message": "Uruchom lub zatrzymaj stoper"
+    },
+    "command_new_timer": {
+        "message": "Nowy stoper dla tej strony"
+    },
+    "options_shortcuts_heading": {
+        "message": "Skróty klawiszowe"
+    },
+    "options_shortcuts_hint": {
+        "message": "Przełączaj stoper, uruchom go dla bieżącej strony albo otwórz to okno z klawiatury. Klawisze ustawia Chrome."
+    },
+    "options_shortcuts_open": {
+        "message": "Zmień skróty w Chrome"
+    },
+    "options_shortcut_unbound": {
+        "message": "Nie ustawiono"
     }
 }

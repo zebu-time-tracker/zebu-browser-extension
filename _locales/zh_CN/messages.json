@@ -295,5 +295,78 @@
     },
     "popup_cancel": {
         "message": "取消"
+    },
+    "popup_resume": {
+        "message": "继续"
+    },
+    "popup_resume_fresh_title": {
+        "message": "该条目属于 $1。今天将以相同的项目、任务和备注开始新的计时。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_presets": {
+        "message": "预设"
+    },
+    "popup_presets_search": {
+        "message": "搜索预设…"
+    },
+    "popup_presets_none": {
+        "message": "还没有预设。可从新计时器中保存一个。"
+    },
+    "popup_presets_no_match": {
+        "message": "没有匹配的预设。"
+    },
+    "popup_preset_save": {
+        "message": "保存为预设"
+    },
+    "popup_preset_saved": {
+        "message": "已保存为预设"
+    },
+    "popup_preset_start": {
+        "message": "开始 $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_preset_rename": {
+        "message": "重命名"
+    },
+    "popup_preset_done": {
+        "message": "完成"
+    },
+    "popup_preset_delete": {
+        "message": "删除"
+    },
+    "popup_preset_confirm_delete": {
+        "message": "删除？"
+    },
+    "popup_preset_missing": {
+        "message": "该项目已不在此工作区中。"
+    },
+    "command_open_popup": {
+        "message": "打开 Zebu 弹出窗口"
+    },
+    "command_toggle_timer": {
+        "message": "开始或停止计时"
+    },
+    "command_new_timer": {
+        "message": "为此页面新建计时"
+    },
+    "options_shortcuts_heading": {
+        "message": "键盘快捷键"
+    },
+    "options_shortcuts_hint": {
+        "message": "通过键盘切换计时、为当前页面开始计时或打开此弹出窗口。按键由 Chrome 设置。"
+    },
+    "options_shortcuts_open": {
+        "message": "在 Chrome 中更改快捷键"
+    },
+    "options_shortcut_unbound": {
+        "message": "未设置"
     }
 }

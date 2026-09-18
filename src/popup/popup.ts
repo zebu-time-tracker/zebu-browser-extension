@@ -6,9 +6,11 @@
 import { shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatMinutes, parseDuration } from '../duration';
 import { isHeld, POLL } from '../maintenance';
+import { lastTimerFor, type LastTimer } from '../lastTimer';
 import { call, CallError, t } from '../messaging';
 import { pageIssue, withSelection } from '../page';
-import { getMappings, getSettings } from '../storage';
+import { defaultPresetName, filterPresets, hasPreset, presetRows, presetsFor, removePreset, renamePreset, savePreset, type Preset, type PresetRow } from '../presets';
+import { getLastTimer, getMappings, getPresets, getSettings, savePresets } from '../storage';
 import { composeNotes, entryMatchesIssue, suggest, type Suggestion } from '../suggest';
 import type { Entry, Issue, ProjectOption, State, WeekSheet } from '../types';
 
@@ -33,6 +35,15 @@ let sheet: WeekSheet = { entries: [], weekStart: '', weekLocked: false };
 let editing: Entry | null = null;
 /** Redrawn every second while something runs: the running card, its row, the day total. */
 let tickers: (() => void)[] = [];
+
+// Saved starting points and the last timer (board #268), both per workspace.
+let presets: Preset[] = [];
+let last: LastTimer | null = null;
+let presetsOpen = false;
+let presetQuery = '';
+/** The preset being renamed, and the one whose ✕ was pressed once. */
+let renaming: string | null = null;
+let confirmingDelete: string | null = null;
 
 const today = () => toDateString(new Date());
 // Against the server's clock: start times came from the server, so a browser
@@ -106,6 +117,8 @@ async function loadSheet(): Promise<void> {
 async function reload(): Promise<void> {
     state = await call<State>({ type: 'state:get' });
     await loadSheet();
+    presets = await getPresets();
+    last = lastTimerFor(await getLastTimer(), workspace);
 }
 
 /** Run a change on the server, then redraw the day from what the service worker now holds. */
@@ -193,6 +206,112 @@ function entryRow(entry: Entry, error: HTMLElement): HTMLElement {
     return el('div', { class: `entry${running ? ' running' : ''}` }, children);
 }
 
+/** One-click resume of the last timer when nothing runs, as the desktop's ▶ Resume bar. */
+function resumeRow(error: HTMLElement): HTMLElement | '' {
+    if (state.running || !last) return '';
+    const l = last;
+    // an older day is not resumed in place: a fresh timer starts today
+    const fresh = l.date !== today();
+    const button = el('button', { type: 'button', class: 'resume', title: fresh ? t('popup_resume_fresh_title', shortDate(l.date)) : t('popup_resume_title') }, [
+        el('span', { class: 'resume-play', text: '▶' }),
+        el('span', { class: 'resume-text', text: `${t('popup_resume')} — ${[l.project, l.task].filter(Boolean).join(' · ')}` }),
+    ]) as HTMLButtonElement;
+    button.addEventListener('click', () => void act(() => call({ type: 'timer:resume-last' }), error, button));
+    return button;
+}
+
+function presetRow(row: PresetRow, redraw: () => void, error: HTMLElement): HTMLElement {
+    const wrap = el('div', { class: `preset-row${row.missing ? ' missing' : ''}` });
+    if (renaming === row.preset.id) {
+        const input = el('input', { type: 'text', class: 'preset-rename', 'aria-label': t('popup_preset_rename'), spellcheck: 'false' }) as HTMLInputElement;
+        input.value = row.preset.name;
+        // Enter, the ✓, or the field losing focus: all the same thing.
+        const commit = async () => {
+            if (renaming !== row.preset.id) return;
+            renaming = null;
+            presets = renamePreset(presets, row.preset.id, input.value);
+            await savePresets(presets);
+            redraw();
+        };
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                void commit();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                renaming = null;
+                redraw();
+            }
+        });
+        input.addEventListener('blur', () => void commit());
+        const done = el('button', { type: 'button', class: 'preset-icon', title: t('popup_preset_done'), text: '✓' });
+        done.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            void commit();
+        });
+        wrap.append(input, done);
+        queueMicrotask(() => input.select());
+        return wrap;
+    }
+    const start = el('button', { type: 'button', class: 'preset-start', title: row.missing ? t('popup_preset_missing') : t('popup_preset_start', row.preset.name) }, [
+        el('span', { class: 'preset-name', text: row.preset.name }),
+        el('span', { class: 'preset-sub', text: row.missing ? t('popup_preset_missing') : row.subtitle }),
+    ]) as HTMLButtonElement;
+    start.disabled = row.missing;
+    start.addEventListener('click', () => {
+        presetsOpen = false;
+        void act(() => call({ type: 'timer:start', issue: null, projectId: row.preset.project_id, taskId: row.preset.task_id || null, notes: '' }), error, start);
+    });
+    wrap.append(start);
+    if (confirmingDelete === row.preset.id) {
+        // two presses, because there is no undo
+        const confirm = el('button', { type: 'button', class: 'preset-confirm', text: t('popup_preset_confirm_delete') });
+        confirm.addEventListener('click', async () => {
+            confirmingDelete = null;
+            presets = removePreset(presets, row.preset.id);
+            await savePresets(presets);
+            redraw();
+        });
+        wrap.append(confirm);
+    } else {
+        const rename = el('button', { type: 'button', class: 'preset-icon', title: t('popup_preset_rename'), text: '✎\uFE0E' });
+        rename.addEventListener('click', () => {
+            confirmingDelete = null;
+            renaming = row.preset.id;
+            redraw();
+        });
+        const remove = el('button', { type: 'button', class: 'preset-icon danger', title: t('popup_preset_delete'), text: '✕' });
+        remove.addEventListener('click', () => {
+            confirmingDelete = row.preset.id;
+            redraw();
+        });
+        wrap.append(rename, remove);
+    }
+    return wrap;
+}
+
+/** The ☆ list: search, start, rename, delete. Rows redraw in place so the search keeps its focus. */
+function presetsPanel(error: HTMLElement): HTMLElement {
+    const search = el('input', { type: 'search', placeholder: t('popup_presets_search'), autocomplete: 'off' }) as HTMLInputElement;
+    search.value = presetQuery;
+    const rows = el('div', { class: 'preset-rows' });
+    const draw = () => {
+        rows.replaceChildren();
+        const all = presetRows(presetsFor(presets, workspace), state.projects);
+        const visible = filterPresets(all, presetQuery);
+        for (const row of visible) rows.append(presetRow(row, draw, error));
+        if (!all.length) rows.append(el('p', { class: 'preset-empty', text: t('popup_presets_none') }));
+        else if (!visible.length) rows.append(el('p', { class: 'preset-empty', text: t('popup_presets_no_match') }));
+    };
+    search.addEventListener('input', () => {
+        presetQuery = search.value;
+        draw();
+    });
+    draw();
+    queueMicrotask(() => search.focus());
+    return el('div', { class: 'presets' }, [el('div', { class: 'group', text: t('popup_presets') }), search, rows]);
+}
+
 function dayCard(): HTMLElement {
     const entries = sheet.entries.filter((e) => e.date === selectedDate);
     const error = el('p', { class: 'error' });
@@ -212,13 +331,22 @@ function dayCard(): HTMLElement {
 
     const add = el('button', { class: 'btn secondary', text: selectedDate === today() ? t('popup_new_timer') : t('popup_add_entry') });
     add.addEventListener('click', () => openForm(null));
+    const star = el('button', { class: `btn secondary star${presetsOpen ? ' active' : ''}`, title: t('popup_presets'), text: '☆' });
+    star.addEventListener('click', () => {
+        presetsOpen = !presetsOpen;
+        renaming = null;
+        confirmingDelete = null;
+        renderMain();
+    });
 
     return el('div', { class: 'card' }, [
+        resumeRow(error),
         el('div', { class: 'daynav' }, [prev, el('span', { class: 'label', text: dayLabel(selectedDate) }), total, next]),
         sheet.weekLocked ? el('p', { class: 'notice', text: t('popup_week_locked') }) : '',
         list,
         error,
-        sheet.weekLocked ? '' : add,
+        sheet.weekLocked ? '' : el('div', { class: 'row' }, [add, star]),
+        sheet.weekLocked || !presetsOpen ? '' : presetsPanel(error),
     ]);
 }
 
@@ -265,12 +393,34 @@ async function renderForm(): Promise<void> {
     };
     duration.addEventListener('input', syncSubmit);
 
+    // The starting point this form describes, offered as a preset once it has
+    // a project; already saved, the control says so instead of offering again.
+    const presetButton = el('button', { type: 'button', class: 'link preset-save' }) as HTMLButtonElement;
+    const presetDraft = () => (selected ? { name: defaultPresetName(selected.project, taskSelect.value), project_id: selected.project.id, task_id: taskSelect.value, workspace } : null);
+    const syncPreset = () => {
+        const draft = presetDraft();
+        presetButton.hidden = !!editing || !draft;
+        if (!draft) return;
+        const saved = hasPreset(presets, draft);
+        presetButton.textContent = saved ? t('popup_preset_saved') : t('popup_preset_save');
+        presetButton.disabled = saved;
+    };
+    presetButton.addEventListener('click', async () => {
+        const draft = presetDraft();
+        if (!draft) return;
+        presets = savePreset(presets, draft);
+        await savePresets(presets);
+        syncPreset();
+    });
+    taskSelect.addEventListener('change', syncPreset);
+
     const renderTasks = () => {
         taskSelect.replaceChildren(el('option', { value: '', text: t('popup_task_none') }));
         for (const task of selected?.project.tasks ?? []) taskSelect.append(el('option', { value: task.id, text: task.name }));
         taskSelect.value = selected?.taskId ?? '';
         taskSelect.disabled = !selected || selected.project.tasks.length === 0;
         submit.disabled = !selected;
+        syncPreset();
     };
 
     const option = (s: Suggestion, badge?: string) => {
@@ -389,6 +539,7 @@ async function renderForm(): Promise<void> {
         list,
         el('label', { text: t('popup_task') }),
         taskSelect,
+        presetButton,
         el('label', { text: t('popup_duration') }),
         duration,
         el('label', { text: t('popup_notes') }),
@@ -470,6 +621,8 @@ function render(): void {
         // opened over: title, link and selection prefill a new timer.
         issue = isWindow ? await call<Issue | null>({ type: 'issue:pending:get' }) : await capturePage();
         if (state.connected) await loadSheet();
+        presets = await getPresets();
+        last = lastTimerFor(await getLastTimer(), workspace);
         const mappings = await getMappings();
         recent = Object.values(mappings)
             .sort((a, b) => b.lastUsed - a.lastUsed)

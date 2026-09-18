@@ -24,6 +24,7 @@ vi.mock('../src/api', () => {
 const settings = { workspace: 'https://studio.app.zebu.work', token: 'tok' };
 
 const alarms = new Map<string, unknown>();
+let badgeText = '';
 
 const chromeStub = {
     storage: {
@@ -31,7 +32,7 @@ const chromeStub = {
         session: { get: async () => ({}), set: async () => undefined, remove: async () => undefined },
         onChanged: { addListener: () => undefined },
     },
-    action: { setBadgeText: async () => undefined, setBadgeBackgroundColor: async () => undefined },
+    action: { setBadgeText: async ({ text }: { text: string }) => void (badgeText = text), setBadgeBackgroundColor: async () => undefined },
     tabs: { query: async () => [], sendMessage: async () => undefined, update: async () => undefined },
     windows: { get: async () => undefined, create: async () => ({ id: 1 }), update: async () => undefined },
     runtime: {
@@ -48,6 +49,7 @@ const chromeStub = {
     },
     scripting: { getRegisteredContentScripts: async () => [], unregisterContentScripts: async () => undefined, registerContentScripts: async () => undefined },
     contextMenus: { removeAll: async () => undefined, create: () => undefined, onClicked: { addListener: () => undefined } },
+    commands: { onCommand: { addListener: () => undefined } },
 };
 
 // The module registers its listeners on import, so the stub has to be in place first.
@@ -174,5 +176,20 @@ describe('weekSheet', () => {
         expect(timesheet).toHaveBeenLastCalledWith('2026-09-10');
         expect(day.weekStart).toBe('2026-09-07');
         expect((await background.refresh()).weekStart).toBe('2026-09-14');
+    });
+});
+
+describe('badge', () => {
+    // The badge is the running timer's clock, as the menubar shows it (board #268).
+    test('a running timer shows its h:mm, banked minutes included; nothing running clears it', async () => {
+        vi.setSystemTime(new Date('2026-09-11T10:19:00Z'));
+        timesheet.mockResolvedValue(sheet({ ...entry, minutes: 12 }, 'tok-1'));
+        await background.refresh(true);
+        expect(badgeText).toBe('0:31');
+
+        timesheet.mockResolvedValue(sheet(null, 'tok-2'));
+        await background.refresh(true);
+        expect(badgeText).toBe('');
+        vi.useRealTimers();
     });
 });

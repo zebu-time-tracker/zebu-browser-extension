@@ -76,3 +76,8 @@ h1 {
     color: var(--ink);
     margin: 6px 0;
 }
+.sites li .shortcut {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
