@@ -60,25 +60,6 @@ export class ApiError extends Error {
     }
 }
 
-/**
- * Normalise what a user types as their workspace into a base URL:
- * "studio" → https://studio.app.zebu.work, "studio.app.zebu.work" → https://…,
- * a full URL (dev servers included) is kept as-is minus trailing slashes.
- */
-export function workspaceUrl(input: string, defaultDomain = 'app.zebu.work'): string {
-    let value = input.trim().replace(/\/+$/, '');
-    if (value === '') return '';
-    if (!/^https?:\/\//i.test(value)) {
-        value = value.includes('.') ? `https://${value}` : `https://${value}.${defaultDomain}`;
-    }
-    try {
-        const url = new URL(value);
-        return `${url.protocol}//${url.host}`;
-    } catch {
-        return '';
-    }
-}
-
 async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
     const settings = await getSettings();
     if (!settings.workspace || !settings.token) throw new ApiError('not connected', 401);

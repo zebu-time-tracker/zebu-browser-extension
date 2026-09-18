@@ -43,7 +43,7 @@ export interface Entry {
 }
 
 export interface Settings {
-    /** Base URL of the workspace, e.g. https://studio.app.zebu.work */
+    /** Origin of the workspace, e.g. https://studio.zebu.work */
     workspace: string;
     token: string;
     user: { name: string; email: string } | null;

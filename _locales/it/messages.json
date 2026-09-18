@@ -138,7 +138,7 @@
         "message": "Il tuo workspace"
     },
     "options_workspace_hint": {
-        "message": "L'indirizzo con cui accedi, es. studio.app.zebu.work — oppure semplicemente «studio»."
+        "message": "Il nome del tuo workspace (es. «studio»), il suo indirizzo (studio.zebu.work) o un URL completo."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -165,6 +165,12 @@
     },
     "options_error_workspace": {
         "message": "Non sembra un indirizzo di workspace."
+    },
+    "options_error_central": {
+        "message": "Quello è il sito principale di Zebu — inserisci invece il nome del tuo workspace."
+    },
+    "options_error_insecure": {
+        "message": "Gli indirizzi dei workspace devono usare https."
     },
     "options_error_unreachable": {
         "message": "Quel workspace non è raggiungibile. Controlla l'indirizzo."

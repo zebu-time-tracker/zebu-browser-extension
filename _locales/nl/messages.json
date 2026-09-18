@@ -138,7 +138,7 @@
         "message": "Je werkruimte"
     },
     "options_workspace_hint": {
-        "message": "Het adres waarmee je inlogt, bijv. studio.app.zebu.work — of gewoon “studio”."
+        "message": "De naam van je werkruimte (bijv. “studio”), het adres (studio.zebu.work) of een volledige URL."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -165,6 +165,12 @@
     },
     "options_error_workspace": {
         "message": "Dat lijkt geen werkruimte-adres te zijn."
+    },
+    "options_error_central": {
+        "message": "Dat is de hoofdsite van Zebu — voer in plaats daarvan de naam van je eigen werkruimte in."
+    },
+    "options_error_insecure": {
+        "message": "Werkruimte-adressen moeten https gebruiken."
     },
     "options_error_unreachable": {
         "message": "Die werkruimte is niet bereikbaar. Controleer het adres."

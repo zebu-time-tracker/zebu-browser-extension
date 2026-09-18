@@ -22,8 +22,9 @@ rebuilds the scripts on change (reload the extension to pick them up; static fil
 
 ## Connect a workspace
 
-The options page (opens on install) asks for your workspace — `studio` or `studio.app.zebu.work`,
-or a full URL for a dev server such as `http://127.0.0.1:8003`. Connecting uses Zebu's device
+The options page (opens on install) asks for your workspace — `studio` or `studio.zebu.work`,
+or a full URL for a dev server such as `http://127.0.0.1:8003` (plain http is only accepted for
+loopback and `.test` hosts; the central `app.zebu.work` site is not a workspace). Connecting uses Zebu's device
 flow: a tab opens in your logged-in workspace asking you to approve "Zebu for Chrome"; the
 extension polls until you do and stores the resulting token in `chrome.storage.local`. No
 password ever passes through the extension. Non-`zebu.work` hosts are requested as optional

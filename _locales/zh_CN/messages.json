@@ -138,7 +138,7 @@
         "message": "您的工作区"
     },
     "options_workspace_hint": {
-        "message": "您登录所用的地址，例如 studio.app.zebu.work —— 或者直接输入“studio”。"
+        "message": "输入您的工作区名称（如 studio）、其地址（studio.zebu.work）或完整 URL。"
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -165,6 +165,12 @@
     },
     "options_error_workspace": {
         "message": "这看起来不像是工作区地址。"
+    },
+    "options_error_central": {
+        "message": "那是 Zebu 主站，请改为输入您自己的工作区名称。"
+    },
+    "options_error_insecure": {
+        "message": "工作区地址必须使用 https。"
     },
     "options_error_unreachable": {
         "message": "无法连接到该工作区，请检查地址。"
