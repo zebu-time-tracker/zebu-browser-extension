@@ -227,3 +227,113 @@ textarea:focus {
 .row .btn {
     margin-top: 12px;
 }
+
+/* the day list (board #267) */
+.daynav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.daynav .label {
+    flex: 1;
+    font-weight: 600;
+}
+.daynav .total {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    margin-right: 4px;
+}
+.daynav button {
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.daynav button:hover {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.entries {
+    margin-top: 8px;
+    border-top: 1px solid var(--line);
+}
+.entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+}
+.entry-text {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    gap: 1px;
+}
+.entry-text.editable {
+    cursor: pointer;
+}
+.entry-text.editable:hover .entry-project {
+    text-decoration: underline;
+}
+.entry-project,
+.entry-sub {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.entry-project {
+    font-weight: 600;
+}
+.entry-sub {
+    color: var(--muted);
+    font-size: 12px;
+}
+.entry-sub:empty {
+    display: none;
+}
+.entry-time {
+    font-variant-numeric: tabular-nums;
+}
+.entry.running .entry-time {
+    color: var(--accent);
+    font-weight: 600;
+}
+.entry-btn {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+.entry-btn:hover {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.entry-btn.stop {
+    color: var(--danger);
+    border-color: var(--danger);
+}
+.entry-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+.entry-lock {
+    font-size: 12px;
+}
+.empty-day {
+    color: var(--muted);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+}
+.notice[hidden] {
+    display: none;
+}

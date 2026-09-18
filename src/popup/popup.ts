@@ -1,37 +1,43 @@
-// The timer UI. Opens two ways: from the toolbar icon (shows the running
-// timer, or a blank start form) and as a small window from a page's "Track
-// time" button (form prefilled with that issue, project suggested). Vanilla
-// DOM on purpose — it's a few hundred lines and starts instantly.
+// The timer UI. Opens two ways: from the toolbar icon (the running timer, the
+// day's entries, and a form to start or log one — board #267) and as a small
+// window from a page's "Track time" button (form prefilled with that issue,
+// project suggested). Vanilla DOM on purpose — it's a few hundred lines and
+// starts instantly.
+import { shiftDate, toDateString } from '../dates';
+import { elapsedMinutes, formatMinutes, parseDuration } from '../duration';
+import { isHeld, POLL } from '../maintenance';
 import { call, CallError, t } from '../messaging';
 import { pageIssue, withSelection } from '../page';
 import { getMappings, getSettings } from '../storage';
 import { composeNotes, entryMatchesIssue, suggest, type Suggestion } from '../suggest';
-import type { Entry, Issue, ProjectOption, State } from '../types';
-import { isHeld, POLL } from '../maintenance';
+import type { Entry, Issue, ProjectOption, State, WeekSheet } from '../types';
 
 const app = document.getElementById('app')!;
 const isWindow = new URLSearchParams(location.search).has('window');
 if (isWindow) document.body.classList.add('window');
 
-let state: State = { connected: false, running: null, projects: [], fetchedAt: 0, pulseToken: '', skewMs: 0, downUntil: null };
+let state: State = { connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, fetchedAt: 0, pulseToken: '', skewMs: 0, downUntil: null };
 let issue: Issue | null = null;
-// True when `issue` is only the page the toolbar popup was opened over: it
-// prefills a new timer but does not force the form open over a running one.
-let ambient = false;
 let workspace = '';
 let noteFormat: 'identifier_title_url' | 'title_url' | 'title' = 'identifier_title_url';
 let recent: string[] = [];
 let tick: number | undefined;
 let watch: number | undefined;
 
-/**
- * How often this page asks the service worker whether the timer changed. The
- * detached window stays open all day, so it used to sit there counting a timer
- * that had been stopped somewhere else hours before (board #49). Two seconds
- * while a clock is running, half a minute when none is — the question costs one
- * aggregate query and about forty bytes.
- */
+// The day the list shows and the week it came from. The toolbar popup is a
+// view of the day with the form as a sheet over it; the detached window is
+// the form for one issue.
+let view: 'main' | 'form' = 'main';
+let selectedDate = toDateString(new Date());
+let sheet: WeekSheet = { entries: [], weekStart: '', weekLocked: false };
+let editing: Entry | null = null;
+/** Redrawn every second while something runs: the running card, its row, the day total. */
+let tickers: (() => void)[] = [];
 
+const today = () => toDateString(new Date());
+// Against the server's clock: start times came from the server, so a browser
+// running fast would otherwise show work nobody did.
+const now = () => Date.now() - state.skewMs;
 
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string, string> = {}, children: (Node | string)[] = []): HTMLElementTagNameMap[K] => {
     const node = document.createElement(tag);
@@ -44,13 +50,15 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string,
     return node;
 };
 
+/** The running card's clock, to the second. */
 const elapsed = (entry: Entry): string => {
-    // Against the server's clock: the start time came from the server, so a
-    // browser running fast would otherwise show work nobody did.
-    const now = Date.now() - state.skewMs;
-    const secs = Math.max(0, Math.floor((now - new Date(entry.timer_started_at!).getTime()) / 1000)) + entry.minutes * 60;
+    const secs = Math.max(0, Math.floor((now() - new Date(entry.timer_started_at!).getTime()) / 1000)) + entry.minutes * 60;
     return `${Math.floor(secs / 3600)}:${String(Math.floor((secs % 3600) / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`;
 };
+
+const shortDate = (date: string): string => new Date(`${date}T00:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+const dayLabel = (date: string): string =>
+    date === today() ? t('popup_today_date', shortDate(date)) : new Date(`${date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
 
 const errorText = (error: unknown): string => {
     if (error instanceof CallError && error.status === 0) return t('popup_error_unreachable');
@@ -91,75 +99,178 @@ async function capturePage(): Promise<Issue | null> {
     return withSelection(known ?? pageIssue({ url: tab.url, title: tab.title ?? '', selection }), selection);
 }
 
+async function loadSheet(): Promise<void> {
+    sheet = await call<WeekSheet>({ type: 'sheet:get', date: selectedDate });
+}
+
+async function reload(): Promise<void> {
+    state = await call<State>({ type: 'state:get' });
+    await loadSheet();
+}
+
+/** Run a change on the server, then redraw the day from what the service worker now holds. */
+async function act(fn: () => Promise<unknown>, error: HTMLElement, busy?: HTMLButtonElement): Promise<void> {
+    if (busy) busy.disabled = true;
+    try {
+        await fn();
+        await reload();
+        editing = null;
+        view = 'main';
+        render();
+    } catch (e) {
+        error.textContent = errorText(e);
+        if (busy) busy.disabled = false;
+    }
+}
+
+async function goDate(date: string): Promise<void> {
+    selectedDate = date;
+    await loadSheet();
+    render();
+}
+
+function openForm(entry: Entry | null): void {
+    editing = entry;
+    view = 'form';
+    void renderForm();
+}
+
 function renderNotConnected(): void {
     const button = el('button', { class: 'btn', text: t('popup_connect') });
     button.addEventListener('click', () => void chrome.runtime.openOptionsPage());
     app.replaceChildren(header(), el('div', { class: 'card' }, [el('p', { text: t('popup_not_connected') }), button]));
 }
 
-function renderRunning(entry: Entry): void {
-    window.clearInterval(tick);
+function runningCard(entry: Entry): HTMLElement {
     const time = el('div', { class: 'elapsed', text: elapsed(entry) });
-    tick = window.setInterval(() => (time.textContent = elapsed(entry)), 1000);
+    tickers.push(() => (time.textContent = elapsed(entry)));
 
     const startedAt = new Date(entry.timer_started_at!).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-    const stop = el('button', { class: 'btn danger', text: t('popup_stop') });
+    const stop = el('button', { class: 'btn danger', text: t('popup_stop') }) as HTMLButtonElement;
     const error = el('p', { class: 'error' });
-    stop.addEventListener('click', async () => {
-        stop.disabled = true;
-        try {
-            state = await call<State>({ type: 'timer:stop' });
-            render();
-        } catch (e) {
-            error.textContent = errorText(e);
-            stop.disabled = false;
-        }
-    });
+    stop.addEventListener('click', () => void act(() => call({ type: 'timer:stop' }), error, stop));
     const open = el('a', { class: 'btn secondary', href: `${workspace}/time`, target: '_blank', rel: 'noopener', text: t('popup_open_zebu') });
-    const another = el('button', { class: 'btn secondary', text: t('popup_new_timer') });
-    another.addEventListener('click', () => renderForm(true));
 
-    app.replaceChildren(
-        header(),
-        el('div', { class: 'card running' }, [
-            el('h2', { text: t('popup_running') }),
-            time,
-            el('div', { class: 'meta', text: [entry.project, entry.task].filter(Boolean).join(' · ') + ' — ' + t('popup_started', startedAt) }),
-            entry.notes ? el('div', { class: 'notes', text: entry.notes }) : '',
-            // agentic work: what the Claude Code hook measured on this timer
-            entry.agent_waiting || (entry.waiting_minutes ?? 0) > 0
-                ? el('div', { class: 'meta waiting', text: entry.agent_waiting && !(entry.waiting_minutes ?? 0) ? t('popup_waiting_now') : `⏳ ${t('popup_waiting', String(entry.waiting_minutes ?? 0))}${entry.agent_waiting ? ' …' : ''}` })
-                : '',
-            error,
-            el('div', { class: 'row' }, [stop, open]),
-            another,
-        ]),
-    );
+    return el('div', { class: 'card running' }, [
+        el('h2', { text: t('popup_running') }),
+        time,
+        el('div', { class: 'meta', text: [entry.project, entry.task].filter(Boolean).join(' · ') + ' — ' + t('popup_started', startedAt) }),
+        entry.notes ? el('div', { class: 'notes', text: entry.notes }) : '',
+        // agentic work: what the Claude Code hook measured on this timer
+        entry.agent_waiting || (entry.waiting_minutes ?? 0) > 0
+            ? el('div', { class: 'meta waiting', text: entry.agent_waiting && !(entry.waiting_minutes ?? 0) ? t('popup_waiting_now') : `⏳ ${t('popup_waiting', String(entry.waiting_minutes ?? 0))}${entry.agent_waiting ? ' …' : ''}` })
+            : '',
+        error,
+        el('div', { class: 'row' }, [stop, open]),
+    ]);
 }
 
-async function renderForm(force = false): Promise<void> {
+function entryRow(entry: Entry, error: HTMLElement): HTMLElement {
+    const editable = !entry.locked && !sheet.weekLocked;
+    const running = !!entry.timer_started_at;
+
+    const text = el('div', { class: `entry-text${editable ? ' editable' : ''}`, ...(editable ? { title: t('popup_edit_entry') } : {}) }, [
+        el('span', { class: 'entry-project', text: [entry.project, entry.task].filter(Boolean).join(' · ') }),
+        el('span', { class: 'entry-sub', text: entry.notes ?? '' }),
+    ]);
+    if (editable) text.addEventListener('click', () => openForm(entry));
+
+    const time = el('span', { class: 'entry-time', text: formatMinutes(elapsedMinutes(entry, now())) });
+    if (running) tickers.push(() => (time.textContent = formatMinutes(elapsedMinutes(entry, now()))));
+
+    const children: (Node | string)[] = [text, time];
+    if (running) {
+        const stop = el('button', { type: 'button', class: 'entry-btn stop', title: t('popup_stop'), text: '■' }) as HTMLButtonElement;
+        stop.addEventListener('click', () => void act(() => call({ type: 'timer:stop' }), error, stop));
+        children.push(stop);
+    } else if (editable) {
+        const play = el('button', { type: 'button', class: 'entry-btn play', title: t('popup_resume_title'), text: '▶' }) as HTMLButtonElement;
+        play.addEventListener('click', () => void act(() => call({ type: 'timer:resume', entryId: entry.id, projectId: entry.project_id }), error, play));
+        children.push(play);
+    }
+    if (entry.locked) children.push(el('span', { class: 'entry-lock', title: t('popup_invoiced'), text: '🔒' }));
+
+    return el('div', { class: `entry${running ? ' running' : ''}` }, children);
+}
+
+function dayCard(): HTMLElement {
+    const entries = sheet.entries.filter((e) => e.date === selectedDate);
+    const error = el('p', { class: 'error' });
+
+    const sum = () => formatMinutes(entries.reduce((s, e) => s + elapsedMinutes(e, now()), 0));
+    const total = el('span', { class: 'total', text: sum() });
+    if (entries.some((e) => e.timer_started_at)) tickers.push(() => (total.textContent = sum()));
+
+    const prev = el('button', { type: 'button', title: t('popup_prev_day'), text: '‹' });
+    const next = el('button', { type: 'button', title: t('popup_next_day'), text: '›' });
+    prev.addEventListener('click', () => void goDate(shiftDate(selectedDate, -1)));
+    next.addEventListener('click', () => void goDate(shiftDate(selectedDate, 1)));
+
+    const list = el('div', { class: 'entries' });
+    for (const entry of entries) list.append(entryRow(entry, error));
+    if (!entries.length) list.append(el('div', { class: 'empty-day', text: t('popup_no_entries') }));
+
+    const add = el('button', { class: 'btn secondary', text: selectedDate === today() ? t('popup_new_timer') : t('popup_add_entry') });
+    add.addEventListener('click', () => openForm(null));
+
+    return el('div', { class: 'card' }, [
+        el('div', { class: 'daynav' }, [prev, el('span', { class: 'label', text: dayLabel(selectedDate) }), total, next]),
+        sheet.weekLocked ? el('p', { class: 'notice', text: t('popup_week_locked') }) : '',
+        list,
+        error,
+        sheet.weekLocked ? '' : add,
+    ]);
+}
+
+function renderMain(): void {
+    view = 'main';
     window.clearInterval(tick);
+    tickers = [];
+    app.replaceChildren(header(), ...(state.running ? [runningCard(state.running)] : []), dayCard());
+    if (tickers.length) tick = window.setInterval(() => tickers.forEach((fn) => fn()), 1000);
+}
+
+async function renderForm(): Promise<void> {
+    view = 'form';
+    window.clearInterval(tick);
+    const isToday = selectedDate === today();
+    // A new entry starts from the page or issue; an edit starts from the entry itself.
+    const from = editing ? null : issue;
     const mappings = await getMappings();
-    const ranked = suggest(issue, state.projects, mappings, recent);
+    const ranked = suggest(from, state.projects, mappings, recent);
     const suggested = ranked.filter((s) => s.reason !== 'recent' && s.score >= 0.45).slice(0, 4);
 
-    let selected: Suggestion | null = suggested[0] ?? null;
+    let selected: Suggestion | null = editing ? (ranked.find((s) => s.project.id === editing!.project_id) ?? null) : (suggested[0] ?? null);
+    if (editing && selected) selected = { ...selected, taskId: editing.task_id };
     let filter = '';
 
     const search = el('input', { type: 'search', placeholder: t('popup_project_search'), autocomplete: 'off' }) as HTMLInputElement;
     const list = el('div', { class: 'projects', role: 'listbox' });
     const taskSelect = el('select') as HTMLSelectElement;
     const notes = el('textarea') as HTMLTextAreaElement;
-    notes.value = issue ? composeNotes(issue, noteFormat) : '';
+    notes.value = editing ? (editing.notes ?? '') : from ? composeNotes(from, noteFormat) : '';
+    // The prefill: only a changed duration rebases a live timer.
+    const openedDuration = editing ? formatMinutes(elapsedMinutes(editing, now())) : '';
+    const duration = el('input', { type: 'text', placeholder: '1:30', autocomplete: 'off', value: openedDuration }) as HTMLInputElement;
     const error = el('p', { class: 'error' });
-    const start = el('button', { class: 'btn', text: t('popup_start') }) as HTMLButtonElement;
+    const submit = el('button', { class: 'btn' }) as HTMLButtonElement;
+    const notice = el('p', { class: 'notice', text: t('popup_switch_note', state.running?.project ?? '') });
+
+    // What the button does follows the duration, the desktop's rule: empty
+    // starts a timer, a value logs a finished block. Only today can start one.
+    const syncSubmit = () => {
+        const logging = duration.value.trim() !== '' || !isToday;
+        submit.textContent = editing ? t('popup_save') : logging ? t('popup_log') : t('popup_start');
+        notice.hidden = !(state.running && !editing && !logging);
+    };
+    duration.addEventListener('input', syncSubmit);
 
     const renderTasks = () => {
         taskSelect.replaceChildren(el('option', { value: '', text: t('popup_task_none') }));
         for (const task of selected?.project.tasks ?? []) taskSelect.append(el('option', { value: task.id, text: task.name }));
         taskSelect.value = selected?.taskId ?? '';
         taskSelect.disabled = !selected || selected.project.tasks.length === 0;
-        start.disabled = !selected;
+        submit.disabled = !selected;
     };
 
     const option = (s: Suggestion, badge?: string) => {
@@ -193,36 +304,84 @@ async function renderForm(force = false): Promise<void> {
         renderList();
     });
 
-    start.addEventListener('click', async () => {
+    submit.addEventListener('click', async () => {
         if (!selected) return;
-        start.disabled = true;
-        start.textContent = t('popup_starting');
+        const typed = duration.value.trim();
+        const minutes = typed ? parseDuration(typed) : null;
+        // A block needs a real duration; a timer can only start today.
+        if ((typed && (minutes === null || minutes <= 0)) || (!editing && !typed && !isToday)) {
+            error.textContent = t('popup_error_duration');
+            return;
+        }
+        const projectId = selected.project.id;
+        const taskId = taskSelect.value || null;
+        submit.disabled = true;
+        if (!editing && minutes === null) submit.textContent = t('popup_starting');
         try {
-            await call<Entry>({ type: 'timer:start', issue, projectId: selected.project.id, taskId: taskSelect.value || null, notes: notes.value });
+            if (editing) {
+                await call({ type: 'entry:update', id: editing.id, projectId, taskId, notes: notes.value, minutes: typed !== openedDuration && minutes !== null ? minutes : null });
+            } else if (minutes !== null) {
+                await call({ type: 'entry:add', issue: from, projectId, taskId, date: selectedDate, minutes, notes: notes.value });
+            } else {
+                await call<Entry>({ type: 'timer:start', issue: from, projectId, taskId, notes: notes.value });
+                if (isWindow) {
+                    window.close();
+                    return;
+                }
+            }
             if (isWindow) {
                 window.close();
                 return;
             }
             issue = null;
-            state = await call<State>({ type: 'state:get' });
-            render();
+            editing = null;
+            await reload();
+            renderMain();
         } catch (e) {
             error.textContent = errorText(e);
-            start.disabled = false;
-            start.textContent = t('popup_start');
+            submit.disabled = false;
+            syncSubmit();
         }
     });
 
+    const actions = el('div', { class: 'row' }, [submit]);
+    if (!isWindow) {
+        const cancel = el('button', { class: 'btn secondary', text: t('popup_cancel') });
+        cancel.addEventListener('click', () => {
+            editing = null;
+            renderMain();
+        });
+        actions.append(cancel);
+    }
+    let remove: HTMLButtonElement | '' = '';
+    if (editing) {
+        const id = editing.id;
+        const button = el('button', { class: 'btn danger', text: t('popup_delete') }) as HTMLButtonElement;
+        // Two clicks and no dialog: the first only asks.
+        let armed = false;
+        button.addEventListener('click', () => {
+            if (!armed) {
+                armed = true;
+                button.textContent = t('popup_delete_confirm');
+                return;
+            }
+            void act(() => call({ type: 'entry:delete', id }), error, button);
+        });
+        remove = button;
+    }
+
     renderList();
     renderTasks();
+    syncSubmit();
 
+    const heading = editing ? t('popup_edit_entry') : from ? t(from.site === 'page' ? 'popup_for_page' : 'popup_for_issue') : isToday ? t('popup_new_timer') : t('popup_add_entry');
     const card = el('div', { class: 'card' }, [
-        el('h2', { text: issue ? t(issue.site === 'page' ? 'popup_for_page' : 'popup_for_issue') : t('popup_new_timer') }),
-        issue
+        el('h2', { text: heading }),
+        from
             ? el('div', { class: 'issue' }, [
-                  issue.identifier ? el('span', { class: 'id', text: issue.identifier }) : '',
-                  el('span', { class: 'title', text: issue.title }),
-                  el('span', { class: 'where', text: issue.container }),
+                  from.identifier ? el('span', { class: 'id', text: from.identifier }) : '',
+                  el('span', { class: 'title', text: from.title }),
+                  el('span', { class: 'where', text: from.container }),
               ])
             : '',
         el('label', { text: t('popup_project') }),
@@ -230,14 +389,18 @@ async function renderForm(force = false): Promise<void> {
         list,
         el('label', { text: t('popup_task') }),
         taskSelect,
+        el('label', { text: t('popup_duration') }),
+        duration,
         el('label', { text: t('popup_notes') }),
         notes,
-        state.running && !force ? el('p', { class: 'notice', text: t('popup_switch_note', state.running.project ?? '') }) : state.running ? el('p', { class: 'notice', text: t('popup_switch_note', state.running.project ?? '') }) : '',
+        notice,
         error,
-        start,
+        actions,
+        remove,
     ]);
     app.replaceChildren(header(), card);
     if (!selected) search.focus();
+    else if (!editing && !isToday) duration.focus();
 }
 
 /**
@@ -254,10 +417,12 @@ function watchTimer(): void {
             const next = await call<State>({ type: 'state:pulse' });
             const changed = next.running?.id !== state.running?.id || next.running?.timer_started_at !== state.running?.timer_started_at;
             state = next;
-            // Only redraw on a real change: the form holds what the user is
-            // half way through typing, and the running card has its own ticker.
-            if (changed) render();
-            else watchTimer();
+            if (!changed) return watchTimer();
+            // Only redraw on a real change, and never over the form: it holds
+            // what the user is half way through typing.
+            await loadSheet();
+            if (view === 'form') watchTimer();
+            else render();
         } catch {
             watchTimer();
         }
@@ -284,11 +449,15 @@ document.addEventListener('visibilitychange', () => {
 function render(): void {
     watchTimer();
     if (!state.connected) return renderNotConnected();
-    // A page handed us an issue: go straight to the form, unless this very
-    // issue is what's already running (then show it so it can be stopped).
-    if (issue && !ambient && !(state.running && entryMatchesIssue(state.running.notes, issue))) return void renderForm();
-    if (state.running) return renderRunning(state.running);
-    void renderForm();
+    if (isWindow) {
+        // A page handed us an issue: go straight to the form, unless this very
+        // issue is what's already running (then show it so it can be stopped).
+        if (issue && !(state.running && entryMatchesIssue(state.running.notes, issue))) return void renderForm();
+        if (!state.running) return void renderForm();
+        return renderMain();
+    }
+    if (view === 'form') return void renderForm();
+    renderMain();
 }
 
 (async () => {
@@ -297,13 +466,10 @@ function render(): void {
     noteFormat = settings.noteFormat;
     try {
         state = await call<State>({ type: 'state:get' });
-        issue = await call<Issue | null>({ type: 'issue:pending:get' });
-        if (!isWindow) {
-            // The toolbar popup is handed no issue, but it has the page it was
-            // opened over: title, link and selection prefill a new timer.
-            issue = await capturePage();
-            ambient = true;
-        }
+        // The toolbar popup is handed no issue, but it has the page it was
+        // opened over: title, link and selection prefill a new timer.
+        issue = isWindow ? await call<Issue | null>({ type: 'issue:pending:get' }) : await capturePage();
+        if (state.connected) await loadSheet();
         const mappings = await getMappings();
         recent = Object.values(mappings)
             .sort((a, b) => b.lastUsed - a.lastUsed)

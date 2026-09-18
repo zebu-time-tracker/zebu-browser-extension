@@ -242,5 +242,58 @@
     },
     "popup_for_page": {
         "message": "Esta página"
+    },
+    "popup_today_date": {
+        "message": "Hoje, $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_prev_day": {
+        "message": "Dia anterior"
+    },
+    "popup_next_day": {
+        "message": "Próximo dia"
+    },
+    "popup_no_entries": {
+        "message": "Nada registrado neste dia."
+    },
+    "popup_week_locked": {
+        "message": "Esta semana está aprovada e bloqueada."
+    },
+    "popup_invoiced": {
+        "message": "Faturado"
+    },
+    "popup_edit_entry": {
+        "message": "Editar entrada"
+    },
+    "popup_add_entry": {
+        "message": "Adicionar entrada"
+    },
+    "popup_resume_title": {
+        "message": "Iniciar (para outros timers)"
+    },
+    "popup_duration": {
+        "message": "Duração"
+    },
+    "popup_error_duration": {
+        "message": "Informe uma duração como 1:30, 1,5 ou 90m."
+    },
+    "popup_log": {
+        "message": "Registrar tempo"
+    },
+    "popup_save": {
+        "message": "Salvar"
+    },
+    "popup_delete": {
+        "message": "Excluir"
+    },
+    "popup_delete_confirm": {
+        "message": "Excluir de vez?"
+    },
+    "popup_cancel": {
+        "message": "Cancelar"
     }
 }

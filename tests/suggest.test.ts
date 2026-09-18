@@ -12,10 +12,10 @@ const issue: Issue = {
 };
 
 const projects: ProjectOption[] = [
-    { id: 'p1', name: 'Website redesign', client: 'Globex', tasks: [] },
-    { id: 'p2', name: 'Billing API', client: 'Acme Corp', tasks: [{ id: 't1', name: 'Development' }] },
-    { id: 'p3', name: 'Internal', client: null, tasks: [] },
-    { id: 'p4', name: 'Acme retainer', client: 'Acme Corp', tasks: [] },
+    { id: 'p1', name: 'Website redesign', code: null, client: 'Globex', tasks: [] },
+    { id: 'p2', name: 'Billing API', code: null, client: 'Acme Corp', tasks: [{ id: 't1', name: 'Development' }] },
+    { id: 'p3', name: 'Internal', code: null, client: null, tasks: [] },
+    { id: 'p4', name: 'Acme retainer', code: null, client: 'Acme Corp', tasks: [] },
 ];
 
 test('normalize splits camelCase, kebab and paths into plain words', () => {

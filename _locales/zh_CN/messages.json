@@ -242,5 +242,58 @@
     },
     "popup_for_page": {
         "message": "此页面"
+    },
+    "popup_today_date": {
+        "message": "今天，$1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_prev_day": {
+        "message": "前一天"
+    },
+    "popup_next_day": {
+        "message": "后一天"
+    },
+    "popup_no_entries": {
+        "message": "这一天没有记录。"
+    },
+    "popup_week_locked": {
+        "message": "本周已批准并锁定。"
+    },
+    "popup_invoiced": {
+        "message": "已开票"
+    },
+    "popup_edit_entry": {
+        "message": "编辑条目"
+    },
+    "popup_add_entry": {
+        "message": "添加条目"
+    },
+    "popup_resume_title": {
+        "message": "开始 (将停止其他计时器)"
+    },
+    "popup_duration": {
+        "message": "时长"
+    },
+    "popup_error_duration": {
+        "message": "请输入 1:30、1.5 或 90m 这样的时长。"
+    },
+    "popup_log": {
+        "message": "记录时间"
+    },
+    "popup_save": {
+        "message": "保存"
+    },
+    "popup_delete": {
+        "message": "删除"
+    },
+    "popup_delete_confirm": {
+        "message": "确定永久删除？"
+    },
+    "popup_cancel": {
+        "message": "取消"
     }
 }

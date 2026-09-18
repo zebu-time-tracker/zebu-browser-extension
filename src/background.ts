@@ -3,12 +3,13 @@
 // and the popup, opens the timer window for a page's issue, and shows a
 // badge while a timer runs.
 import { api, ApiError } from './api';
+import { inWeek } from './dates';
 import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
 import { t } from './messaging';
 import { pageIssue, withSelection } from './page';
 import { getMappings, getPendingIssue, getSettings, saveMappings, setPendingIssue } from './storage';
 import { composeNotes, remember } from './suggest';
-import type { Issue, Message, State } from './types';
+import type { Issue, Message, State, WeekSheet } from './types';
 
 /**
  * How long a cached timesheet is served without asking again. It used to be
@@ -19,7 +20,7 @@ import type { Issue, Message, State } from './types';
  */
 const CACHE_MS = 15 * 1000;
 
-const empty = (): State => ({ connected: false, running: null, projects: [], fetchedAt: Date.now(), pulseToken: '', skewMs: 0, downUntil: null });
+const empty = (): State => ({ connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, fetchedAt: Date.now(), pulseToken: '', skewMs: 0, downUntil: null });
 
 let cache: State = { ...empty(), fetchedAt: 0 };
 
@@ -38,6 +39,9 @@ export async function refresh(force = false): Promise<State> {
             connected: true,
             running: sheet.running,
             projects: sheet.projects,
+            entries: sheet.entries,
+            weekStart: sheet.week_start,
+            weekLocked: sheet.week_locked,
             fetchedAt: Date.now(),
             pulseToken: sheet.pulse_token ?? '',
             // Measured the moment the reply lands, so the round trip is not
@@ -89,6 +93,26 @@ export async function pulse(): Promise<State> {
         // No pulse (old workspace, network blip): fall back to the refetch.
     }
     return refresh(true);
+}
+
+/**
+ * The week holding `date`, for the popup's day list (board #267). The current
+ * week is what the cache already holds; any other week is fetched and not
+ * kept — the cache is the week the badge and the pulse are about.
+ */
+export async function weekSheet(date: string): Promise<WeekSheet> {
+    const state = await refresh();
+    if (!state.connected) return { entries: [], weekStart: '', weekLocked: false };
+    if (inWeek(date, state.weekStart)) return { entries: state.entries, weekStart: state.weekStart, weekLocked: state.weekLocked };
+    const sheet = await api.timesheet(date);
+    return { entries: sheet.entries, weekStart: sheet.week_start, weekLocked: sheet.week_locked };
+}
+
+/** After a change on the server: refetch, and tell every page. */
+async function changed(): Promise<State> {
+    const state = await refresh(true);
+    await broadcast(state);
+    return state;
 }
 
 async function badge(text: string | null): Promise<void> {
@@ -185,9 +209,39 @@ chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) =
             }
             case 'timer:stop': {
                 await api.stopTimer();
-                const state = await refresh(true);
-                await broadcast(state);
-                return state;
+                return changed();
+            }
+            case 'sheet:get':
+                return weekSheet(message.date);
+            case 'timer:resume': {
+                await api.startTimer({ project_id: message.projectId, entry_id: message.entryId });
+                return changed();
+            }
+            case 'entry:add': {
+                const settings = await getSettings();
+                const notes = message.notes || (message.issue ? composeNotes(message.issue, settings.noteFormat) : '');
+                const { entry } = await api.addEntry({ project_id: message.projectId, task_id: message.taskId, date: message.date, minutes: message.minutes, notes });
+                if (message.issue) {
+                    await saveMappings(remember(await getMappings(), message.issue, message.projectId, message.taskId));
+                }
+                await setPendingIssue(null);
+                await changed();
+                return entry;
+            }
+            case 'entry:update': {
+                const { entry } = await api.updateEntry(message.id, {
+                    project_id: message.projectId,
+                    task_id: message.taskId,
+                    notes: message.notes,
+                    // null means the duration was not touched: leave a running clock alone
+                    ...(message.minutes === null ? {} : { minutes: message.minutes }),
+                });
+                await changed();
+                return entry;
+            }
+            case 'entry:delete': {
+                await api.deleteEntry(message.id);
+                return changed();
             }
         }
     })().then(

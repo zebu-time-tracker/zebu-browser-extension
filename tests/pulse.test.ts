@@ -18,7 +18,7 @@ vi.mock('../src/api', () => {
         }
     }
 
-    return { ApiError, api: { timesheet: () => timesheet(), pulse: () => pulseCall() } };
+    return { ApiError, api: { timesheet: (date?: string) => timesheet(date), pulse: () => pulseCall() } };
 });
 
 const settings = { workspace: 'https://studio.app.zebu.work', token: 'tok' };
@@ -145,4 +145,34 @@ test('the refresh alarm is created once, not on every service-worker start', asy
 
     expect(alarms.get('refresh')).toEqual(first ?? { periodInMinutes: 1 });
     expect([...alarms.keys()]).toEqual(['refresh']);
+});
+
+describe('weekSheet', () => {
+    // The popup's day list (board #267): the current week is what the cache
+    // already holds; another week is fetched for that date and not kept.
+    const week = (weekStart: string, token: string) => ({ ...sheet(null, token), week_start: weekStart, entries: [{ ...entry, date: weekStart, timer_started_at: null }], week_locked: false });
+
+    test('a day in the cached week costs no request', async () => {
+        timesheet.mockResolvedValue(week('2026-09-14', 'tok-1'));
+        await background.refresh(true);
+
+        const day = await background.weekSheet('2026-09-18');
+
+        expect(timesheet).toHaveBeenCalledTimes(1);
+        expect(day.weekStart).toBe('2026-09-14');
+        expect(day.entries).toHaveLength(1);
+    });
+
+    test('another week is fetched for that date, and the cache stays on this week', async () => {
+        timesheet.mockResolvedValueOnce(week('2026-09-14', 'tok-1'));
+        await background.refresh(true);
+        timesheet.mockResolvedValueOnce(week('2026-09-07', 'tok-1'));
+
+        const day = await background.weekSheet('2026-09-10');
+
+        expect(timesheet).toHaveBeenCalledTimes(2);
+        expect(timesheet).toHaveBeenLastCalledWith('2026-09-10');
+        expect(day.weekStart).toBe('2026-09-07');
+        expect((await background.refresh()).weekStart).toBe('2026-09-14');
+    });
 });

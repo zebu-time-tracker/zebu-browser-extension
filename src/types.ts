@@ -16,12 +16,20 @@ export interface Issue {
     url: string;
 }
 
-/** Mirrors the Zebu API's project option (GET /api/timesheet). */
+/** Mirrors the Zebu API's project option (GET /api/timesheet), as the desktop's src/api.ts has it. */
 export interface ProjectOption {
     id: string;
     name: string;
+    code: string | null;
     client: string | null;
     tasks: { id: string; name: string }[];
+}
+
+/** Per-project totals from GET /api/timesheet; `budget_pct` only for projects with a budget. */
+export interface ProjectStats {
+    total_minutes: number;
+    uninvoiced_minutes: number;
+    budget_pct: number | null;
 }
 
 /** Mirrors the Zebu API's time entry. */
@@ -37,9 +45,24 @@ export interface Entry {
     is_billable: boolean;
     locked: boolean;
     timer_started_at: string | null;
+    /**
+     * When the row was last touched — started, stopped, created or edited.
+     * Optional: workspaces older than board #49 do not send it.
+     */
+    updated_at?: string | null;
     /** Agentic work: minutes waited on an AI agent, and whether one is being waited on now. */
     waiting_minutes?: number;
+    waiting_subtracted?: boolean;
     agent_waiting?: boolean;
+}
+
+/** The week the popup's day list is drawn from (board #267). */
+export interface WeekSheet {
+    entries: Entry[];
+    /** First day of the week, "YYYY-MM-DD"; '' when nothing has been fetched. */
+    weekStart: string;
+    /** An approved week: nothing in it can be edited, resumed or added to. */
+    weekLocked: boolean;
 }
 
 export interface Settings {
@@ -68,6 +91,10 @@ export interface State {
     connected: boolean;
     running: Entry | null;
     projects: ProjectOption[];
+    /** The current week's entries, so today's list costs no extra request (board #267). */
+    entries: Entry[];
+    weekStart: string;
+    weekLocked: boolean;
     fetchedAt: number;
     /**
      * The pulse token this state is the answer to. Poll /api/timer/pulse and
@@ -99,7 +126,13 @@ export type Message =
     | { type: 'timer:stop' }
     | { type: 'issue:pending:get' }
     | { type: 'issue:pending:clear' }
-    | { type: 'page:issue' };
+    | { type: 'page:issue' }
+    // the day list and its edits (board #267)
+    | { type: 'sheet:get'; date: string }
+    | { type: 'timer:resume'; entryId: string; projectId: string }
+    | { type: 'entry:add'; issue: Issue | null; projectId: string; taskId: string | null; date: string; minutes: number; notes: string }
+    | { type: 'entry:update'; id: string; projectId: string; taskId: string | null; notes: string; minutes: number | null }
+    | { type: 'entry:delete'; id: string };
 
 export const DEFAULT_SETTINGS: Settings = {
     workspace: '',

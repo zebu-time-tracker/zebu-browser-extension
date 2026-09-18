@@ -242,5 +242,58 @@
     },
     "popup_for_page": {
         "message": "Cette page"
+    },
+    "popup_today_date": {
+        "message": "Aujourd’hui, $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_prev_day": {
+        "message": "Jour précédent"
+    },
+    "popup_next_day": {
+        "message": "Jour suivant"
+    },
+    "popup_no_entries": {
+        "message": "Rien de suivi ce jour-là."
+    },
+    "popup_week_locked": {
+        "message": "Cette semaine est approuvée et verrouillée."
+    },
+    "popup_invoiced": {
+        "message": "Facturé"
+    },
+    "popup_edit_entry": {
+        "message": "Modifier l’entrée"
+    },
+    "popup_add_entry": {
+        "message": "Ajouter une entrée"
+    },
+    "popup_resume_title": {
+        "message": "Démarrer (arrête tout autre minuteur)"
+    },
+    "popup_duration": {
+        "message": "Durée"
+    },
+    "popup_error_duration": {
+        "message": "Saisissez une durée comme 1:30, 1,5 ou 90m."
+    },
+    "popup_log": {
+        "message": "Consigner le temps"
+    },
+    "popup_save": {
+        "message": "Enregistrer"
+    },
+    "popup_delete": {
+        "message": "Supprimer"
+    },
+    "popup_delete_confirm": {
+        "message": "Supprimer définitivement ?"
+    },
+    "popup_cancel": {
+        "message": "Annuler"
     }
 }

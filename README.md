@@ -12,6 +12,12 @@ and selected text becomes the description. The right-click menu offers **Track t
 page** and, with a selection, **Track time: "…"**. A tracker page keeps its issue identity when
 tracked from either.
 
+The toolbar popup is also the day's timesheet, as in the desktop app: today's entries with a
+running total, ▶ to resume one and ■ to stop, ‹ › to other days, and a form to start a timer or
+log a finished block (a duration such as `1:30`, `1.5` or `90m`). Click an entry to edit its
+project, task, notes or duration, or delete it. Invoiced entries and approved weeks are read-only,
+as the workspace requires.
+
 Manifest V3, TypeScript, no framework. Talks to the same workspace API as the desktop app.
 
 ## Install (development)

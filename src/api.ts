@@ -2,13 +2,19 @@
 // app uses. The workspace base URL and the Sanctum token come from settings;
 // requests only run from the service worker and the extension pages.
 import { getSettings, saveSettings } from './storage';
-import type { Entry, ProjectOption } from './types';
+import type { Entry, ProjectOption, ProjectStats } from './types';
 
+/** GET /api/timesheet, the shape the desktop's src/api.ts reads. */
 export interface Timesheet {
     week_start: string;
     entries: Entry[];
     running: Entry | null;
+    /** The entry the server says is current (board #49); absent on older workspaces. */
+    active?: Entry | null;
+    active_as_of?: string | null;
     projects: ProjectOption[];
+    week_locked: boolean;
+    project_stats: Record<string, ProjectStats>;
     /** The pulse token this payload answers to; see `api.pulse()`. */
     pulse_token?: string;
     /** The server's clock at this response, for correcting the browser's. */
@@ -140,14 +146,22 @@ export const api = {
     },
 
     me: () => request<{ name: string; email: string }>('GET', '/me'),
-    timesheet: () => request<Timesheet>('GET', `/timesheet?date=${today()}`),
+    timesheet: (date = today()) => request<Timesheet>('GET', `/timesheet?date=${date}`),
     /**
      * One aggregate query and about forty bytes: the version of the answer to
      * "which timer is active". Polled instead of refetching the timesheet, so
      * a timer started elsewhere shows up in seconds rather than a minute.
      */
     pulse: () => request<Pulse>('GET', '/timer/pulse'),
-    startTimer: (payload: { project_id: string; task_id?: string | null; notes?: string | null }) =>
+    /** `entry_id` resumes that entry instead of creating one; either way any running timer stops first. */
+    startTimer: (payload: { project_id: string; task_id?: string | null; notes?: string | null; entry_id?: string }) =>
         request<{ entry: Entry }>('POST', '/timer/start', payload),
     stopTimer: () => request<{ entry: Entry | null }>('POST', '/timer/stop', {}),
+    // Finished blocks, the same calls the desktop makes (board #267). The
+    // server refuses edits to locked entries and approved weeks.
+    addEntry: (payload: { project_id: string; task_id?: string | null; date: string; minutes: number; notes?: string | null }) =>
+        request<{ entry: Entry }>('POST', '/time', payload),
+    updateEntry: (id: string, payload: { project_id?: string; task_id?: string | null; notes?: string | null; date?: string; minutes?: number }) =>
+        request<{ entry: Entry }>('PUT', `/time/${id}`, payload),
+    deleteEntry: (id: string) => request<{ ok: boolean }>('DELETE', `/time/${id}`),
 };
