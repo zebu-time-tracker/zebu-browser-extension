@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "未設定"
+    },
+    "idle_title": {
+        "message": "$1 操作がありませんでした",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "$1 のタイマーは離席中も動き続けていました。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "閉じると時間はそのまま残ります。"
+    },
+    "idle_remove": {
+        "message": "無操作時間を削除"
+    },
+    "idle_remove_stop": {
+        "message": "削除してタイマーを停止"
+    },
+    "options_idle_heading": {
+        "message": "無操作の検出"
+    },
+    "options_idle_hint": {
+        "message": "タイマー実行中にパソコンの操作が止まると Chrome が検出し、その時間を含めるかどうかを尋ねます。"
+    },
+    "options_idle_after": {
+        "message": "無操作を検出:"
+    },
+    "options_idle_minutes": {
+        "message": "分"
+    },
+    "popup_insights": {
+        "message": "インサイト"
+    },
+    "summary_hours_today": {
+        "message": "今日の時間"
+    },
+    "summary_hours_yesterday": {
+        "message": "昨日の時間"
+    },
+    "summary_hours_this_week": {
+        "message": "今週"
+    },
+    "summary_hours_last_week": {
+        "message": "先週"
+    },
+    "summary_hours_this_month": {
+        "message": "今月"
+    },
+    "summary_billable_this_month": {
+        "message": "請求対象 (今月)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "未請求 (今月)"
+    },
+    "summary_time": {
+        "message": "時間"
+    },
+    "summary_approx_total": {
+        "message": "≈ 合計 ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "1日あたりの時間 · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "時間"
+    },
+    "unit_minute": {
+        "message": "分"
+    },
+    "unit_day": {
+        "message": "日"
+    },
+    "unit_week": {
+        "message": "週"
     }
 }

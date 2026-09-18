@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "Nie ustawiono"
+    },
+    "idle_title": {
+        "message": "Brak aktywności przez $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "Stoper dla $1 działał dalej, gdy Cię nie było.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "Zamknij, aby zachować ten czas."
+    },
+    "idle_remove": {
+        "message": "Usuń bezczynność"
+    },
+    "idle_remove_stop": {
+        "message": "Usuń i zatrzymaj stoper"
+    },
+    "options_idle_heading": {
+        "message": "Wykrywanie bezczynności"
+    },
+    "options_idle_hint": {
+        "message": "Gdy stoper działa, Chrome zauważa, kiedy przestajesz używać komputera, i pyta, czy ten czas ma się liczyć."
+    },
+    "options_idle_after": {
+        "message": "Wykryj bezczynność po"
+    },
+    "options_idle_minutes": {
+        "message": "minutach"
+    },
+    "popup_insights": {
+        "message": "Podsumowanie"
+    },
+    "summary_hours_today": {
+        "message": "Godziny dziś"
+    },
+    "summary_hours_yesterday": {
+        "message": "Godziny wczoraj"
+    },
+    "summary_hours_this_week": {
+        "message": "Ten tydzień"
+    },
+    "summary_hours_last_week": {
+        "message": "Poprzedni tydzień"
+    },
+    "summary_hours_this_month": {
+        "message": "Ten miesiąc"
+    },
+    "summary_billable_this_month": {
+        "message": "Fakturowalne (miesiąc)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "Niezafakturowane (miesiąc)"
+    },
+    "summary_time": {
+        "message": "Czas"
+    },
+    "summary_approx_total": {
+        "message": "≈ Razem ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "Godziny dziennie · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "g"
+    },
+    "unit_minute": {
+        "message": "min"
+    },
+    "unit_day": {
+        "message": "d"
+    },
+    "unit_week": {
+        "message": "tyg"
     }
 }

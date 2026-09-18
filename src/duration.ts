@@ -28,3 +28,30 @@ export function elapsedMinutes(entry: { minutes: number; timer_started_at: strin
     if (!entry.timer_started_at) return entry.minutes;
     return entry.minutes + Math.max(0, (now - new Date(entry.timer_started_at).getTime()) / 60000);
 }
+
+export interface DurationUnits {
+    hour: string;
+    minute: string;
+    day: string;
+    week: string;
+}
+
+const HOUR = 60;
+const DAY = 24 * HOUR;
+const WEEK = 7 * DAY;
+
+/**
+ * Totals at two units of precision, stepping up as they grow so a long
+ * absence or an uninvoiced pile never reads "500h 9m": "4h 5m", "2d 3h",
+ * "1w 2d". Days are calendar days and weeks seven of them. The unit labels
+ * come from the locale.
+ */
+export function formatDurationHuman(minutes: number, units: DurationUnits): string {
+    const total = Math.max(0, Math.round(minutes));
+    const pair = (big: number, bigUnit: string, small: number, smallUnit: string) => (small > 0 ? `${big}${bigUnit} ${small}${smallUnit}` : `${big}${bigUnit}`);
+
+    if (total >= WEEK) return pair(Math.floor(total / WEEK), units.week, Math.floor((total % WEEK) / DAY), units.day);
+    if (total >= DAY) return pair(Math.floor(total / DAY), units.day, Math.floor((total % DAY) / HOUR), units.hour);
+    if (total >= HOUR) return pair(Math.floor(total / HOUR), units.hour, total % HOUR, units.minute);
+    return `${total}${units.minute}`;
+}

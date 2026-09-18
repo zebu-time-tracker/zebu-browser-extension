@@ -4,7 +4,7 @@
 // project suggested). Vanilla DOM on purpose — it's a few hundred lines and
 // starts instantly.
 import { shiftDate, toDateString } from '../dates';
-import { elapsedMinutes, formatMinutes, parseDuration } from '../duration';
+import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
 import { isHeld, POLL } from '../maintenance';
 import { lastTimerFor, type LastTimer } from '../lastTimer';
 import { call, CallError, t } from '../messaging';
@@ -12,7 +12,7 @@ import { pageIssue, withSelection } from '../page';
 import { defaultPresetName, filterPresets, hasPreset, presetRows, presetsFor, removePreset, renamePreset, savePreset, type Preset, type PresetRow } from '../presets';
 import { getLastTimer, getMappings, getPresets, getSettings, savePresets } from '../storage';
 import { composeNotes, entryMatchesIssue, suggest, type Suggestion } from '../suggest';
-import type { Entry, Issue, ProjectOption, State, WeekSheet } from '../types';
+import type { Entry, Issue, ProjectOption, State, Summary, WeekSheet } from '../types';
 
 const app = document.getElementById('app')!;
 const isWindow = new URLSearchParams(location.search).has('window');
@@ -29,7 +29,7 @@ let watch: number | undefined;
 // The day the list shows and the week it came from. The toolbar popup is a
 // view of the day with the form as a sheet over it; the detached window is
 // the form for one issue.
-let view: 'main' | 'form' = 'main';
+let view: 'main' | 'form' | 'summary' = 'main';
 let selectedDate = toDateString(new Date());
 let sheet: WeekSheet = { entries: [], weekStart: '', weekLocked: false };
 let editing: Entry | null = null;
@@ -82,7 +82,68 @@ function header(): HTMLElement {
         e.preventDefault();
         void chrome.runtime.openOptionsPage();
     });
-    return el('div', { class: 'brand' }, [el('strong', { text: 'Zebu' }), settings]);
+    const links = el('span', { class: 'links' }, [settings]);
+    if (!isWindow && state.connected) {
+        const insights = el('a', { href: '#', text: t('popup_insights') });
+        insights.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (view === 'summary') renderMain();
+            else renderSummary();
+        });
+        links.prepend(insights);
+    }
+    return el('div', { class: 'brand' }, [el('strong', { text: 'Zebu' }), links]);
+}
+
+const units = () => ({ hour: t('unit_hour'), minute: t('unit_minute'), day: t('unit_day'), week: t('unit_week') });
+const money = (cents: number) => (cents / 100).toLocaleString(undefined, { maximumFractionDigits: 0 });
+
+/** The desktop's Insights window, as a view: six tiles, uninvoiced this month, and hours per day. */
+function summaryContent(s: Summary): (Node | string)[] {
+    const tile = (label: string, value: string) => el('div', { class: 'tile' }, [el('span', { text: label }), el('strong', { text: value })]);
+    const grid = el('div', { class: 'summary-grid' }, [
+        tile(t('summary_hours_today'), formatMinutes(s.today)),
+        tile(t('summary_hours_yesterday'), formatMinutes(s.yesterday)),
+        tile(t('summary_hours_this_week'), formatMinutes(s.this_week)),
+        tile(t('summary_hours_last_week'), formatMinutes(s.last_week)),
+        tile(t('summary_hours_this_month'), formatMinutes(s.this_month)),
+        tile(t('summary_billable_this_month'), `${s.billable_pct_month}%`),
+    ]);
+    const row = (label: string, value: string, cls = 'uninv-row') => el('div', { class: cls }, [el('span', { text: label }), el('strong', { text: value })]);
+    const uninvoiced = el('div', { class: 'summary-uninv' }, [
+        el('p', { class: 'uninv-title', text: t('summary_uninvoiced_this_month') }),
+        row(t('summary_time'), formatDurationHuman(s.uninvoiced_minutes, units())),
+        ...Object.entries(s.uninvoiced_amounts ?? {}).map(([currency, cents]) => row(currency, money(cents))),
+        s.uninvoiced_total ? row(t('summary_approx_total', s.base_currency), money(s.uninvoiced_total), 'uninv-row uninv-total') : '',
+    ]);
+    const days = s.month_by_day ?? [];
+    const max = Math.max(...days, 60);
+    const todayIndex = new Date().getDate() - 1;
+    const chart = el('div', { class: 'mini-chart' });
+    days.forEach((m, i) => {
+        const bar = el('span', { class: i === todayIndex ? 'today' : '', title: `${i + 1}: ${formatMinutes(m)}` }, [el('i')]);
+        (bar.firstChild as HTMLElement).style.height = `${Math.max(4, (m / max) * 100)}%`;
+        chart.append(bar);
+    });
+    const month = new Date().toLocaleDateString(undefined, { month: 'long' });
+    return [el('h2', { text: t('popup_insights') }), grid, uninvoiced, chart, el('p', { class: 'notice caption', text: t('summary_hours_per_day', month) })];
+}
+
+function renderSummary(): void {
+    view = 'summary';
+    window.clearInterval(tick);
+    const card = el('div', { class: 'card summary' }, [el('h2', { text: t('popup_insights') })]);
+    app.replaceChildren(header(), card);
+    void call<Summary>({ type: 'summary:get' })
+        .then((s) => {
+            if (view !== 'summary') return;
+            card.replaceChildren(...summaryContent(s));
+            // the figures include the running timer, so re-ask while the view is up
+            window.setTimeout(() => {
+                if (view === 'summary') renderSummary();
+            }, 20000);
+        })
+        .catch((e) => card.append(el('p', { class: 'error', text: errorText(e) })));
 }
 
 /**

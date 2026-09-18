@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "Non défini"
+    },
+    "idle_title": {
+        "message": "Inactif pendant $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "Le minuteur sur $1 a continué pendant votre absence.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "Fermez ceci pour conserver le temps."
+    },
+    "idle_remove": {
+        "message": "Retirer l’inactivité"
+    },
+    "idle_remove_stop": {
+        "message": "La retirer et arrêter le minuteur"
+    },
+    "options_idle_heading": {
+        "message": "Détection d’inactivité"
+    },
+    "options_idle_hint": {
+        "message": "Pendant qu’un minuteur tourne, Chrome remarque quand vous cessez d’utiliser l’ordinateur et demande si ce temps doit compter."
+    },
+    "options_idle_after": {
+        "message": "Détecter l’inactivité après"
+    },
+    "options_idle_minutes": {
+        "message": "minutes"
+    },
+    "popup_insights": {
+        "message": "Aperçu"
+    },
+    "summary_hours_today": {
+        "message": "Heures aujourd’hui"
+    },
+    "summary_hours_yesterday": {
+        "message": "Heures hier"
+    },
+    "summary_hours_this_week": {
+        "message": "Cette semaine"
+    },
+    "summary_hours_last_week": {
+        "message": "Semaine dernière"
+    },
+    "summary_hours_this_month": {
+        "message": "Ce mois-ci"
+    },
+    "summary_billable_this_month": {
+        "message": "Facturable (mois)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "Non facturé (mois)"
+    },
+    "summary_time": {
+        "message": "Temps"
+    },
+    "summary_approx_total": {
+        "message": "≈ Total ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "Heures par jour · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "h"
+    },
+    "unit_minute": {
+        "message": "min"
+    },
+    "unit_day": {
+        "message": "j"
+    },
+    "unit_week": {
+        "message": "sem"
     }
 }

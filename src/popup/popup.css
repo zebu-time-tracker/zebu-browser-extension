@@ -484,3 +484,85 @@ textarea:focus {
 .link[hidden] {
     display: none;
 }
+
+/* insights (board #269) */
+.brand .links {
+    display: flex;
+    gap: 12px;
+}
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.summary-grid .tile {
+    display: grid;
+    gap: 2px;
+    padding: 8px 9px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg);
+}
+.summary-grid .tile span {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.3;
+}
+.summary-grid .tile strong {
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+}
+.summary-uninv {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+}
+.uninv-title {
+    margin: 0 0 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.uninv-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+    font-variant-numeric: tabular-nums;
+}
+.uninv-row span {
+    color: var(--muted);
+}
+.uninv-total {
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+    padding-top: 4px;
+}
+.mini-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 56px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+}
+.mini-chart span {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+}
+.mini-chart i {
+    display: block;
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+    background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.mini-chart span.today i {
+    background: var(--accent);
+}
+.notice.caption {
+    margin-top: 4px;
+    font-size: 11px;
+}

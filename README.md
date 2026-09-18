@@ -25,6 +25,12 @@ shortcuts** are suggested — Alt+Shift+Z opens the popup, Alt+Shift+S starts or
 Alt+Shift+N starts a timer for the page you are on — and can be changed at
 `chrome://extensions/shortcuts` (the options page links there).
 
+**Idle detection**, on by default: while a timer runs and Chrome reports the machine idle (ten
+minutes without input; change it on the options page), coming back shows a notification with the
+desktop's choices — remove the idle time and keep timing, remove it and stop, or dismiss to keep
+it. **Insights** in the popup header shows the dashboard's summary: today, yesterday, this and
+last week, this month, billable share, uninvoiced time and money, and hours per day this month.
+
 Manifest V3, TypeScript, no framework. Talks to the same workspace API as the desktop app.
 
 ## Install (development)

@@ -2,7 +2,7 @@
 // app uses. The workspace base URL and the Sanctum token come from settings;
 // requests only run from the service worker and the extension pages.
 import { getSettings, saveSettings } from './storage';
-import type { Entry, ProjectOption, ProjectStats } from './types';
+import type { Entry, ProjectOption, ProjectStats, Summary } from './types';
 
 /** GET /api/timesheet, the shape the desktop's src/api.ts reads. */
 export interface Timesheet {
@@ -157,6 +157,10 @@ export const api = {
     startTimer: (payload: { project_id: string; task_id?: string | null; notes?: string | null; entry_id?: string }) =>
         request<{ entry: Entry }>('POST', '/timer/start', payload),
     stopTimer: () => request<{ entry: Entry | null }>('POST', '/timer/stop', {}),
+    /** Drop an idle stretch from the running timer, keeping it running or stopping it (board #269). */
+    idleTimer: (payload: { idle_started_at: string; action: 'discard_keep' | 'discard_stop' }) =>
+        request<{ entry: Entry | null }>('POST', '/timer/idle', payload),
+    summary: () => request<Summary>('GET', '/summary'),
     // Finished blocks, the same calls the desktop makes (board #267). The
     // server refuses edits to locked entries and approved weeks.
     addEntry: (payload: { project_id: string; task_id?: string | null; date: string; minutes: number; notes?: string | null }) =>

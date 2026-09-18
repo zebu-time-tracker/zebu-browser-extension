@@ -74,6 +74,28 @@ export interface Settings {
     noteFormat: 'identifier_title_url' | 'title_url' | 'title';
     /** Self-hosted trackers added by the user: origin → adapter id. */
     customSites: { origin: string; adapter: string }[];
+    /** Idle detection while a timer runs (board #269): on, and after how many minutes without input. */
+    idleEnabled: boolean;
+    idleMinutes: number;
+}
+
+/** GET /api/summary: the dashboard's time widgets, as the desktop's src/api.ts reads them. Minutes throughout; money in minor units. */
+export interface Summary {
+    today: number;
+    yesterday: number;
+    this_week: number;
+    last_week: number;
+    this_month: number;
+    last_month: number;
+    billable_pct_month: number;
+    month_by_day: number[];
+    year_by_month: number[];
+    uninvoiced_minutes: number;
+    uninvoiced_amounts: Record<string, number>;
+    uninvoiced_total: number;
+    base_currency: string;
+    /** Since board #120 the figures include the running timer's elapsed time, and say so. */
+    live_included?: boolean;
 }
 
 /** Learned repo/board → project choices, keyed by Issue.container per site. */
@@ -134,7 +156,9 @@ export type Message =
     | { type: 'entry:update'; id: string; projectId: string; taskId: string | null; notes: string; minutes: number | null }
     | { type: 'entry:delete'; id: string }
     // the last timer, resumed (board #268)
-    | { type: 'timer:resume-last' };
+    | { type: 'timer:resume-last' }
+    // the summary view (board #269)
+    | { type: 'summary:get' };
 
 export const DEFAULT_SETTINGS: Settings = {
     workspace: '',
@@ -142,4 +166,6 @@ export const DEFAULT_SETTINGS: Settings = {
     user: null,
     noteFormat: 'identifier_title_url',
     customSites: [],
+    idleEnabled: true,
+    idleMinutes: 10,
 };

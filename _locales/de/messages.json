@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "Nicht belegt"
+    },
+    "idle_title": {
+        "message": "Du warst $1 inaktiv",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "Der Timer auf $1 lief weiter, während du weg warst.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "Schließen, um die Zeit zu behalten."
+    },
+    "idle_remove": {
+        "message": "Leerlaufzeit entfernen"
+    },
+    "idle_remove_stop": {
+        "message": "Entfernen und Timer stoppen"
+    },
+    "options_idle_heading": {
+        "message": "Inaktivität erkennen"
+    },
+    "options_idle_hint": {
+        "message": "Während ein Timer läuft, bemerkt Chrome, wenn du den Rechner nicht mehr benutzt, und fragt, ob diese Zeit zählen soll."
+    },
+    "options_idle_after": {
+        "message": "Inaktivität erkennen nach"
+    },
+    "options_idle_minutes": {
+        "message": "Minuten"
+    },
+    "popup_insights": {
+        "message": "Einblicke"
+    },
+    "summary_hours_today": {
+        "message": "Stunden heute"
+    },
+    "summary_hours_yesterday": {
+        "message": "Stunden gestern"
+    },
+    "summary_hours_this_week": {
+        "message": "Diese Woche"
+    },
+    "summary_hours_last_week": {
+        "message": "Letzte Woche"
+    },
+    "summary_hours_this_month": {
+        "message": "Dieser Monat"
+    },
+    "summary_billable_this_month": {
+        "message": "Abrechenbar (Monat)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "Nicht abgerechnet (Monat)"
+    },
+    "summary_time": {
+        "message": "Zeit"
+    },
+    "summary_approx_total": {
+        "message": "≈ Summe ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "Stunden pro Tag · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "h"
+    },
+    "unit_minute": {
+        "message": "min"
+    },
+    "unit_day": {
+        "message": "T"
+    },
+    "unit_week": {
+        "message": "W"
     }
 }

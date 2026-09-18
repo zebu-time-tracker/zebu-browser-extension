@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "Sin asignar"
+    },
+    "idle_title": {
+        "message": "Estuviste inactivo $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "El temporizador de $1 siguió contando mientras no estabas.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "Cierra esto para conservar el tiempo."
+    },
+    "idle_remove": {
+        "message": "Quitar la inactividad"
+    },
+    "idle_remove_stop": {
+        "message": "Quitarla y detener el temporizador"
+    },
+    "options_idle_heading": {
+        "message": "Detección de inactividad"
+    },
+    "options_idle_hint": {
+        "message": "Mientras hay un temporizador activo, Chrome detecta cuándo dejas de usar el equipo y pregunta si ese tiempo debe contar."
+    },
+    "options_idle_after": {
+        "message": "Detectar inactividad tras"
+    },
+    "options_idle_minutes": {
+        "message": "minutos"
+    },
+    "popup_insights": {
+        "message": "Resumen"
+    },
+    "summary_hours_today": {
+        "message": "Horas hoy"
+    },
+    "summary_hours_yesterday": {
+        "message": "Horas ayer"
+    },
+    "summary_hours_this_week": {
+        "message": "Esta semana"
+    },
+    "summary_hours_last_week": {
+        "message": "Semana pasada"
+    },
+    "summary_hours_this_month": {
+        "message": "Este mes"
+    },
+    "summary_billable_this_month": {
+        "message": "Facturable (mes)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "Sin facturar (mes)"
+    },
+    "summary_time": {
+        "message": "Tiempo"
+    },
+    "summary_approx_total": {
+        "message": "≈ Total ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "Horas por día · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "h"
+    },
+    "unit_minute": {
+        "message": "min"
+    },
+    "unit_day": {
+        "message": "d"
+    },
+    "unit_week": {
+        "message": "sem"
     }
 }

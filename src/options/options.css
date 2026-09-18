@@ -81,3 +81,13 @@ h1 {
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
+.idle-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+    margin: 6px 0;
+}
+.idle-row input.minutes {
+    width: 64px;
+}

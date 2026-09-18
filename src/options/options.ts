@@ -161,6 +161,32 @@ function sitesCard(settings: Settings): HTMLElement {
     ]);
 }
 
+// Idle detection while a timer runs (board #269): on or off, and the minutes
+// without input after which Chrome reports the machine idle.
+function idleCard(settings: Settings): HTMLElement {
+    const enabled = el('input', { type: 'checkbox' }) as HTMLInputElement;
+    enabled.checked = settings.idleEnabled;
+    const minutes = el('input', { type: 'number', min: '1', max: '120', class: 'minutes' }) as HTMLInputElement;
+    minutes.value = String(settings.idleMinutes);
+    minutes.disabled = !settings.idleEnabled;
+    const status = el('p', { class: 'status ok' });
+    const save = async () => {
+        const value = Math.min(120, Math.max(1, Math.round(Number(minutes.value) || 10)));
+        minutes.value = String(value);
+        minutes.disabled = !enabled.checked;
+        await saveSettings({ idleEnabled: enabled.checked, idleMinutes: value });
+        status.textContent = t('options_saved');
+    };
+    enabled.addEventListener('change', () => void save());
+    minutes.addEventListener('change', () => void save());
+    return el('section', { class: 'card' }, [
+        el('h2', { text: t('options_idle_heading') }),
+        el('p', { class: 'hint', text: t('options_idle_hint') }),
+        el('label', { class: 'idle-row' }, [enabled, t('options_idle_after'), minutes, t('options_idle_minutes')]),
+        status,
+    ]);
+}
+
 // The three commands and what they are bound to. Chrome owns the bindings
 // (board #268): the button opens its shortcuts page, the only place they change.
 function shortcutsCard(): HTMLElement {
@@ -187,5 +213,5 @@ function forgetCard(): HTMLElement {
 
 (async () => {
     const settings = await getSettings();
-    app.replaceChildren(el('h1', { text: t('options_title') }), workspaceCard(settings), notesCard(settings), shortcutsCard(), sitesCard(settings), forgetCard());
+    app.replaceChildren(el('h1', { text: t('options_title') }), workspaceCard(settings), notesCard(settings), idleCard(settings), shortcutsCard(), sitesCard(settings), forgetCard());
 })();

@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "Niet ingesteld"
+    },
+    "idle_title": {
+        "message": "Je was $1 inactief",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "De timer op $1 liep door terwijl je weg was.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "Sluit dit om de tijd te houden."
+    },
+    "idle_remove": {
+        "message": "Inactieve tijd verwijderen"
+    },
+    "idle_remove_stop": {
+        "message": "Verwijderen en timer stoppen"
+    },
+    "options_idle_heading": {
+        "message": "Inactiviteit detecteren"
+    },
+    "options_idle_hint": {
+        "message": "Terwijl een timer loopt, merkt Chrome wanneer je de computer niet meer gebruikt en vraagt of die tijd moet meetellen."
+    },
+    "options_idle_after": {
+        "message": "Detecteer inactiviteit na"
+    },
+    "options_idle_minutes": {
+        "message": "minuten"
+    },
+    "popup_insights": {
+        "message": "Inzichten"
+    },
+    "summary_hours_today": {
+        "message": "Uren vandaag"
+    },
+    "summary_hours_yesterday": {
+        "message": "Uren gisteren"
+    },
+    "summary_hours_this_week": {
+        "message": "Deze week"
+    },
+    "summary_hours_last_week": {
+        "message": "Vorige week"
+    },
+    "summary_hours_this_month": {
+        "message": "Deze maand"
+    },
+    "summary_billable_this_month": {
+        "message": "Factureerbaar (maand)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "Ongefactureerd (maand)"
+    },
+    "summary_time": {
+        "message": "Tijd"
+    },
+    "summary_approx_total": {
+        "message": "≈ Totaal ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "Uren per dag · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "u"
+    },
+    "unit_minute": {
+        "message": "m"
+    },
+    "unit_day": {
+        "message": "d"
+    },
+    "unit_week": {
+        "message": "w"
     }
 }

@@ -4,7 +4,8 @@
 // badge while a timer runs.
 import { api, ApiError } from './api';
 import { inWeek, toDateString } from './dates';
-import { elapsedMinutes, formatMinutes } from './duration';
+import { elapsedMinutes, formatDurationHuman, formatMinutes } from './duration';
+import { detectionInterval, idleActionForButton, idleMinutes, idleWindowStart } from './idle';
 import { lastTimerFor, lastTimerFrom } from './lastTimer';
 import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
 import { t } from './messaging';
@@ -245,6 +246,8 @@ chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) =
             }
             case 'timer:resume-last':
                 return resumeLast();
+            case 'summary:get':
+                return api.summary();
             case 'entry:add': {
                 const settings = await getSettings();
                 const notes = message.notes || (message.issue ? composeNotes(message.issue, settings.noteFormat) : '');
@@ -301,8 +304,84 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === 'install') await chrome.runtime.openOptionsPage();
     await registerCustomSites();
     await installContextMenus();
+    await applyIdleSettings();
 });
-chrome.runtime.onStartup.addListener(() => void refresh(true));
+chrome.runtime.onStartup.addListener(() => {
+    void refresh(true);
+    void applyIdleSettings();
+});
+
+// ---- idle detection (board #269) -------------------------------------------
+//
+// Chrome watches the machine's input for us (chrome.idle) and says "idle"
+// once the detection interval has passed without any, then "active" on the
+// first keypress or click. The absence therefore began an interval before the
+// first event; it is noted in session storage (the worker may be gone by the
+// time the user is back) and asked about as a notification on return, with
+// the desktop's choices: remove the time and keep timing, remove it and stop,
+// or dismiss to keep it. The server does the arithmetic on `idle_started_at`.
+
+/** Session storage: when the absence in progress began (epoch ms). */
+const IDLE_SINCE = 'idleSince';
+
+export async function applyIdleSettings(): Promise<void> {
+    const { idleMinutes: minutes } = await getSettings();
+    chrome.idle.setDetectionInterval(detectionInterval(minutes));
+}
+
+async function onIdleState(state: chrome.idle.IdleState): Promise<void> {
+    const settings = await getSettings();
+    if (!settings.idleEnabled) return;
+    if (state === 'active') {
+        const { [IDLE_SINCE]: since } = await chrome.storage.session.get(IDLE_SINCE);
+        await chrome.storage.session.remove(IDLE_SINCE);
+        if (typeof since !== 'number') return;
+        const state = await refresh(true);
+        if (!state.running) return;
+        await askAboutIdle(since, (Date.now() - since) / 1000, state.running);
+        return;
+    }
+    // idle or locked: an absence begins, unless one is already in progress (idle → locked)
+    const { [IDLE_SINCE]: since } = await chrome.storage.session.get(IDLE_SINCE);
+    if (typeof since === 'number') return;
+    const current = await refresh();
+    if (!current.running) return;
+    const startedAt = idleWindowStart(Date.now(), detectionInterval(settings.idleMinutes), current.running.timer_started_at);
+    if (startedAt !== null) await chrome.storage.session.set({ [IDLE_SINCE]: startedAt });
+}
+
+async function askAboutIdle(startedAt: number, seconds: number, running: Entry): Promise<void> {
+    const id = `zebu-idle-${startedAt}`;
+    await chrome.storage.session.set({ [`idle:${id}`]: startedAt });
+    const units = { hour: t('unit_hour'), minute: t('unit_minute'), day: t('unit_day'), week: t('unit_week') };
+    await chrome.notifications.create(id, {
+        type: 'basic',
+        iconUrl: 'icons/128.png',
+        title: t('idle_title', formatDurationHuman(idleMinutes(seconds), units)),
+        message: t('idle_message', running.project ?? ''),
+        contextMessage: t('idle_keep'),
+        buttons: [{ title: t('idle_remove') }, { title: t('idle_remove_stop') }],
+        requireInteraction: true,
+        priority: 2,
+    });
+}
+
+chrome.idle.onStateChanged.addListener((state) => void onIdleState(state));
+
+chrome.notifications.onButtonClicked.addListener((id, index) => {
+    void (async () => {
+        const key = `idle:${id}`;
+        const { [key]: startedAt } = await chrome.storage.session.get(key);
+        await chrome.storage.session.remove(key);
+        chrome.notifications.clear(id);
+        if (typeof startedAt !== 'number') return;
+        await api.idleTimer({ idle_started_at: new Date(startedAt).toISOString(), action: idleActionForButton(index) });
+        await changed();
+    })();
+});
+// dismissed, or clicked without choosing: the time stays
+chrome.notifications.onClosed.addListener((id) => void chrome.storage.session.remove(`idle:${id}`));
+chrome.notifications.onClicked.addListener((id) => chrome.notifications.clear(id));
 
 // Keyboard shortcuts (manifest `commands`, rebindable at
 // chrome://extensions/shortcuts). The popup itself is `_execute_action`,
@@ -349,6 +428,7 @@ export async function registerCustomSites(): Promise<void> {
 chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'local' && changes.settings) {
         void registerCustomSites();
+        void applyIdleSettings();
         void refresh(true).then(broadcast);
     }
 });

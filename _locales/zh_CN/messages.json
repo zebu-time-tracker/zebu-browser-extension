@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "未设置"
+    },
+    "idle_title": {
+        "message": "您已闲置 $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "您离开期间，$1 的计时器一直在运行。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "关闭此通知即保留该时间。"
+    },
+    "idle_remove": {
+        "message": "移除闲置时间"
+    },
+    "idle_remove_stop": {
+        "message": "移除并停止计时"
+    },
+    "options_idle_heading": {
+        "message": "闲置检测"
+    },
+    "options_idle_hint": {
+        "message": "计时进行中时，Chrome 会察觉您停止使用电脑，并询问这段时间是否计入。"
+    },
+    "options_idle_after": {
+        "message": "闲置检测时间"
+    },
+    "options_idle_minutes": {
+        "message": "分钟"
+    },
+    "popup_insights": {
+        "message": "概览"
+    },
+    "summary_hours_today": {
+        "message": "今日时长"
+    },
+    "summary_hours_yesterday": {
+        "message": "昨日时长"
+    },
+    "summary_hours_this_week": {
+        "message": "本周"
+    },
+    "summary_hours_last_week": {
+        "message": "上周"
+    },
+    "summary_hours_this_month": {
+        "message": "本月"
+    },
+    "summary_billable_this_month": {
+        "message": "可开票 (本月)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "未开票 (本月)"
+    },
+    "summary_time": {
+        "message": "时间"
+    },
+    "summary_approx_total": {
+        "message": "≈ 合计 ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "每日时长 · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "小时"
+    },
+    "unit_minute": {
+        "message": "分钟"
+    },
+    "unit_day": {
+        "message": "天"
+    },
+    "unit_week": {
+        "message": "周"
     }
 }

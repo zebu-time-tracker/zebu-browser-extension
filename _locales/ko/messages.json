@@ -368,5 +368,97 @@
     },
     "options_shortcut_unbound": {
         "message": "설정 안 됨"
+    },
+    "idle_title": {
+        "message": "$1 동안 자리를 비웠습니다",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_message": {
+        "message": "자리를 비운 동안 $1 타이머가 계속 실행되었습니다.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_keep": {
+        "message": "닫으면 시간이 그대로 유지됩니다."
+    },
+    "idle_remove": {
+        "message": "유휴 시간 제거"
+    },
+    "idle_remove_stop": {
+        "message": "제거하고 타이머 정지"
+    },
+    "options_idle_heading": {
+        "message": "유휴 감지"
+    },
+    "options_idle_hint": {
+        "message": "타이머가 실행 중일 때 컴퓨터 사용이 멈추면 Chrome이 감지하고 그 시간을 포함할지 묻습니다."
+    },
+    "options_idle_after": {
+        "message": "유휴 감지 시간"
+    },
+    "options_idle_minutes": {
+        "message": "분"
+    },
+    "popup_insights": {
+        "message": "인사이트"
+    },
+    "summary_hours_today": {
+        "message": "오늘 시간"
+    },
+    "summary_hours_yesterday": {
+        "message": "어제 시간"
+    },
+    "summary_hours_this_week": {
+        "message": "이번 주"
+    },
+    "summary_hours_last_week": {
+        "message": "지난주"
+    },
+    "summary_hours_this_month": {
+        "message": "이번 달"
+    },
+    "summary_billable_this_month": {
+        "message": "청구 가능 (이번 달)"
+    },
+    "summary_uninvoiced_this_month": {
+        "message": "미청구 (이번 달)"
+    },
+    "summary_time": {
+        "message": "시간"
+    },
+    "summary_approx_total": {
+        "message": "≈ 합계 ($1)",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "summary_hours_per_day": {
+        "message": "일별 시간 · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "unit_hour": {
+        "message": "시간"
+    },
+    "unit_minute": {
+        "message": "분"
+    },
+    "unit_day": {
+        "message": "일"
+    },
+    "unit_week": {
+        "message": "주"
     }
 }

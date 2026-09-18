@@ -50,6 +50,8 @@ const chromeStub = {
     scripting: { getRegisteredContentScripts: async () => [], unregisterContentScripts: async () => undefined, registerContentScripts: async () => undefined },
     contextMenus: { removeAll: async () => undefined, create: () => undefined, onClicked: { addListener: () => undefined } },
     commands: { onCommand: { addListener: () => undefined } },
+    idle: { setDetectionInterval: () => undefined, onStateChanged: { addListener: () => undefined } },
+    notifications: { create: async () => undefined, clear: () => undefined, onButtonClicked: { addListener: () => undefined }, onClosed: { addListener: () => undefined }, onClicked: { addListener: () => undefined } },
 };
 
 // The module registers its listeners on import, so the stub has to be in place first.
