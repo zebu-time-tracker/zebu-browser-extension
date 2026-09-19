@@ -25,29 +25,32 @@ const settings = { workspace: 'https://studio.zebu.work', token: 'tok' };
 
 const alarms = new Map<string, unknown>();
 let badgeText = '';
-let icon: { imageData?: Record<number, { texts: string[] }>; path?: Record<number, string> } = {};
+let icon: { imageData?: Record<number, { fills: number; strokes: number }>; path?: Record<number, string> } = {};
 let title = '';
 
-// jsdom has no canvas: a stand-in that records what was written on it, so
-// the test can read the clock back off the "pixels".
+// jsdom has no canvas: a stand-in that counts what was painted on it, so the
+// test can tell a filled square (a timer) from an outline (none) off the "pixels".
 class FakeCanvas {
     constructor(
         public width: number,
         public height: number,
     ) {}
     getContext() {
-        const texts: string[] = [];
+        const painted = { fills: 0, strokes: 0 };
         return {
             fillStyle: '',
-            font: '',
-            textAlign: '',
-            textBaseline: '',
+            strokeStyle: '',
+            lineWidth: 0,
+            lineCap: '',
+            lineJoin: '',
             beginPath: () => undefined,
             roundRect: () => undefined,
-            fill: () => undefined,
+            moveTo: () => undefined,
+            lineTo: () => undefined,
+            fill: () => void painted.fills++,
+            stroke: () => void painted.strokes++,
             clearRect: () => undefined,
-            fillText: (text: string) => texts.push(text),
-            getImageData: () => ({ texts }),
+            getImageData: () => painted,
         };
     }
 }
@@ -218,18 +221,20 @@ describe('toolbar icon', () => {
     // The icon is the running timer's clock, as the menubar pill shows it
     // (board #268): hours over minutes, drawn into the square rather than
     // squeezed into the badge.
-    test('a running timer is drawn as hours over minutes, banked minutes included; nothing running restores the plain icon', async () => {
+    test('a running timer fills the square with its clock, banked minutes included; nothing running draws the outline', async () => {
         vi.setSystemTime(new Date('2026-09-11T10:19:00Z'));
         timesheet.mockResolvedValue(sheet({ ...entry, project: 'Website', task: 'Dev', minutes: 12 }, 'tok-1'));
         await background.refresh(true);
-        expect(icon.imageData?.[16].texts).toEqual(['0h', '31m']);
         expect(Object.keys(icon.imageData ?? {})).toEqual(['16', '32', '48', '64']);
+        expect(icon.imageData?.[16].fills).toBe(1);
+        expect(icon.imageData?.[16].strokes).toBeGreaterThan(0);
         expect(badgeText).toBe('');
         expect(title).toBe('Website · Dev · 0:31');
 
         timesheet.mockResolvedValue(sheet(null, 'tok-2'));
         await background.refresh(true);
-        expect(icon.path?.[16]).toBe('icons/16.png');
+        expect(icon.imageData?.[16].fills).toBe(0);
+        expect(icon.imageData?.[16].strokes).toBeGreaterThan(0);
         expect(title).toBe('Zebu');
         vi.useRealTimers();
     });

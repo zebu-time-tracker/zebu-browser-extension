@@ -18,7 +18,7 @@ import { getLastTimer, getMappings, getPresets, getSettings, savePresets, saveSe
 import { composeNotes, entryMatchesIssue, suggest } from '../suggest';
 import { DEFAULT_SETTINGS, type Entry, type Issue, type Mappings, type ProjectStats, type Settings, type State, type WeekSheet } from '../types';
 import { weekDays } from '../week';
-import { DEFAULT_DOMAIN } from '../workspace';
+import { DEFAULT_DOMAIN, isWorkspaceName, workspaceName } from '../workspace';
 import { el, ICON_CHART, ICON_PENCIL, svg } from './dom';
 import { insightsPanel, type Insights } from './insights';
 import { projectPicker } from './picker';
@@ -815,20 +815,21 @@ function settingsPopout(): HTMLElement {
 
 // ---- screens -------------------------------------------------------------------
 
-/** The desktop's connect screen; the device flow itself runs on the options page, which stays open while you approve. */
+/** The desktop's connect screen: the workspace's name before .zebu.work. The device flow itself runs on the options page, which stays open while you approve. */
 function renderConnect(): void {
     destroyInsights();
-    const host = settings.workspace.replace(/^https?:\/\//, '');
     const input = el('input', { type: 'text', autocapitalize: 'none', autocorrect: 'off', autocomplete: 'off', spellcheck: 'false', placeholder: t('options_workspace_placeholder') });
-    input.value = host.endsWith(`.${DEFAULT_DOMAIN}`) ? host.slice(0, -(DEFAULT_DOMAIN.length + 1)) : host;
-    const suffix = el('span', { class: 'field-suffix', text: `.${DEFAULT_DOMAIN}` });
-    const syncSuffix = () => (suffix.hidden = input.value.includes('.') || input.value.includes(':'));
-    input.addEventListener('input', syncSuffix);
-    syncSuffix();
+    input.value = settings.workspace ? workspaceName(settings.workspace) : '';
+    const error = el('p', { class: 'error status', text: errorMessage });
     const login = el('button', { type: 'button', class: 'btn-primary', text: t('popup_login') });
     const go = () => {
-        const params = new URLSearchParams({ workspace: input.value.trim(), connect: '1' });
-        openInTab(chrome.runtime.getURL(`options.html?${params}`));
+        const name = workspaceName(input.value);
+        if (!isWorkspaceName(name)) {
+            // a well-formed name that is refused can only be the central site's
+            error.textContent = t(/^[a-z0-9][a-z0-9-]*$/i.test(name) ? 'options_error_central' : 'options_error_workspace');
+            return;
+        }
+        openInTab(chrome.runtime.getURL(`options.html?${new URLSearchParams({ workspace: name, connect: '1' })}`));
     };
     login.addEventListener('click', go);
     input.addEventListener('keyup', (e) => {
@@ -839,11 +840,11 @@ function renderConnect(): void {
             el('div', { class: 'connect-logo', text: 'Zebu' }),
             el('label', { class: 'field' }, [
                 el('span', { class: 'field-label', text: t('popup_workspace') }),
-                el('span', { class: 'field-row' }, [input, suffix]),
+                el('span', { class: 'field-row' }, [input, el('span', { class: 'field-suffix', text: `.${DEFAULT_DOMAIN}` })]),
                 el('span', { class: 'hint', text: t('options_workspace_hint') }),
             ]),
             login,
-            errorMessage ? el('p', { class: 'error status', text: errorMessage }) : '',
+            error,
         ]),
     );
     queueMicrotask(() => input.focus());

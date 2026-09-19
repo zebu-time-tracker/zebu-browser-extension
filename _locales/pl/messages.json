@@ -92,7 +92,7 @@
         "message": "Twoja przestrzeń"
     },
     "options_workspace_hint": {
-        "message": "Nazwa Twojej przestrzeni (np. „studio”), jej adres (studio.zebu.work) lub pełny URL."
+        "message": "Nazwa Twojej przestrzeni roboczej — część przed .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,13 +118,10 @@
         "message": "Rozłącz"
     },
     "options_error_workspace": {
-        "message": "To nie wygląda na adres przestrzeni."
+        "message": "To nie wygląda na nazwę przestrzeni roboczej — tylko litery, cyfry i myślniki."
     },
     "options_error_central": {
         "message": "To główna strona Zebu — wpisz zamiast tego nazwę swojej przestrzeni."
-    },
-    "options_error_insecure": {
-        "message": "Adresy przestrzeni muszą używać https."
     },
     "options_error_unreachable": {
         "message": "Nie można połączyć się z tą przestrzenią. Sprawdź adres."

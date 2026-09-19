@@ -92,7 +92,7 @@
         "message": "Your workspace"
     },
     "options_workspace_hint": {
-        "message": "Your workspace name (e.g. “studio”), its address (studio.zebu.work), or a full URL."
+        "message": "The name of your workspace — the part before .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,13 +118,10 @@
         "message": "Disconnect"
     },
     "options_error_workspace": {
-        "message": "That doesn’t look like a workspace address."
+        "message": "That doesn’t look like a workspace name — letters, numbers and dashes only."
     },
     "options_error_central": {
         "message": "That’s the main Zebu site — enter your own workspace’s name instead."
-    },
-    "options_error_insecure": {
-        "message": "Workspace addresses must use https."
     },
     "options_error_unreachable": {
         "message": "That workspace can’t be reached. Check the address."

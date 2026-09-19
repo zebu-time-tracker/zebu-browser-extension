@@ -70,6 +70,22 @@ export function resolveWorkspace(input: string, { defaultDomain = DEFAULT_DOMAIN
     return { ok: true, origin: `${url.protocol}//${url.host.toLowerCase()}` };
 }
 
+/**
+ * What was typed into the workspace field, reduced to the workspace's name —
+ * the part before .zebu.work. The field only asks for the name, but people
+ * paste what they have: "Studio", "studio.zebu.work/login" and
+ * "https://studio.zebu.work" all mean "studio".
+ */
+export function workspaceName(input: string): string {
+    const r = resolveWorkspace(input);
+    const host = r.ok ? new URL(r.origin).hostname : input.trim().toLowerCase().replace(/^[a-z]+:\/\//, '');
+    const bare = host.endsWith(`.${DEFAULT_DOMAIN}`) ? host.slice(0, -(DEFAULT_DOMAIN.length + 1)) : host;
+    return bare.split(/[/?#:]/)[0];
+}
+
+/** Whether `name` can be a hosted workspace's name: what goes before .zebu.work. */
+export const isWorkspaceName = (name: string): boolean => /^[a-z0-9][a-z0-9-]*$/i.test(name) && !CENTRAL_HOSTS.has(`${name.toLowerCase()}.${DEFAULT_DOMAIN}`);
+
 /** Convenience form of {@link resolveWorkspace}: the origin, or '' when the input isn't a workspace. */
 export function workspaceUrl(input: string, options: ResolveOptions = {}): string {
     const r = resolveWorkspace(input, options);

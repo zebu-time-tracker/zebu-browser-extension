@@ -5,7 +5,7 @@
 import { api, ApiError } from './api';
 import { inWeek, toDateString } from './dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes } from './duration';
-import { CLOCK_GREEN, clockImages } from './icon';
+import { CLOCK_GREEN, clockImages, idleImages } from './icon';
 import { detectionInterval, idleActionForButton, idleMinutes, idleWindowStart } from './idle';
 import { lastTimerFor, lastTimerFrom } from './lastTimer';
 import { backoffMs, KEEPALIVE_MS, parseFrame, PING, PONG, readBroadcast, shouldRefetch, socketIdOf, socketUrl, subscribeFrame, timerChangedOf } from './live';
@@ -136,9 +136,9 @@ let shownClock = 'unset';
 
 /**
  * The toolbar icon is the running timer's clock (board #268): hours over
- * minutes, drawn into the green square, as the menubar pill shows it. The
- * badge is the fallback where the worker cannot draw. Nothing running: the
- * plain icon.
+ * minutes, drawn into the green square, as the menubar pill shows it. Nothing
+ * running: the Z in a green outline, so a filled square always means a timer.
+ * The badge and the shipped icon are the fallbacks where the worker cannot draw.
  */
 async function badge(running: Entry | null): Promise<void> {
     const minutes = running ? Math.round(elapsedMinutes(running, Date.now() - cache.skewMs)) : null;
@@ -146,7 +146,8 @@ async function badge(running: Entry | null): Promise<void> {
     if (key === shownClock) return;
     shownClock = key;
     if (!running || minutes === null) {
-        await chrome.action.setIcon({ path: DEFAULT_ICON });
+        const idle = idleImages();
+        await chrome.action.setIcon(idle ? { imageData: idle } : { path: DEFAULT_ICON });
         await chrome.action.setBadgeText({ text: '' });
         await chrome.action.setTitle({ title: 'Zebu' });
         return;

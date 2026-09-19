@@ -42,7 +42,10 @@ h1 {
 .inline {
     display: flex;
     gap: 8px;
-    align-items: stretch;
+    align-items: center;
+}
+.inline .field-suffix {
+    margin-left: -4px;
 }
 .inline input,
 .inline select {

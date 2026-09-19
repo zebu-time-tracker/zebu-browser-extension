@@ -92,7 +92,7 @@
         "message": "Seu workspace"
     },
     "options_workspace_hint": {
-        "message": "O nome do seu workspace (ex.: “studio”), o endereço dele (studio.zebu.work) ou uma URL completa."
+        "message": "O nome do seu espaço de trabalho — a parte antes de .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,13 +118,10 @@
         "message": "Desconectar"
     },
     "options_error_workspace": {
-        "message": "Isso não parece um endereço de workspace."
+        "message": "Isso não parece um nome de espaço de trabalho — apenas letras, números e hífens."
     },
     "options_error_central": {
         "message": "Esse é o site principal do Zebu — digite o nome do seu próprio workspace."
-    },
-    "options_error_insecure": {
-        "message": "Endereços de workspace precisam usar https."
     },
     "options_error_unreachable": {
         "message": "Não é possível acessar esse workspace. Verifique o endereço."

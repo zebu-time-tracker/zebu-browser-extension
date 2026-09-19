@@ -7,7 +7,7 @@ import { getSettings, saveMappings, saveSettings } from '../storage';
 import { ADAPTERS } from '../content/adapters';
 import { readBroadcast } from '../live';
 import type { Settings } from '../types';
-import { resolveWorkspace } from '../workspace';
+import { DEFAULT_DOMAIN, isWorkspaceName, resolveWorkspace, workspaceName } from '../workspace';
 
 const app = document.getElementById('app')!;
 
@@ -34,7 +34,9 @@ async function ensureHostPermission(origin: string): Promise<boolean> {
 const params = new URLSearchParams(location.search);
 
 function workspaceCard(settings: Settings): HTMLElement {
-    const input = el('input', { type: 'text', placeholder: t('options_workspace_placeholder'), value: settings.token ? settings.workspace : params.get('workspace') || settings.workspace }) as HTMLInputElement;
+    // the field is the workspace's name; .zebu.work is fixed beside it
+    const remembered = settings.workspace ? workspaceName(settings.workspace) : '';
+    const input = el('input', { type: 'text', autocapitalize: 'none', autocorrect: 'off', autocomplete: 'off', spellcheck: 'false', placeholder: t('options_workspace_placeholder'), value: settings.token ? remembered : params.get('workspace') || remembered }) as HTMLInputElement;
     const button = el('button', { class: 'btn', text: settings.token ? t('options_disconnect') : t('options_connect') }) as HTMLButtonElement;
     const status = el('p', { class: 'status' });
 
@@ -51,12 +53,14 @@ function workspaceCard(settings: Settings): HTMLElement {
             return;
         }
 
-        const resolved = resolveWorkspace(input.value);
+        const name = workspaceName(input.value);
+        const resolved = resolveWorkspace(name);
         status.className = 'status error';
-        if (!resolved.ok) {
-            status.textContent = t(resolved.reason === 'central' ? 'options_error_central' : resolved.reason === 'insecure' ? 'options_error_insecure' : 'options_error_workspace');
+        if (!isWorkspaceName(name) || !resolved.ok) {
+            status.textContent = t(resolved.ok === false && resolved.reason === 'central' ? 'options_error_central' : 'options_error_workspace');
             return;
         }
+        input.value = name;
         const workspace = resolved.origin;
         if (!(await ensureHostPermission(workspace))) {
             status.textContent = t('options_sites_permission_denied');
@@ -98,7 +102,7 @@ function workspaceCard(settings: Settings): HTMLElement {
     return el('section', { class: 'card' }, [
         el('h2', { text: t('options_workspace_heading') }),
         el('p', { class: 'hint', text: t('options_workspace_hint') }),
-        el('div', { class: 'inline' }, [input, button]),
+        el('div', { class: 'inline' }, [input, el('span', { class: 'field-suffix', text: `.${DEFAULT_DOMAIN}` }), button]),
         status,
     ]);
 }

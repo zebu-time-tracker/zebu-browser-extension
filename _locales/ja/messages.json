@@ -92,7 +92,7 @@
         "message": "ワークスペース"
     },
     "options_workspace_hint": {
-        "message": "ワークスペース名 (例: studio)、そのアドレス (studio.zebu.work)、または完全な URL を入力します。"
+        "message": "ワークスペース名（.zebu.work の前の部分）"
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,13 +118,10 @@
         "message": "切断"
     },
     "options_error_workspace": {
-        "message": "ワークスペースのアドレスとして正しくないようです。"
+        "message": "ワークスペース名として無効です。英数字とハイフンのみ使えます。"
     },
     "options_error_central": {
         "message": "それは Zebu のメインサイトです。ご自身のワークスペース名を入力してください。"
-    },
-    "options_error_insecure": {
-        "message": "ワークスペースのアドレスは https を使用する必要があります。"
     },
     "options_error_unreachable": {
         "message": "そのワークスペースに接続できません。アドレスを確認してください。"

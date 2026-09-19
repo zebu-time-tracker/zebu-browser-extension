@@ -1,6 +1,6 @@
 // The workspace address normaliser, the same rules as the desktop app's
 // tests/workspace.test.ts (board #270).
-import { migrateWorkspaceOrigin, resolveWorkspace, workspaceUrl } from '../src/workspace';
+import { isWorkspaceName, migrateWorkspaceOrigin, resolveWorkspace, workspaceName, workspaceUrl } from '../src/workspace';
 
 test('a bare name is completed with the hosted domain', () => {
     expect(workspaceUrl('studio')).toBe('https://studio.zebu.work');
@@ -48,4 +48,22 @@ test('stored origins from the old layout migrate to zebu.work', () => {
     expect(migrateWorkspaceOrigin('https://studio.app.zebu.work')).toBe('https://studio.zebu.work');
     expect(migrateWorkspaceOrigin('https://studio.zebu.work')).toBe('https://studio.zebu.work');
     expect(migrateWorkspaceOrigin('http://127.0.0.1:8003')).toBe('http://127.0.0.1:8003');
+});
+
+test('the workspace field takes a name, and reduces whatever was pasted to one', () => {
+    expect(workspaceName('studio')).toBe('studio');
+    expect(workspaceName('  Studio ')).toBe('studio');
+    expect(workspaceName('studio.zebu.work')).toBe('studio');
+    expect(workspaceName('https://Studio.zebu.work/login?x=1')).toBe('studio');
+    expect(workspaceName('my-team.zebu.work')).toBe('my-team');
+});
+
+test('a name is letters, digits and dashes, and never the central site', () => {
+    expect(isWorkspaceName('studio')).toBe(true);
+    expect(isWorkspaceName('my-team2')).toBe(true);
+    expect(isWorkspaceName('')).toBe(false);
+    expect(isWorkspaceName('stu dio')).toBe(false);
+    expect(isWorkspaceName('studio.zebu.work')).toBe(false);
+    expect(isWorkspaceName('app')).toBe(false);
+    expect(isWorkspaceName('www')).toBe(false);
 });
