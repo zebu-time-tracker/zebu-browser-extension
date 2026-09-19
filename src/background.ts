@@ -11,7 +11,7 @@ import { backoffMs, KEEPALIVE_MS, parseFrame, PING, PONG, readBroadcast, shouldR
 import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
 import { t } from './messaging';
 import { pageIssue, withSelection } from './page';
-import { getLastTimer, getMappings, getPendingIssue, getSettings, saveMappings, setLastTimer, setPendingIssue } from './storage';
+import { getLastTimer, getMappings, getPendingIssue, getSettings, saveMappings, saveSettings, setLastTimer, setPendingIssue } from './storage';
 import { composeNotes, remember } from './suggest';
 import type { Entry, Issue, Message, State, WeekSheet } from './types';
 
@@ -301,7 +301,7 @@ void ensureRefreshAlarm();
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === 'refresh') {
         void refresh(true).then(broadcast);
-        void connectLive();
+        void relearnBroadcast().then(connectLive);
     }
 });
 
@@ -477,6 +477,30 @@ function closeLive(): void {
         s.onmessage = null;
         s.close();
     }
+}
+
+/**
+ * The broadcast block is learned at login, but a workspace can switch Reverb
+ * on (or off, or rotate its key) long after: while nothing is subscribed, ask
+ * GET /api/me again every few minutes and save what changed — the storage
+ * listener then opens or closes the socket. Nothing is asked while live.
+ */
+export const RELEARN_MS = 5 * 60_000;
+let relearnedAt = 0;
+
+export async function relearnBroadcast(now = Date.now()): Promise<void> {
+    if (cache.live || now - relearnedAt < RELEARN_MS) return;
+    const settings = await getSettings();
+    if (!settings.workspace || !settings.token) return;
+    relearnedAt = now;
+    let learned: unknown;
+    try {
+        learned = (await api.me()).broadcast;
+    } catch {
+        return; // unreachable or revoked: the pulse path already reports that
+    }
+    const next = readBroadcast(learned);
+    if (JSON.stringify(next) !== JSON.stringify(readBroadcast(settings.broadcast))) await saveSettings({ broadcast: next });
 }
 
 /** Open (or keep) the socket the settings describe; close it when they no longer describe one. */

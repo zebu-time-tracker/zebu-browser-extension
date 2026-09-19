@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 const timesheet = vi.fn();
 const pulseCall = vi.fn();
 const broadcastingAuth = vi.fn();
+const me = vi.fn();
 
 vi.mock('../src/api', () => {
     class ApiError extends Error {
@@ -17,7 +18,7 @@ vi.mock('../src/api', () => {
             super(message);
         }
     }
-    return { ApiError, api: { timesheet: (date?: string) => timesheet(date), pulse: () => pulseCall(), broadcastingAuth: (id: string, channel: string) => broadcastingAuth(id, channel) } };
+    return { ApiError, api: { timesheet: (date?: string) => timesheet(date), pulse: () => pulseCall(), broadcastingAuth: (id: string, channel: string) => broadcastingAuth(id, channel), me: () => me() } };
 });
 
 const settings = { workspace: 'https://studio.zebu.work', token: 'tok', broadcast: { key: 'abc', host: null, port: 443, scheme: 'https', channel: 'timers.studio.7' } };
@@ -161,5 +162,37 @@ describe('the worker owns the socket', () => {
         await vi.advanceTimersByTimeAsync(20_000);
         expect(JSON.parse(sent[0])).toEqual({ event: 'pusher:ping', data: {} });
         vi.useRealTimers();
+    });
+});
+
+describe('learning that the workspace switched Reverb on after login', () => {
+    test('while not live the block is asked for again, a few minutes apart, and saved when it changed', async () => {
+        const { connectLive, relearnBroadcast, RELEARN_MS } = await import('../src/background');
+        const block = { key: 'new', host: null, port: 443, scheme: 'https', channel: 'timers.studio.7' };
+        stored.settings = { ...settings, broadcast: null };
+        await connectLive(); // nothing to subscribe to: back to polling
+        me.mockReset();
+        me.mockResolvedValue({ name: 'A', email: 'a@x', broadcast: null });
+
+        // an unchanged answer saves nothing...
+        await relearnBroadcast(1_000_000);
+        expect(me).toHaveBeenCalledTimes(1);
+        expect((stored.settings as { broadcast: unknown }).broadcast).toBeNull();
+
+        // ...and is not asked again straight away
+        await relearnBroadcast(1_000_000 + RELEARN_MS - 1);
+        expect(me).toHaveBeenCalledTimes(1);
+
+        // once Reverb is on, the block is saved (the storage listener opens the socket from there)
+        me.mockResolvedValue({ name: 'A', email: 'a@x', broadcast: block });
+        await relearnBroadcast(1_000_000 + RELEARN_MS);
+        expect(me).toHaveBeenCalledTimes(2);
+        expect((stored.settings as { broadcast: unknown }).broadcast).toEqual(block);
+
+        // a server that cannot be reached changes nothing
+        stored.settings = { ...settings, broadcast: null };
+        me.mockRejectedValue(new Error('unreachable'));
+        await relearnBroadcast(1_000_000 + 2 * RELEARN_MS);
+        expect((stored.settings as { broadcast: unknown }).broadcast).toBeNull();
     });
 });
