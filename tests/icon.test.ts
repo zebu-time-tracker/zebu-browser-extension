@@ -43,6 +43,7 @@ const recorder = () => {
     const strokes: Stroke[] = [];
     const fills: string[] = [];
     const rects: number[][] = [];
+    const texts: { text: string; x: number; y: number }[] = [];
     let current: Stroke = [];
     const ctx: ClockContext = {
         fillStyle: '',
@@ -50,6 +51,10 @@ const recorder = () => {
         lineWidth: 0,
         lineCap: 'butt',
         lineJoin: 'miter',
+        font: '',
+        textAlign: 'left',
+        textBaseline: 'alphabetic',
+        fillText: (text, x, y) => void texts.push({ text, x, y }),
         beginPath: () => void (current = []),
         roundRect: (...args) => void rects.push(args as number[]),
         fill() {
@@ -60,13 +65,26 @@ const recorder = () => {
         stroke: () => void (current.length && strokes.push(current)),
         clearRect: () => undefined,
     };
-    return { ctx, strokes, fills, rects };
+    return { ctx, strokes, fills, rects, texts };
 };
 
-test('a running timer fills the square and stacks the lines, right-aligned and the same size', () => {
-    const { ctx, strokes, fills } = recorder();
+test('a running timer is the clock in monospace, both lines right-aligned on one edge', () => {
+    const { ctx, texts, fills } = recorder();
 
     drawClock(ctx, 32, clockLines(95));
+
+    expect(fills).toEqual(['#197300']);
+    expect(ctx.textAlign).toBe('right');
+    expect(ctx.font).toContain('monospace');
+    expect(texts.map((t) => t.text)).toEqual(['1h', '35m']);
+    expect(texts[0].x).toBe(texts[1].x);
+    expect(texts[0].y).toBeLessThan(texts[1].y);
+});
+
+test('without a font the same lines are stroked, right-aligned and the same size', () => {
+    const { ctx, strokes, fills } = recorder();
+
+    drawClock(ctx, 32, clockLines(95), 'strokes');
 
     expect(fills).toEqual(['#197300']);
     expect(ctx.strokeStyle).toBe('#fff');

@@ -47,10 +47,15 @@ class FakeCanvas {
             roundRect: () => undefined,
             moveTo: () => undefined,
             lineTo: () => undefined,
+            font: '',
+            textAlign: '',
+            textBaseline: '',
             fill: () => void painted.fills++,
             stroke: () => void painted.strokes++,
+            fillText: () => void painted.strokes++,
             clearRect: () => undefined,
-            getImageData: () => painted,
+            // one white pixel, so the drawn text counts as having rendered
+            getImageData: () => ({ ...painted, data: new Uint8ClampedArray([255, 255, 255, 255]) }),
         };
     }
 }

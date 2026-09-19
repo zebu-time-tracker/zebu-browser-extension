@@ -4,11 +4,12 @@
 // Chrome's badge (the strip under the icon) can only hold four characters,
 // rendered tiny and cramped; the desktop's tray pill is the model instead.
 //
-// The glyphs are strokes, not text: a service worker's canvas has no page
-// fonts to draw with, and on some platforms fillText paints nothing at all —
-// a blank green square in the toolbar. A stroke font of digits, "h" and "m"
-// cannot fail, every digit is the same width (so the lines stay tabular), and
-// it is crisper at 16px than any typeface would be.
+// The clock is bold monospace text, right-aligned so the two lines share an
+// edge and the digits sit in columns. A service worker's canvas has no page
+// fonts, and a platform where fillText paints nothing would leave a blank
+// green square — so the drawn pixels are checked, and a stroke font of
+// digits, "h" and "m" (which cannot fail) takes over when they are empty.
+// The idle Z is always strokes.
 
 export interface ClockLines {
     top: string;
@@ -70,7 +71,22 @@ export function textStrokes(text: string, cx: number, cy: number, height: number
 /** The 2D-context methods the drawing uses, so a test or a preview page can supply its own. */
 export type ClockContext = Pick<
     CanvasRenderingContext2D,
-    'fillStyle' | 'strokeStyle' | 'lineWidth' | 'lineCap' | 'lineJoin' | 'beginPath' | 'roundRect' | 'fill' | 'moveTo' | 'lineTo' | 'stroke' | 'clearRect'
+    | 'fillStyle'
+    | 'strokeStyle'
+    | 'lineWidth'
+    | 'lineCap'
+    | 'lineJoin'
+    | 'font'
+    | 'textAlign'
+    | 'textBaseline'
+    | 'beginPath'
+    | 'roundRect'
+    | 'fill'
+    | 'fillText'
+    | 'moveTo'
+    | 'lineTo'
+    | 'stroke'
+    | 'clearRect'
 >;
 
 export const CLOCK_GREEN = '#197300';
@@ -90,24 +106,41 @@ const pen = (ctx: ClockContext, size: number, color: string, width: number) => {
     ctx.lineJoin = 'round';
 };
 
-/** A running timer: the clock, right-aligned so the units line up, in the filled square. */
-export function drawClock(ctx: ClockContext, size: number, lines: ClockLines): void {
+/** Where the two lines sit: a shared right edge, one above and one below the middle. */
+const RIGHT = 0.88;
+const TOP_Y = 0.29;
+const BOTTOM_Y = 0.71;
+
+/**
+ * A running timer: the clock in the filled square. Bold monospace so the
+ * digits are tabular, right-aligned so the two lines share an edge; the
+ * stroke font is the fallback for a worker whose canvas paints no text.
+ */
+export function drawClock(ctx: ClockContext, size: number, lines: ClockLines, mode: 'text' | 'strokes' = 'text'): void {
     ctx.clearRect(0, 0, size, size);
     ctx.fillStyle = CLOCK_GREEN;
     ctx.beginPath();
     ctx.roundRect(0, 0, size, size, size * 0.2);
     ctx.fill();
+    const right = size * RIGHT;
+    const maxWidth = size * 0.78;
+    if (mode === 'text') {
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.font = `bold ${size * 0.4}px ui-monospace, Menlo, Consolas, "Liberation Mono", monospace`;
+        ctx.fillText(lines.top, right, size * TOP_Y, maxWidth);
+        ctx.fillText(lines.bottom, right, size * BOTTOM_Y, maxWidth);
+        return;
+    }
     // One scale for both lines, so the digits are the same size and the
     // lines share a right edge; small enough that "23h" over "59m" keeps a
     // margin all round at 16px.
-    const height = size * 0.3;
-    const maxWidth = size * 0.76;
-    const unit = Math.min(height / GLYPH_HEIGHT, maxWidth / Math.max(textWidth(lines.top), textWidth(lines.bottom)));
-    const right = size * 0.88;
+    const unit = Math.min((size * 0.3) / GLYPH_HEIGHT, maxWidth / Math.max(textWidth(lines.top), textWidth(lines.bottom)));
     pen(ctx, size, '#fff', 1 / 14);
     for (const [text, cy] of [
-        [lines.top, size * 0.29],
-        [lines.bottom, size * 0.71],
+        [lines.top, size * TOP_Y],
+        [lines.bottom, size * BOTTOM_Y],
     ] as const) {
         strokeAll(ctx, strokesAt(text, right - textWidth(text) * unit, cy - (GLYPH_HEIGHT * unit) / 2, unit));
     }
@@ -139,8 +172,21 @@ const render = (draw: (ctx: ClockContext, size: number) => void): Record<number,
     return images;
 };
 
+/** Whether anything white was painted over the green: text that never rendered leaves none. */
+export const hasInk = (image: ImageData): boolean => {
+    const d = image.data;
+    for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 0 && d[i] > 200 && d[i + 2] > 200) return true;
+    return false;
+};
+
 /** The running clock at every size, or null where there is no canvas to draw on. */
-export const clockImages = (minutes: number): Record<number, ImageData> | null => render((ctx, size) => drawClock(ctx, size, clockLines(minutes)));
+export function clockImages(minutes: number): Record<number, ImageData> | null {
+    const lines = clockLines(minutes);
+    const text = render((ctx, size) => drawClock(ctx, size, lines, 'text'));
+    if (!text) return null;
+    // a worker whose canvas cannot reach a font paints the square and nothing else
+    return hasInk(text[ICON_SIZES[ICON_SIZES.length - 1]]) ? text : render((ctx, size) => drawClock(ctx, size, lines, 'strokes'));
+}
 
 /** The idle icon at every size, or null where there is no canvas to draw on. */
 export const idleImages = (): Record<number, ImageData> | null => render(drawIdle);
