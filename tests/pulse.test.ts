@@ -37,6 +37,7 @@ const chromeStub = {
     windows: { get: async () => undefined, create: async () => ({ id: 1 }), update: async () => undefined },
     runtime: {
         getURL: (p: string) => p,
+        getManifest: () => ({ version: '0.2.0' }),
         onMessage: { addListener: () => undefined },
         onInstalled: { addListener: () => undefined },
         onStartup: { addListener: () => undefined },

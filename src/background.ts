@@ -7,6 +7,7 @@ import { inWeek, toDateString } from './dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes } from './duration';
 import { detectionInterval, idleActionForButton, idleMinutes, idleWindowStart } from './idle';
 import { lastTimerFor, lastTimerFrom } from './lastTimer';
+import { backoffMs, KEEPALIVE_MS, parseFrame, PING, PONG, readBroadcast, shouldRefetch, socketIdOf, socketUrl, subscribeFrame, timerChangedOf } from './live';
 import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
 import { t } from './messaging';
 import { pageIssue, withSelection } from './page';
@@ -23,7 +24,7 @@ import type { Entry, Issue, Message, State, WeekSheet } from './types';
  */
 const CACHE_MS = 15 * 1000;
 
-const empty = (): State => ({ connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, fetchedAt: Date.now(), pulseToken: '', skewMs: 0, downUntil: null });
+const empty = (): State => ({ connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, fetchedAt: Date.now(), pulseToken: '', skewMs: 0, downUntil: null, live: false });
 
 let cache: State = { ...empty(), fetchedAt: 0 };
 
@@ -52,6 +53,7 @@ export async function refresh(force = false): Promise<State> {
             skewMs: sheet.server_time ? Date.now() - new Date(sheet.server_time).getTime() : 0,
             // The server answered, so whatever hold was in force is over.
             downUntil: null,
+            live: cache.live,
         };
         // The server's own "current timer" is what Resume offers (board #268):
         // the running one, else the entry touched last. Older workspaces do
@@ -297,7 +299,10 @@ export async function ensureRefreshAlarm(): Promise<void> {
 void ensureRefreshAlarm();
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === 'refresh') void refresh(true).then(broadcast);
+    if (alarm.name === 'refresh') {
+        void refresh(true).then(broadcast);
+        void connectLive();
+    }
 });
 
 chrome.runtime.onInstalled.addListener(async (details) => {
@@ -430,5 +435,128 @@ chrome.storage.onChanged.addListener((changes, area) => {
         void registerCustomSites();
         void applyIdleSettings();
         void refresh(true).then(broadcast);
+        void connectLive();
     }
 });
+
+// ---- live updates over Reverb (board #279) ------------------------------------
+//
+// The workspace pushes "your timer changed" over a websocket (Pusher protocol,
+// see src/live.ts); on one the cache is refetched exactly as after a pulse
+// that moved, and every page and popup is told. The socket lives here, in the
+// service worker, so the badge and the page buttons are live too; a ping every
+// twenty seconds keeps the worker alive (Chrome 116+), and when it is killed
+// anyway the next start — every message, every alarm — reconnects. Without a
+// `broadcast` block from the server nothing here runs and the pulse stays as
+// it is.
+
+let socket: WebSocket | null = null;
+/** What the open socket was built for; a new target replaces it. */
+let liveTarget = '';
+let liveAttempt = 0;
+let liveTimer: ReturnType<typeof setTimeout> | undefined;
+let keepalive: ReturnType<typeof setInterval> | undefined;
+/** True once a socket has dropped: the next subscription refetches, since anything could have happened meanwhile. */
+let liveGap = false;
+
+async function setLive(live: boolean): Promise<void> {
+    if (cache.live === live) return;
+    cache = { ...cache, live };
+    await broadcast(cache);
+}
+
+function closeLive(): void {
+    clearTimeout(liveTimer);
+    clearInterval(keepalive);
+    keepalive = undefined;
+    if (socket) {
+        const s = socket;
+        socket = null;
+        s.onclose = null;
+        s.onerror = null;
+        s.onmessage = null;
+        s.close();
+    }
+}
+
+/** Open (or keep) the socket the settings describe; close it when they no longer describe one. */
+export async function connectLive(): Promise<void> {
+    if (typeof WebSocket === 'undefined') return;
+    const settings = await getSettings();
+    const config = settings.workspace && settings.token ? readBroadcast(settings.broadcast) : null;
+    if (!config) {
+        closeLive();
+        liveTarget = '';
+        await setLive(false);
+        return;
+    }
+    const url = socketUrl(config, settings.workspace, chrome.runtime.getManifest().version);
+    const target = `${url}|${config.channel}`;
+    if (socket && liveTarget === target && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
+    closeLive();
+    liveTarget = target;
+    const s = new WebSocket(url);
+    socket = s;
+    s.onmessage = (e) => void onLiveFrame(s, config.channel, e.data);
+    s.onclose = () => void onLiveClosed(s);
+    s.onerror = () => s.close();
+}
+
+async function onLiveFrame(s: WebSocket, channel: string, raw: unknown): Promise<void> {
+    if (s !== socket) return;
+    const frame = parseFrame(raw);
+    if (!frame) return;
+    const socketId = socketIdOf(frame);
+    if (socketId) {
+        try {
+            const { auth } = await api.broadcastingAuth(socketId, `private-${channel}`);
+            if (s === socket) s.send(subscribeFrame(channel, auth));
+        } catch {
+            s.close(); // reconnects with backoff; a 401 also cleared the token, so the next attempt stops
+        }
+        return;
+    }
+    if (frame.event === 'pusher_internal:subscription_succeeded') {
+        liveAttempt = 0;
+        clearInterval(keepalive);
+        keepalive = setInterval(() => {
+            if (s === socket && s.readyState === WebSocket.OPEN) s.send(PING);
+        }, KEEPALIVE_MS);
+        await setLive(true);
+        if (liveGap) {
+            liveGap = false;
+            await changed();
+        }
+        return;
+    }
+    if (frame.event === 'pusher:ping') {
+        s.send(PONG);
+        return;
+    }
+    if (frame.event === 'pusher:error') {
+        s.close();
+        return;
+    }
+    const event = timerChangedOf(frame);
+    if (!event) return;
+    // The server's clock rode along: the freshest reading there is.
+    if (event.at) {
+        const at = new Date(event.at).getTime();
+        if (!Number.isNaN(at)) cache = { ...cache, skewMs: Date.now() - at };
+    }
+    if (shouldRefetch(event.token, cache.pulseToken)) await changed();
+}
+
+async function onLiveClosed(s: WebSocket): Promise<void> {
+    if (s !== socket) return;
+    socket = null;
+    clearInterval(keepalive);
+    keepalive = undefined;
+    liveGap = true;
+    await setLive(false);
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(() => void connectLive(), backoffMs(liveAttempt++));
+}
+
+// Every worker start is a chance the socket died with the last one.
+void connectLive();

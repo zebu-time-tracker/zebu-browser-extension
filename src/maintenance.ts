@@ -24,7 +24,12 @@ export const GRACE_MS = 15_000;
  * in the popup so the service worker can reason about the same cadence when it
  * decides how long to hold.
  */
-export const POLL = { running: 2_000, idle: 30_000 } as const;
+export const POLL = {
+    running: 2_000,
+    idle: 30_000,
+    /** While the Reverb socket is up every change is pushed (board #279), so the pulse is only a backstop against a quietly dead socket. */
+    live: 30_000,
+} as const;
 
 /**
  * The longest a single hold may be. A window can be hours, and sleeping

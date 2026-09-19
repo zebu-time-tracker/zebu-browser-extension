@@ -5,6 +5,7 @@ import { api, ApiError, workspaceUrl } from '../api';
 import { t } from '../messaging';
 import { getSettings, saveMappings, saveSettings } from '../storage';
 import { ADAPTERS } from '../content/adapters';
+import { readBroadcast } from '../live';
 import type { Settings } from '../types';
 
 const app = document.getElementById('app')!;
@@ -40,7 +41,7 @@ function workspaceCard(settings: Settings): HTMLElement {
 
     button.addEventListener('click', async () => {
         if (settings.token) {
-            await saveSettings({ token: '', user: null });
+            await saveSettings({ token: '', user: null, broadcast: null });
             location.reload();
             return;
         }
@@ -70,7 +71,7 @@ function workspaceCard(settings: Settings): HTMLElement {
                 if (code === 200 && data.status === 'approved' && data.token) {
                     await saveSettings({ workspace, token: data.token });
                     const me = await api.me();
-                    await saveSettings({ user: me });
+                    await saveSettings({ user: { name: me.name, email: me.email }, broadcast: readBroadcast(me.broadcast) });
                     location.reload();
                     return;
                 }

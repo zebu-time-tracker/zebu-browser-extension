@@ -460,5 +460,8 @@
     },
     "unit_week": {
         "message": "sem"
+    },
+    "popup_live": {
+        "message": "Atualizações ao vivo ativas"
     }
 }

@@ -77,6 +77,18 @@ export interface Settings {
     /** Idle detection while a timer runs (board #269): on, and after how many minutes without input. */
     idleEnabled: boolean;
     idleMinutes: number;
+    /** Where the workspace pushes timer changes (board #279), from GET /api/me at connect time; null when it does not broadcast. */
+    broadcast: BroadcastConfig | null;
+}
+
+/** The `broadcast` block of GET /api/me: where to open the socket and which private channel is this person's. */
+export interface BroadcastConfig {
+    key: string;
+    /** null: the workspace host the extension already talks to */
+    host: string | null;
+    port: number;
+    scheme: 'http' | 'https';
+    channel: string;
 }
 
 /** GET /api/summary: the dashboard's time widgets, as the desktop's src/api.ts reads them. Minutes throughout; money in minor units. */
@@ -136,6 +148,8 @@ export interface State {
      * See src/maintenance.ts (board #216).
      */
     downUntil: number | null;
+    /** A socket to Reverb is up and subscribed (board #279): changes are pushed, the pulse is only a backstop. */
+    live: boolean;
 }
 
 /** Messages between the pieces of the extension. */
@@ -168,4 +182,5 @@ export const DEFAULT_SETTINGS: Settings = {
     customSites: [],
     idleEnabled: true,
     idleMinutes: 10,
+    broadcast: null,
 };

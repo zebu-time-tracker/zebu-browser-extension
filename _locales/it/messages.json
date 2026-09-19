@@ -460,5 +460,8 @@
     },
     "unit_week": {
         "message": "sett"
+    },
+    "popup_live": {
+        "message": "Aggiornamenti in tempo reale attivi"
     }
 }

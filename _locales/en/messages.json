@@ -460,5 +460,8 @@
     },
     "unit_week": {
         "message": "w"
+    },
+    "popup_live": {
+        "message": "Live updates on"
     }
 }

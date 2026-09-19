@@ -566,3 +566,17 @@ textarea:focus {
     margin-top: 4px;
     font-size: 11px;
 }
+
+/* live updates (board #279) */
+.brand-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}

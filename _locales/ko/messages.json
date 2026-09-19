@@ -460,5 +460,8 @@
     },
     "unit_week": {
         "message": "주"
+    },
+    "popup_live": {
+        "message": "실시간 업데이트 켜짐"
     }
 }

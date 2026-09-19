@@ -31,6 +31,13 @@ desktop's choices — remove the idle time and keep timing, remove it and stop, 
 it. **Insights** in the popup header shows the dashboard's summary: today, yesterday, this and
 last week, this month, billable share, uninvoiced time and money, and hours per day this month.
 
+**Live updates.** When the workspace broadcasts (Laravel Reverb; `GET /api/me` carries a
+`broadcast` block), the service worker keeps a websocket to it and refetches the moment a timer is
+started, stopped or edited anywhere else — about a hundred milliseconds instead of the next poll.
+The pulse slows to a 30-second backstop while the socket is up and returns to its usual cadence
+when it is down; a green dot beside the name in the popup shows the socket is connected. Without a
+`broadcast` block nothing changes.
+
 Manifest V3, TypeScript, no framework. Talks to the same workspace API as the desktop app.
 
 ## Install (development)

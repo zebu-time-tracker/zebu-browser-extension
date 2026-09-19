@@ -145,7 +145,11 @@ export const api = {
         return { status: response.status, data: (await response.json().catch(() => ({}))) as { status?: string; token?: string } };
     },
 
-    me: () => request<{ name: string; email: string }>('GET', '/me'),
+    /** `broadcast` is the raw block; src/live.ts readBroadcast() makes it safe. */
+    me: () => request<{ name: string; email: string; broadcast?: unknown }>('GET', '/me'),
+    /** Authorise this socket for a private channel with the bearer token (board #279), as the browser does with its session. */
+    broadcastingAuth: (socketId: string, channelName: string) =>
+        request<{ auth: string }>('POST', '/broadcasting/auth', { socket_id: socketId, channel_name: channelName }),
     timesheet: (date = today()) => request<Timesheet>('GET', `/timesheet?date=${date}`),
     /**
      * One aggregate query and about forty bytes: the version of the answer to

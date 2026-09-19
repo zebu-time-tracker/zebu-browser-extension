@@ -460,5 +460,8 @@
     },
     "unit_week": {
         "message": "W"
+    },
+    "popup_live": {
+        "message": "Live-Updates aktiv"
     }
 }

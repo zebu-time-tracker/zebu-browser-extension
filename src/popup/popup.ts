@@ -18,7 +18,7 @@ const app = document.getElementById('app')!;
 const isWindow = new URLSearchParams(location.search).has('window');
 if (isWindow) document.body.classList.add('window');
 
-let state: State = { connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, fetchedAt: 0, pulseToken: '', skewMs: 0, downUntil: null };
+let state: State = { connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, fetchedAt: 0, pulseToken: '', skewMs: 0, downUntil: null, live: false };
 let issue: Issue | null = null;
 let workspace = '';
 let noteFormat: 'identifier_title_url' | 'title_url' | 'title' = 'identifier_title_url';
@@ -92,7 +92,10 @@ function header(): HTMLElement {
         });
         links.prepend(insights);
     }
-    return el('div', { class: 'brand' }, [el('strong', { text: 'Zebu' }), links]);
+    const brand = el('span', { class: 'brand-name' }, [el('strong', { text: 'Zebu' })]);
+    // the socket to the workspace is up: changes made elsewhere arrive as they happen
+    if (state.live) brand.append(el('span', { class: 'live-dot', title: t('popup_live') }));
+    return el('div', { class: 'brand' }, [brand, links]);
 }
 
 const units = () => ({ hour: t('unit_hour'), minute: t('unit_minute'), day: t('unit_day'), week: t('unit_week') });
@@ -627,7 +630,7 @@ function watchTimer(): void {
     watch = window.setTimeout(async () => {
         try {
             const next = await call<State>({ type: 'state:pulse' });
-            const changed = next.running?.id !== state.running?.id || next.running?.timer_started_at !== state.running?.timer_started_at;
+            const changed = next.running?.id !== state.running?.id || next.running?.timer_started_at !== state.running?.timer_started_at || next.live !== state.live;
             state = next;
             if (!changed) return watchTimer();
             // Only redraw on a real change, and never over the form: it holds
@@ -647,8 +650,10 @@ function watchTimer(): void {
  * service worker will not ask the server either way, so polling it every two
  * seconds only spins this window (board #216).
  */
-export function nextWatchIn(state: Pick<State, 'running' | 'downUntil'>, now: number): number {
+export function nextWatchIn(state: Pick<State, 'running' | 'downUntil' | 'live'>, now: number): number {
     if (isHeld(state.downUntil, now)) return Math.max(state.downUntil! - now, POLL.idle);
+    // pushed changes arrive on their own; the pulse is only a backstop
+    if (state.live) return POLL.live;
 
     return state.running ? POLL.running : POLL.idle;
 }
