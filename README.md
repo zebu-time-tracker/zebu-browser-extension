@@ -1,4 +1,9 @@
-# Zebu for Chrome
+# Zebu for browsers
+
+One extension for Chrome, Firefox and Safari, built from one source (`npm run build` makes
+`dist/chrome`, `dist/firefox` and `dist/safari`). What each browser cannot do is a fact in
+`src/platform.ts`, not a fork: Safari has no idle detection or notifications, Firefox shows the
+idle prompt without buttons and asks for the workspace host on connect.
 
 Track time in Zebu from the places work actually happens. On GitHub, GitLab, Jira, Linear,
 Asana, Trello, Bitbucket, ClickUp and Basecamp issue pages a **Track time** button appears
@@ -55,10 +60,12 @@ Manifest V3, TypeScript, no framework. Talks to the same workspace API as the de
 ```sh
 npm install
 npm run icons      # generates icons/*.png (once)
-npm run build      # → dist/
+npm run build      # → dist/chrome, dist/firefox, dist/safari
+npm run build:firefox   # one target; npm run watch rebuilds chrome on change
 ```
 
-Then `chrome://extensions` → *Developer mode* → *Load unpacked* → pick `dist/`. `npm run watch`
+Then `chrome://extensions` → *Developer mode* → *Load unpacked* → pick `dist/chrome/`; in Firefox
+`about:debugging#/runtime/this-firefox` → *Load Temporary Add-on* → `dist/firefox/manifest.json`. `npm run watch`
 rebuilds the scripts on change (reload the extension to pick them up; static files are copied once).
 
 ## Connect a workspace
@@ -86,14 +93,15 @@ Add one object to `ADAPTERS` in `src/content/adapters.ts`: a hostname test, `det
 returning an `Issue` (identity from the URL, title from the DOM with a `document.title` fallback)
 and an optional `anchor(doc)` for where the button goes (missing anchor → floating button, so a
 selector change never hides the feature). Add the host to `content_scripts.matches` in
-`manifest.json`, and a test in `tests/adapters.test.ts`. Self-hosted instances of an existing
+`manifest.base.json`, and a test in `tests/adapters.test.ts`. Self-hosted instances of an existing
 tracker need no code: users add the origin on the options page and pick the tracker type.
 
 ## Scripts
 
 | Command | What |
 |---|---|
-| `npm run build` | Bundle to `dist/` |
+| `npm run build` | Bundle every browser to `dist/<target>/` |
+| `npm run package` | …and zip each into `dist/zebu-<target>-<version>.zip` |
 | `npm run watch` | Rebuild on change |
 | `npm test` | Unit tests (suggestions, adapters) |
 | `npm run typecheck` | `tsc --noEmit` |
@@ -102,7 +110,6 @@ tracker need no code: users add the origin on the options page and pick the trac
 
 ## Publishing
 
-Bump `version` in `manifest.json` and `package.json`, `npm run zip`, upload at the Chrome Web
-Store developer dashboard. The listing needs the 128px icon, screenshots, and a privacy
-disclosure: the extension stores a workspace token locally, reads the title/URL of issue pages on
-the listed sites, and sends only what you start a timer with to your own Zebu workspace.
+`scripts/release.sh --minor` tags a release; the workflow builds all three browsers, signs Firefox,
+uploads to the Chrome Web Store and publishes to https://app-downloads.zebu.work/extension/. See
+`docs/release.md`.

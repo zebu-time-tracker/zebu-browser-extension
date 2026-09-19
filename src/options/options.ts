@@ -6,6 +6,7 @@ import { t } from '../messaging';
 import { getSettings, saveMappings, saveSettings } from '../storage';
 import { ADAPTERS } from '../content/adapters';
 import { readBroadcast } from '../live';
+import { hasIdle, hostPermissionIsOptional, shortcutsPage } from '../platform';
 import type { Settings } from '../types';
 import { DEFAULT_DOMAIN, isWorkspaceName, resolveWorkspace, workspaceName } from '../workspace';
 
@@ -25,8 +26,12 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string,
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function ensureHostPermission(origin: string): Promise<boolean> {
-    if (/\.zebu\.work$/.test(new URL(origin).hostname)) return true; // covered by host_permissions
-    return chrome.permissions.request({ origins: [`${origin}/*`] });
+    const pattern = `${origin}/*`;
+    // Chrome grants the zebu.work hosts at install; Firefox only lists them
+    // as optional and asks the user here, inside the click (src/platform.ts).
+    if (/\.zebu\.work$/.test(new URL(origin).hostname) && !hostPermissionIsOptional()) return true;
+    if (await chrome.permissions.contains({ origins: [pattern] })) return true;
+    return chrome.permissions.request({ origins: [pattern] });
 }
 
 // The popup's connect screen hands its workspace over here (`?workspace=…&connect=1`),
@@ -209,9 +214,11 @@ function shortcutsCard(): HTMLElement {
             list.append(el('li', {}, [el('span', { text: command.description ?? command.name ?? '' }), el('span', { class: 'shortcut', text: command.shortcut || t('options_shortcut_unbound') })]));
         }
     });
-    const open = el('button', { class: 'btn secondary', text: t('options_shortcuts_open') });
-    open.addEventListener('click', () => void chrome.tabs.create({ url: 'chrome://extensions/shortcuts' }));
-    return el('section', { class: 'card' }, [el('h2', { text: t('options_shortcuts_heading') }), el('p', { class: 'hint', text: t('options_shortcuts_hint') }), list, open]);
+    // Only Chrome has a page to open; Firefox changes them under Add-ons → Manage Extension Shortcuts
+    const page = shortcutsPage();
+    const open = page ? el('button', { class: 'btn secondary', text: t('options_shortcuts_open') }) : null;
+    open?.addEventListener('click', () => void chrome.tabs.create({ url: page! }));
+    return el('section', { class: 'card' }, [el('h2', { text: t('options_shortcuts_heading') }), el('p', { class: 'hint', text: t('options_shortcuts_hint') }), list, ...(open ? [open] : [])]);
 }
 
 function forgetCard(): HTMLElement {
@@ -227,5 +234,14 @@ function forgetCard(): HTMLElement {
 (async () => {
     const settings = await getSettings();
     if (settings.appearance !== 'system') document.documentElement.dataset.theme = settings.appearance;
-    app.replaceChildren(el('h1', { text: t('options_title') }), workspaceCard(settings), notesCard(settings), idleCard(settings), shortcutsCard(), sitesCard(settings), forgetCard());
+    // Safari has no idle API, so the card for it would promise nothing (src/platform.ts)
+    app.replaceChildren(
+        el('h1', { text: t('options_title') }),
+        workspaceCard(settings),
+        notesCard(settings),
+        ...(hasIdle() ? [idleCard(settings)] : []),
+        shortcutsCard(),
+        sitesCard(settings),
+        forgetCard(),
+    );
 })();

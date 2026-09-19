@@ -1,13 +1,31 @@
-# Zebu for Chrome
+# Zebu browser extension
 
 Track time from issue trackers with project suggestions and device-flow
-login against the web app. Built with `build.mjs` (esbuild), tested with
-vitest, MV3 manifest in `manifest.json`.
+login against the web app. One source for Chrome, Firefox and Safari
+(board #287): `build.mjs --target <browser>` bundles with esbuild into
+`dist/<target>/` and writes the manifest from `manifest.base.json` plus
+`browsers/<target>.json` (scripts/manifest.mjs), with the version stamped
+from `package.json`. Tested with vitest.
 
 ```bash
 npm run build && npm run typecheck && npm test && npm run i18n:check
-npm run zip             # dist -> zebu-chrome-extension.zip for the store
+bash scripts/tests/publish-r2.test.sh   # release scripts
+npm run package                          # dist/zebu-<target>-<version>.zip
+scripts/release.sh --minor               # tag; the workflow does the rest (docs/release.md)
 ```
+
+Conventions:
+
+- Browser differences are facts in `src/platform.ts` (`hasIdle`,
+  `hasNotifications`, `hasNotificationButtons`, `hostPermissionIsOptional`,
+  `shortcutsPage`), each taking the target so `tests/platform.test.ts`
+  covers all three. Never sniff `navigator.userAgent`; `build.mjs` bakes
+  `__TARGET__` in.
+- A browser-specific manifest key goes in `browsers/<target>.json`; an
+  array there replaces the base's (Safari lists the permissions it can use).
+- Releases: tag-based, `scripts/release.sh`; nothing here deploys on push.
+  Chrome updates only through the Web Store, Firefox from
+  `extension/firefox/updates.json` on R2, Safari by hand for now.
 
 ## Task board (lite-kan) — shared across the Zebu suite
 
