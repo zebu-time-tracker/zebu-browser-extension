@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "먼저 확장 프로그램을 Zebu 워크스페이스에 연결하세요"
     },
-    "popup_not_connected": {
-        "message": "확장 프로그램을 Zebu 워크스페이스에 연결하면 여기서 타이머를 시작할 수 있습니다."
-    },
-    "popup_connect": {
-        "message": "워크스페이스 연결"
-    },
-    "popup_running": {
-        "message": "실행 중"
-    },
-    "popup_started": {
-        "message": "$1 시작됨",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "타이머 정지"
-    },
-    "popup_open_zebu": {
-        "message": "Zebu에서 열기"
-    },
-    "popup_new_timer": {
-        "message": "새 타이머"
-    },
-    "popup_for_issue": {
-        "message": "이 이슈용"
-    },
-    "popup_project": {
-        "message": "프로젝트"
     },
     "popup_project_search": {
         "message": "프로젝트 검색…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "제안됨"
     },
-    "popup_all_projects": {
-        "message": "모든 프로젝트"
-    },
     "popup_no_projects": {
         "message": "일치하는 프로젝트가 없습니다."
     },
-    "popup_task": {
-        "message": "작업"
-    },
     "popup_task_none": {
         "message": "작업 없음"
-    },
-    "popup_notes": {
-        "message": "메모"
     },
     "popup_start": {
         "message": "타이머 시작"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "설정"
-    },
-    "popup_today": {
-        "message": "오늘: $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "Chrome용 Zebu"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "시간 기록: “%s”"
     },
-    "popup_for_page": {
-        "message": "이 페이지"
-    },
     "popup_today_date": {
         "message": "오늘, $1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "이전 날"
-    },
-    "popup_next_day": {
-        "message": "다음 날"
-    },
-    "popup_no_entries": {
-        "message": "이 날에는 기록이 없습니다."
     },
     "popup_week_locked": {
         "message": "이번 주는 승인되어 잠겨 있습니다."
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "시작 (다른 타이머는 정지)"
-    },
-    "popup_duration": {
-        "message": "소요 시간"
     },
     "popup_error_duration": {
         "message": "1:30, 1.5 또는 90m 같은 형식으로 입력하세요."
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "다시 시작"
-    },
-    "popup_resume_fresh_title": {
-        "message": "해당 항목은 $1의 기록입니다. 같은 프로젝트·작업·메모로 오늘 새 타이머를 시작합니다.",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "프리셋"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "실시간 업데이트 켜짐"
+    },
+    "header_today": {
+        "message": "오늘"
+    },
+    "header_jump_today": {
+        "message": "오늘로 이동"
+    },
+    "popup_prev_week": {
+        "message": "이전 주"
+    },
+    "popup_next_week": {
+        "message": "다음 주"
+    },
+    "summary_hours_per_month": {
+        "message": "월별 시간 · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "$1부터 타이머 실행 중",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "합계"
+    },
+    "entry_uninvoiced": {
+        "message": "미청구"
+    },
+    "entry_budget": {
+        "message": "예산"
+    },
+    "newday_title": {
+        "message": "오늘 새 타이머를 시작할까요?"
+    },
+    "newday_body": {
+        "message": "해당 항목은 $1의 기록입니다. 같은 프로젝트·작업·메모로 오늘 새 타이머를 시작하며, 원본은 그대로 유지됩니다.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "오늘 시작"
+    },
+    "popup_select_project": {
+        "message": "프로젝트 선택…"
+    },
+    "popup_no_client": {
+        "message": "클라이언트 없음"
+    },
+    "popup_new_project_link": {
+        "message": "Zebu에서 새 프로젝트 ↗"
+    },
+    "popup_timer_running": {
+        "message": "타이머 실행 중"
+    },
+    "popup_notes_placeholder": {
+        "message": "메모 (선택)"
+    },
+    "popup_new_entry": {
+        "message": "새 시간 항목"
+    },
+    "settings_appearance": {
+        "message": "화면 모드"
+    },
+    "settings_dark": {
+        "message": "다크"
+    },
+    "settings_light": {
+        "message": "라이트"
+    },
+    "settings_system": {
+        "message": "시스템"
+    },
+    "settings_min": {
+        "message": "분"
+    },
+    "settings_open_browser": {
+        "message": "브라우저에서 Zebu 열기"
+    },
+    "settings_disconnect": {
+        "message": "이 기기 연결 해제"
+    },
+    "settings_more": {
+        "message": "추가 설정…"
+    },
+    "popup_loading": {
+        "message": "불러오는 중…"
+    },
+    "popup_login": {
+        "message": "로그인"
+    },
+    "popup_workspace": {
+        "message": "워크스페이스"
+    },
+    "popup_back_to_timers": {
+        "message": "타이머로 돌아가기"
     }
 }

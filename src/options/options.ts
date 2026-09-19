@@ -29,8 +29,12 @@ async function ensureHostPermission(origin: string): Promise<boolean> {
     return chrome.permissions.request({ origins: [`${origin}/*`] });
 }
 
+// The popup's connect screen hands its workspace over here (`?workspace=…&connect=1`),
+// because this tab stays open while the approval happens in another.
+const params = new URLSearchParams(location.search);
+
 function workspaceCard(settings: Settings): HTMLElement {
-    const input = el('input', { type: 'text', placeholder: t('options_workspace_placeholder'), value: settings.workspace }) as HTMLInputElement;
+    const input = el('input', { type: 'text', placeholder: t('options_workspace_placeholder'), value: settings.token ? settings.workspace : params.get('workspace') || settings.workspace }) as HTMLInputElement;
     const button = el('button', { class: 'btn', text: settings.token ? t('options_disconnect') : t('options_connect') }) as HTMLButtonElement;
     const status = el('p', { class: 'status' });
 
@@ -88,6 +92,8 @@ function workspaceCard(settings: Settings): HTMLElement {
             button.disabled = false;
         }
     });
+
+    if (!settings.token && params.get('connect') && input.value.trim()) queueMicrotask(() => button.click());
 
     return el('section', { class: 'card' }, [
         el('h2', { text: t('options_workspace_heading') }),
@@ -216,5 +222,6 @@ function forgetCard(): HTMLElement {
 
 (async () => {
     const settings = await getSettings();
+    if (settings.appearance !== 'system') document.documentElement.dataset.theme = settings.appearance;
     app.replaceChildren(el('h1', { text: t('options_title') }), workspaceCard(settings), notesCard(settings), idleCard(settings), shortcutsCard(), sitesCard(settings), forgetCard());
 })();

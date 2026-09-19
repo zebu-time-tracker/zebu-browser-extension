@@ -1,43 +1,84 @@
+/* The options page shares the popup's theme and controls; only the page layout is its own. */
 @import url('popup.css');
 
 body,
 body.window {
     width: auto;
     min-height: 100vh;
+    user-select: text;
 }
 .app {
     max-width: 640px;
     margin: 0 auto;
     padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
     gap: 18px;
 }
 h1 {
-    margin: 0;
     font-size: 20px;
+    font-weight: 700;
+}
+.card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+.card h2 {
+    margin: 0 0 6px;
+    font-size: 12px;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
 }
 .card p.hint {
-    margin: 0 0 8px;
+    margin: 0 0 10px;
     color: var(--muted);
     font-size: 12px;
+    opacity: 1;
 }
 .inline {
     display: flex;
     gap: 8px;
-    align-items: flex-end;
+    align-items: stretch;
 }
 .inline input,
 .inline select {
     flex: 1;
+    min-width: 0;
 }
-.inline .btn {
-    width: auto;
-    margin-top: 0;
-    padding: 8px 14px;
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.btn:disabled {
+    opacity: 0.6;
+}
+.btn.secondary {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+}
+.btn.secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
 }
 .status {
     margin-top: 10px;
     font-size: 12px;
+    text-align: left;
+    padding: 0;
 }
 .status.ok {
     color: var(--accent);
@@ -58,36 +99,50 @@ h1 {
     align-items: center;
     gap: 8px;
     padding: 6px 9px;
-    border: 1px solid var(--line);
-    border-radius: 7px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     background: var(--bg);
 }
 .sites li button {
-    border: 0;
-    background: transparent;
     color: var(--danger);
-    cursor: pointer;
-    font: inherit;
-}
-.radios label {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    color: var(--ink);
-    margin: 6px 0;
 }
 .sites li .shortcut {
     color: var(--muted);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
+.sites + .btn {
+    margin-top: 10px;
+}
+.radios label,
 .idle-row {
     display: flex;
-    align-items: center;
     gap: 8px;
-    color: var(--ink);
+    align-items: center;
     margin: 6px 0;
+}
+.radios input[type='radio'] {
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-grid;
+    place-content: center;
+    flex: none;
+    cursor: pointer;
+}
+.radios input[type='radio']:checked {
+    border-color: var(--accent);
+}
+.radios input[type='radio']:checked::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
 }
 .idle-row input.minutes {
     width: 64px;
+    padding: 4px 6px;
+    text-align: center;
 }

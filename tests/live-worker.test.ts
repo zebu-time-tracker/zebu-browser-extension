@@ -59,7 +59,7 @@ const chromeStub = {
         session: { get: async () => ({}), set: async () => undefined, remove: async () => undefined },
         onChanged: { addListener: () => undefined },
     },
-    action: { setBadgeText: async () => undefined, setBadgeBackgroundColor: async () => undefined },
+    action: { setBadgeText: async () => undefined, setBadgeBackgroundColor: async () => undefined, setIcon: async () => undefined, setTitle: async () => undefined },
     tabs: { query: async () => [{ id: 1 }], sendMessage: async (_id: number, m: unknown) => void messages.push(m), update: async () => undefined },
     windows: { get: async () => undefined, create: async () => ({ id: 1 }), update: async () => undefined },
     runtime: {

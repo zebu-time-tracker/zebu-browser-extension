@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "Connetti prima l'estensione al tuo workspace Zebu"
     },
-    "popup_not_connected": {
-        "message": "Connetti l'estensione al tuo workspace Zebu per avviare timer da qui."
-    },
-    "popup_connect": {
-        "message": "Connetti workspace"
-    },
-    "popup_running": {
-        "message": "In corso"
-    },
-    "popup_started": {
-        "message": "avviato $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "Ferma timer"
-    },
-    "popup_open_zebu": {
-        "message": "Apri in Zebu"
-    },
-    "popup_new_timer": {
-        "message": "Nuovo timer"
-    },
-    "popup_for_issue": {
-        "message": "Per questo problema"
-    },
-    "popup_project": {
-        "message": "Progetto"
     },
     "popup_project_search": {
         "message": "Cerca progetti…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "Suggerito"
     },
-    "popup_all_projects": {
-        "message": "Tutti i progetti"
-    },
     "popup_no_projects": {
         "message": "Nessun progetto corrisponde."
     },
-    "popup_task": {
-        "message": "Attività"
-    },
     "popup_task_none": {
         "message": "Nessuna attività"
-    },
-    "popup_notes": {
-        "message": "Note"
     },
     "popup_start": {
         "message": "Avvia timer"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "Impostazioni"
-    },
-    "popup_today": {
-        "message": "Oggi: $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "Zebu per Chrome"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "Traccia il tempo: “%s”"
     },
-    "popup_for_page": {
-        "message": "Questa pagina"
-    },
     "popup_today_date": {
         "message": "Oggi, $1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "Giorno precedente"
-    },
-    "popup_next_day": {
-        "message": "Giorno successivo"
-    },
-    "popup_no_entries": {
-        "message": "Nessuna registrazione in questo giorno."
     },
     "popup_week_locked": {
         "message": "Questa settimana è approvata e bloccata."
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "Avvia (ferma gli altri timer)"
-    },
-    "popup_duration": {
-        "message": "Durata"
     },
     "popup_error_duration": {
         "message": "Inserisci una durata come 1:30, 1,5 o 90m."
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "Riprendi"
-    },
-    "popup_resume_fresh_title": {
-        "message": "Quella voce è del $1 — oggi parte un nuovo timer con lo stesso progetto, attività e note.",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "Modelli"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "Aggiornamenti in tempo reale attivi"
+    },
+    "header_today": {
+        "message": "Oggi"
+    },
+    "header_jump_today": {
+        "message": "Vai a oggi"
+    },
+    "popup_prev_week": {
+        "message": "Settimana precedente"
+    },
+    "popup_next_week": {
+        "message": "Settimana successiva"
+    },
+    "summary_hours_per_month": {
+        "message": "Ore al mese · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "Timer attivo dal $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "Totale"
+    },
+    "entry_uninvoiced": {
+        "message": "Non fatturato"
+    },
+    "entry_budget": {
+        "message": "Budget"
+    },
+    "newday_title": {
+        "message": "Avviare un nuovo timer per oggi?"
+    },
+    "newday_body": {
+        "message": "Quella voce è del $1. Oggi parte un nuovo timer con lo stesso progetto, attività e note — l'originale resta invariata.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "Avvia oggi"
+    },
+    "popup_select_project": {
+        "message": "Scegli progetto…"
+    },
+    "popup_no_client": {
+        "message": "Nessun cliente"
+    },
+    "popup_new_project_link": {
+        "message": "Nuovo progetto in Zebu ↗"
+    },
+    "popup_timer_running": {
+        "message": "Timer attivo"
+    },
+    "popup_notes_placeholder": {
+        "message": "Note (facoltative)"
+    },
+    "popup_new_entry": {
+        "message": "Nuova voce"
+    },
+    "settings_appearance": {
+        "message": "Aspetto"
+    },
+    "settings_dark": {
+        "message": "Scuro"
+    },
+    "settings_light": {
+        "message": "Chiaro"
+    },
+    "settings_system": {
+        "message": "Sistema"
+    },
+    "settings_min": {
+        "message": "min"
+    },
+    "settings_open_browser": {
+        "message": "Apri Zebu nel browser"
+    },
+    "settings_disconnect": {
+        "message": "Disconnetti questo dispositivo"
+    },
+    "settings_more": {
+        "message": "Altre impostazioni…"
+    },
+    "popup_loading": {
+        "message": "Caricamento…"
+    },
+    "popup_login": {
+        "message": "Accedi"
+    },
+    "popup_workspace": {
+        "message": "Spazio di lavoro"
+    },
+    "popup_back_to_timers": {
+        "message": "Torna ai timer"
     }
 }

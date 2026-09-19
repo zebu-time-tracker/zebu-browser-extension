@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "Verbind de extensie eerst met je Zebu-werkruimte"
     },
-    "popup_not_connected": {
-        "message": "Verbind de extensie met je Zebu-werkruimte om hier timers te starten."
-    },
-    "popup_connect": {
-        "message": "Werkruimte verbinden"
-    },
-    "popup_running": {
-        "message": "Actief"
-    },
-    "popup_started": {
-        "message": "gestart $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "Timer stoppen"
-    },
-    "popup_open_zebu": {
-        "message": "Openen in Zebu"
-    },
-    "popup_new_timer": {
-        "message": "Nieuwe timer"
-    },
-    "popup_for_issue": {
-        "message": "Voor deze issue"
-    },
-    "popup_project": {
-        "message": "Project"
     },
     "popup_project_search": {
         "message": "Projecten zoeken…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "Voorgesteld"
     },
-    "popup_all_projects": {
-        "message": "Alle projecten"
-    },
     "popup_no_projects": {
         "message": "Geen projecten gevonden."
     },
-    "popup_task": {
-        "message": "Taak"
-    },
     "popup_task_none": {
         "message": "Geen taak"
-    },
-    "popup_notes": {
-        "message": "Notities"
     },
     "popup_start": {
         "message": "Timer starten"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "Instellingen"
-    },
-    "popup_today": {
-        "message": "Vandaag: $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "Zebu voor Chrome"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "Tijd registreren: ‘%s’"
     },
-    "popup_for_page": {
-        "message": "Deze pagina"
-    },
     "popup_today_date": {
         "message": "Vandaag, $1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "Vorige dag"
-    },
-    "popup_next_day": {
-        "message": "Volgende dag"
-    },
-    "popup_no_entries": {
-        "message": "Niets geregistreerd op deze dag."
     },
     "popup_week_locked": {
         "message": "Deze week is goedgekeurd en vergrendeld."
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "Starten (stopt andere timers)"
-    },
-    "popup_duration": {
-        "message": "Duur"
     },
     "popup_error_duration": {
         "message": "Voer een duur in zoals 1:30, 1,5 of 90m."
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "Hervatten"
-    },
-    "popup_resume_fresh_title": {
-        "message": "Die registratie is van $1 — er start vandaag een nieuwe timer met hetzelfde project, dezelfde taak en notities.",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "Sjablonen"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "Live-updates aan"
+    },
+    "header_today": {
+        "message": "Vandaag"
+    },
+    "header_jump_today": {
+        "message": "Naar vandaag"
+    },
+    "popup_prev_week": {
+        "message": "Vorige week"
+    },
+    "popup_next_week": {
+        "message": "Volgende week"
+    },
+    "summary_hours_per_month": {
+        "message": "Uren per maand · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "Timer loopt sinds $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "Totaal"
+    },
+    "entry_uninvoiced": {
+        "message": "Ongefactureerd"
+    },
+    "entry_budget": {
+        "message": "Budget"
+    },
+    "newday_title": {
+        "message": "Nieuwe timer voor vandaag starten?"
+    },
+    "newday_body": {
+        "message": "Die registratie is van $1. Er start vandaag een nieuwe timer met hetzelfde project, dezelfde taak en notities — het origineel blijft staan.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "Vandaag starten"
+    },
+    "popup_select_project": {
+        "message": "Project kiezen…"
+    },
+    "popup_no_client": {
+        "message": "Geen klant"
+    },
+    "popup_new_project_link": {
+        "message": "Nieuw project in Zebu ↗"
+    },
+    "popup_timer_running": {
+        "message": "Timer loopt"
+    },
+    "popup_notes_placeholder": {
+        "message": "Notities (optioneel)"
+    },
+    "popup_new_entry": {
+        "message": "Nieuwe registratie"
+    },
+    "settings_appearance": {
+        "message": "Weergave"
+    },
+    "settings_dark": {
+        "message": "Donker"
+    },
+    "settings_light": {
+        "message": "Licht"
+    },
+    "settings_system": {
+        "message": "Systeem"
+    },
+    "settings_min": {
+        "message": "min"
+    },
+    "settings_open_browser": {
+        "message": "Open Zebu in de browser"
+    },
+    "settings_disconnect": {
+        "message": "Dit apparaat loskoppelen"
+    },
+    "settings_more": {
+        "message": "Meer instellingen…"
+    },
+    "popup_loading": {
+        "message": "Laden…"
+    },
+    "popup_login": {
+        "message": "Inloggen"
+    },
+    "popup_workspace": {
+        "message": "Werkruimte"
+    },
+    "popup_back_to_timers": {
+        "message": "Terug naar timers"
     }
 }

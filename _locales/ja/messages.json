@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "まず拡張機能をZebuのワークスペースに接続してください"
     },
-    "popup_not_connected": {
-        "message": "拡張機能をZebuのワークスペースに接続すると、ここからタイマーを開始できます。"
-    },
-    "popup_connect": {
-        "message": "ワークスペースを接続"
-    },
-    "popup_running": {
-        "message": "実行中"
-    },
-    "popup_started": {
-        "message": "$1 に開始",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "タイマーを停止"
-    },
-    "popup_open_zebu": {
-        "message": "Zebuで開く"
-    },
-    "popup_new_timer": {
-        "message": "新しいタイマー"
-    },
-    "popup_for_issue": {
-        "message": "この課題の場合"
-    },
-    "popup_project": {
-        "message": "プロジェクト"
     },
     "popup_project_search": {
         "message": "プロジェクトを検索…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "提案"
     },
-    "popup_all_projects": {
-        "message": "すべてのプロジェクト"
-    },
     "popup_no_projects": {
         "message": "一致するプロジェクトがありません。"
     },
-    "popup_task": {
-        "message": "タスク"
-    },
     "popup_task_none": {
         "message": "タスクなし"
-    },
-    "popup_notes": {
-        "message": "メモ"
     },
     "popup_start": {
         "message": "タイマーを開始"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "設定"
-    },
-    "popup_today": {
-        "message": "今日: $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "Chrome版Zebu"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "時間を記録: 「%s」"
     },
-    "popup_for_page": {
-        "message": "このページ"
-    },
     "popup_today_date": {
         "message": "今日・$1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "前日"
-    },
-    "popup_next_day": {
-        "message": "翌日"
-    },
-    "popup_no_entries": {
-        "message": "この日は記録がありません。"
     },
     "popup_week_locked": {
         "message": "この週は承認済みでロックされています。"
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "開始 (他のタイマーは停止)"
-    },
-    "popup_duration": {
-        "message": "時間"
     },
     "popup_error_duration": {
         "message": "1:30、1.5、90m のように入力してください。"
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "再開"
-    },
-    "popup_resume_fresh_title": {
-        "message": "そのエントリは $1 のものです。同じプロジェクト・タスク・メモで今日から新しいタイマーを開始します。",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "プリセット"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "ライブ更新オン"
+    },
+    "header_today": {
+        "message": "今日"
+    },
+    "header_jump_today": {
+        "message": "今日へ移動"
+    },
+    "popup_prev_week": {
+        "message": "前の週"
+    },
+    "popup_next_week": {
+        "message": "次の週"
+    },
+    "summary_hours_per_month": {
+        "message": "月別の時間 · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "$1 からタイマー実行中",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "合計"
+    },
+    "entry_uninvoiced": {
+        "message": "未請求"
+    },
+    "entry_budget": {
+        "message": "予算"
+    },
+    "newday_title": {
+        "message": "今日の新しいタイマーを開始しますか？"
+    },
+    "newday_body": {
+        "message": "そのエントリは $1 のものです。同じプロジェクト・タスク・メモで今日から新しいタイマーを開始します。元のエントリはそのまま残ります。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "今日から開始"
+    },
+    "popup_select_project": {
+        "message": "プロジェクトを選択…"
+    },
+    "popup_no_client": {
+        "message": "クライアントなし"
+    },
+    "popup_new_project_link": {
+        "message": "Zebu で新しいプロジェクト ↗"
+    },
+    "popup_timer_running": {
+        "message": "タイマー実行中"
+    },
+    "popup_notes_placeholder": {
+        "message": "メモ (任意)"
+    },
+    "popup_new_entry": {
+        "message": "新規エントリ"
+    },
+    "settings_appearance": {
+        "message": "外観"
+    },
+    "settings_dark": {
+        "message": "ダーク"
+    },
+    "settings_light": {
+        "message": "ライト"
+    },
+    "settings_system": {
+        "message": "システム"
+    },
+    "settings_min": {
+        "message": "分"
+    },
+    "settings_open_browser": {
+        "message": "ブラウザで Zebu を開く"
+    },
+    "settings_disconnect": {
+        "message": "この端末の接続を解除"
+    },
+    "settings_more": {
+        "message": "その他の設定…"
+    },
+    "popup_loading": {
+        "message": "読み込み中…"
+    },
+    "popup_login": {
+        "message": "ログイン"
+    },
+    "popup_workspace": {
+        "message": "ワークスペース"
+    },
+    "popup_back_to_timers": {
+        "message": "タイマーに戻る"
     }
 }

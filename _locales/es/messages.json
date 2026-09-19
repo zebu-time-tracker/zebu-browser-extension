@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "Conecta primero la extensión a tu espacio de trabajo de Zebu"
     },
-    "popup_not_connected": {
-        "message": "Conecta la extensión a tu espacio de trabajo de Zebu para iniciar temporizadores desde aquí."
-    },
-    "popup_connect": {
-        "message": "Conectar espacio de trabajo"
-    },
-    "popup_running": {
-        "message": "En marcha"
-    },
-    "popup_started": {
-        "message": "iniciado $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "Detener temporizador"
-    },
-    "popup_open_zebu": {
-        "message": "Abrir en Zebu"
-    },
-    "popup_new_timer": {
-        "message": "Nuevo temporizador"
-    },
-    "popup_for_issue": {
-        "message": "Para esta incidencia"
-    },
-    "popup_project": {
-        "message": "Proyecto"
     },
     "popup_project_search": {
         "message": "Buscar proyectos…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "Sugerido"
     },
-    "popup_all_projects": {
-        "message": "Todos los proyectos"
-    },
     "popup_no_projects": {
         "message": "Ningún proyecto coincide."
     },
-    "popup_task": {
-        "message": "Tarea"
-    },
     "popup_task_none": {
         "message": "Sin tarea"
-    },
-    "popup_notes": {
-        "message": "Notas"
     },
     "popup_start": {
         "message": "Iniciar temporizador"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "Configuración"
-    },
-    "popup_today": {
-        "message": "Hoy: $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "Zebu para Chrome"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "Registrar tiempo: «%s»"
     },
-    "popup_for_page": {
-        "message": "Esta página"
-    },
     "popup_today_date": {
         "message": "Hoy, $1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "Día anterior"
-    },
-    "popup_next_day": {
-        "message": "Día siguiente"
-    },
-    "popup_no_entries": {
-        "message": "Nada registrado este día."
     },
     "popup_week_locked": {
         "message": "Esta semana está aprobada y bloqueada."
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "Iniciar (detiene otros temporizadores)"
-    },
-    "popup_duration": {
-        "message": "Duración"
     },
     "popup_error_duration": {
         "message": "Introduce una duración como 1:30, 1,5 o 90m."
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "Reanudar"
-    },
-    "popup_resume_fresh_title": {
-        "message": "Esa entrada es del $1; hoy se inicia un temporizador nuevo con el mismo proyecto, tarea y notas.",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "Plantillas"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "Actualizaciones en directo activas"
+    },
+    "header_today": {
+        "message": "Hoy"
+    },
+    "header_jump_today": {
+        "message": "Ir a hoy"
+    },
+    "popup_prev_week": {
+        "message": "Semana anterior"
+    },
+    "popup_next_week": {
+        "message": "Semana siguiente"
+    },
+    "summary_hours_per_month": {
+        "message": "Horas por mes · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "Temporizador activo desde el $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "Total"
+    },
+    "entry_uninvoiced": {
+        "message": "Sin facturar"
+    },
+    "entry_budget": {
+        "message": "Presupuesto"
+    },
+    "newday_title": {
+        "message": "¿Iniciar un temporizador nuevo hoy?"
+    },
+    "newday_body": {
+        "message": "Esa entrada es del $1. Hoy se inicia un temporizador nuevo con el mismo proyecto, tarea y notas; la original no cambia.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "Iniciar hoy"
+    },
+    "popup_select_project": {
+        "message": "Elegir proyecto…"
+    },
+    "popup_no_client": {
+        "message": "Sin cliente"
+    },
+    "popup_new_project_link": {
+        "message": "Nuevo proyecto en Zebu ↗"
+    },
+    "popup_timer_running": {
+        "message": "Temporizador activo"
+    },
+    "popup_notes_placeholder": {
+        "message": "Notas (opcional)"
+    },
+    "popup_new_entry": {
+        "message": "Nueva entrada"
+    },
+    "settings_appearance": {
+        "message": "Apariencia"
+    },
+    "settings_dark": {
+        "message": "Oscuro"
+    },
+    "settings_light": {
+        "message": "Claro"
+    },
+    "settings_system": {
+        "message": "Sistema"
+    },
+    "settings_min": {
+        "message": "min"
+    },
+    "settings_open_browser": {
+        "message": "Abrir Zebu en el navegador"
+    },
+    "settings_disconnect": {
+        "message": "Desconectar este dispositivo"
+    },
+    "settings_more": {
+        "message": "Más ajustes…"
+    },
+    "popup_loading": {
+        "message": "Cargando…"
+    },
+    "popup_login": {
+        "message": "Iniciar sesión"
+    },
+    "popup_workspace": {
+        "message": "Espacio de trabajo"
+    },
+    "popup_back_to_timers": {
+        "message": "Volver a los temporizadores"
     }
 }

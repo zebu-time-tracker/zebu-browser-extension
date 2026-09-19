@@ -1,10 +1,11 @@
 // Service worker: the only piece that talks to Zebu. Keeps a short-lived
 // cache of the running timer and the project list for the content scripts
 // and the popup, opens the timer window for a page's issue, and shows a
-// badge while a timer runs.
+// clock in the toolbar icon while a timer runs.
 import { api, ApiError } from './api';
 import { inWeek, toDateString } from './dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes } from './duration';
+import { CLOCK_GREEN, clockImages } from './icon';
 import { detectionInterval, idleActionForButton, idleMinutes, idleWindowStart } from './idle';
 import { lastTimerFor, lastTimerFrom } from './lastTimer';
 import { backoffMs, KEEPALIVE_MS, parseFrame, PING, PONG, readBroadcast, shouldRefetch, socketIdOf, socketUrl, subscribeFrame, timerChangedOf } from './live';
@@ -24,7 +25,7 @@ import type { Entry, Issue, Message, State, WeekSheet } from './types';
  */
 const CACHE_MS = 15 * 1000;
 
-const empty = (): State => ({ connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, fetchedAt: Date.now(), pulseToken: '', skewMs: 0, downUntil: null, live: false });
+const empty = (): State => ({ connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, projectStats: {}, fetchedAt: Date.now(), pulseToken: '', skewMs: 0, downUntil: null, live: false });
 
 let cache: State = { ...empty(), fetchedAt: 0 };
 
@@ -46,6 +47,7 @@ export async function refresh(force = false): Promise<State> {
             entries: sheet.entries,
             weekStart: sheet.week_start,
             weekLocked: sheet.week_locked,
+            projectStats: sheet.project_stats ?? {},
             fetchedAt: Date.now(),
             pulseToken: sheet.pulse_token ?? '',
             // Measured the moment the reply lands, so the round trip is not
@@ -115,10 +117,10 @@ export async function pulse(): Promise<State> {
  */
 export async function weekSheet(date: string): Promise<WeekSheet> {
     const state = await refresh();
-    if (!state.connected) return { entries: [], weekStart: '', weekLocked: false };
-    if (inWeek(date, state.weekStart)) return { entries: state.entries, weekStart: state.weekStart, weekLocked: state.weekLocked };
+    if (!state.connected) return { entries: [], weekStart: '', weekLocked: false, projectStats: {} };
+    if (inWeek(date, state.weekStart)) return { entries: state.entries, weekStart: state.weekStart, weekLocked: state.weekLocked, projectStats: state.projectStats };
     const sheet = await api.timesheet(date);
-    return { entries: sheet.entries, weekStart: sheet.week_start, weekLocked: sheet.week_locked };
+    return { entries: sheet.entries, weekStart: sheet.week_start, weekLocked: sheet.week_locked, projectStats: sheet.project_stats ?? {} };
 }
 
 /** After a change on the server: refetch, and tell every page. */
@@ -128,11 +130,36 @@ async function changed(): Promise<State> {
     return state;
 }
 
-/** The badge is the running timer's clock, h:mm, as the menubar shows it (board #268); blank when nothing runs. */
+const DEFAULT_ICON = { 16: 'icons/16.png', 32: 'icons/32.png', 48: 'icons/48.png', 128: 'icons/128.png' };
+/** What the icon last showed, so a pulse every two seconds redraws nothing; 'unset' so the first call always applies. */
+let shownClock = 'unset';
+
+/**
+ * The toolbar icon is the running timer's clock (board #268): hours over
+ * minutes, drawn into the green square, as the menubar pill shows it. The
+ * badge is the fallback where the worker cannot draw. Nothing running: the
+ * plain icon.
+ */
 async function badge(running: Entry | null): Promise<void> {
-    const text = running ? formatMinutes(elapsedMinutes(running, Date.now() - cache.skewMs)) : '';
-    await chrome.action.setBadgeText({ text });
-    if (text) await chrome.action.setBadgeBackgroundColor({ color: '#197300' });
+    const minutes = running ? Math.round(elapsedMinutes(running, Date.now() - cache.skewMs)) : null;
+    const key = running ? `${running.id}:${minutes}` : '';
+    if (key === shownClock) return;
+    shownClock = key;
+    if (!running || minutes === null) {
+        await chrome.action.setIcon({ path: DEFAULT_ICON });
+        await chrome.action.setBadgeText({ text: '' });
+        await chrome.action.setTitle({ title: 'Zebu' });
+        return;
+    }
+    const images = clockImages(minutes);
+    if (images) {
+        await chrome.action.setIcon({ imageData: images });
+        await chrome.action.setBadgeText({ text: '' });
+    } else {
+        await chrome.action.setBadgeText({ text: formatMinutes(minutes) });
+        await chrome.action.setBadgeBackgroundColor({ color: CLOCK_GREEN });
+    }
+    await chrome.action.setTitle({ title: `${[running.project, running.task].filter(Boolean).join(' · ') || 'Zebu'} · ${formatMinutes(minutes)}` });
 }
 
 /**
@@ -266,6 +293,7 @@ chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) =
                     project_id: message.projectId,
                     task_id: message.taskId,
                     notes: message.notes,
+                    date: message.date,
                     // null means the duration was not touched: leave a running clock alone
                     ...(message.minutes === null ? {} : { minutes: message.minutes }),
                 });

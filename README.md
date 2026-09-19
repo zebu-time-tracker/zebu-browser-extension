@@ -12,31 +12,41 @@ and selected text becomes the description. The right-click menu offers **Track t
 page** and, with a selection, **Track time: "…"**. A tracker page keeps its issue identity when
 tracked from either.
 
-The toolbar popup is also the day's timesheet, as in the desktop app: today's entries with a
-running total, ▶ to resume one and ■ to stop, ‹ › to other days, and a form to start a timer or
-log a finished block (a duration such as `1:30`, `1.5` or `90m`). Click an entry to edit its
-project, task, notes or duration, or delete it. Invoiced entries and approved weeks are read-only,
-as the workspace requires.
+The toolbar popup is the desktop app's menubar popover, in Chrome: a header naming the day, a
+week strip with each day's total (‹ › move a week, the days are buttons, *Today ⤴︎* jumps back),
+and the day's entries — client, code and project, task and notes, the project's total, uninvoiced
+time and budget — with ▶ to resume one and ■ to stop. Click an entry to edit it; ＋ opens the
+entry sheet, where a project picker grouped by client (with the page's suggested projects on top),
+a task, a date, a duration (`1:30`, `1.5`, `90m`) and notes start a timer or log a finished block.
+Invoiced entries and approved weeks are read-only, as the workspace requires. A timer running on
+another day is pinned above the list as a jump target.
 
 Also from the desktop: ☆ **presets** (a saved project and task, started with one click, renamed
 or deleted in place; stored locally per workspace), a **Resume** bar for the last timer when
-nothing runs, and the toolbar badge showing the running timer's `h:mm`. Three **keyboard
+nothing runs (an older day's entry asks before starting a fresh timer today), ⚙ **settings** in
+the footer (who is signed in, appearance, idle detection, the keyboard shortcuts, disconnect) and
+the toolbar icon becoming the running timer's clock — hours over minutes, drawn into the green
+square like the menubar pill, with the project and time in its tooltip. Three **keyboard
 shortcuts** are suggested — Alt+Shift+Z opens the popup, Alt+Shift+S starts or stops the timer,
 Alt+Shift+N starts a timer for the page you are on — and can be changed at
-`chrome://extensions/shortcuts` (the options page links there).
+`chrome://extensions/shortcuts`.
 
 **Idle detection**, on by default: while a timer runs and Chrome reports the machine idle (ten
-minutes without input; change it on the options page), coming back shows a notification with the
+minutes without input; change it in the settings), coming back shows a notification with the
 desktop's choices — remove the idle time and keep timing, remove it and stop, or dismiss to keep
-it. **Insights** in the popup header shows the dashboard's summary: today, yesterday, this and
-last week, this month, billable share, uninvoiced time and money, and hours per day this month.
+it. **Insights** (the chart button in the header) is the desktop's Insights panel: today,
+yesterday, this and last week, this month, billable share, uninvoiced time and money, and hours
+per day this month and per month this year, counting up with the running timer.
+
+The popup follows the system theme, or the Appearance setting; the options page (self-hosted
+trackers, note format, forgetting learned suggestions) is behind *More settings…*.
 
 **Live updates.** When the workspace broadcasts (Laravel Reverb; `GET /api/me` carries a
 `broadcast` block), the service worker keeps a websocket to it and refetches the moment a timer is
 started, stopped or edited anywhere else — about a hundred milliseconds instead of the next poll.
 The pulse slows to a 30-second backstop while the socket is up and returns to its usual cadence
-when it is down; a green dot beside the name in the popup shows the socket is connected. Without a
-`broadcast` block nothing changes.
+when it is down; a dot beside the day in the popup's header shows the socket is connected. Without
+a `broadcast` block nothing changes.
 
 Manifest V3, TypeScript, no framework. Talks to the same workspace API as the desktop app.
 

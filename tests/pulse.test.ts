@@ -25,6 +25,33 @@ const settings = { workspace: 'https://studio.zebu.work', token: 'tok' };
 
 const alarms = new Map<string, unknown>();
 let badgeText = '';
+let icon: { imageData?: Record<number, { texts: string[] }>; path?: Record<number, string> } = {};
+let title = '';
+
+// jsdom has no canvas: a stand-in that records what was written on it, so
+// the test can read the clock back off the "pixels".
+class FakeCanvas {
+    constructor(
+        public width: number,
+        public height: number,
+    ) {}
+    getContext() {
+        const texts: string[] = [];
+        return {
+            fillStyle: '',
+            font: '',
+            textAlign: '',
+            textBaseline: '',
+            beginPath: () => undefined,
+            roundRect: () => undefined,
+            fill: () => undefined,
+            clearRect: () => undefined,
+            fillText: (text: string) => texts.push(text),
+            getImageData: () => ({ texts }),
+        };
+    }
+}
+(globalThis as unknown as { OffscreenCanvas: unknown }).OffscreenCanvas = FakeCanvas;
 
 const chromeStub = {
     storage: {
@@ -32,7 +59,12 @@ const chromeStub = {
         session: { get: async () => ({}), set: async () => undefined, remove: async () => undefined },
         onChanged: { addListener: () => undefined },
     },
-    action: { setBadgeText: async ({ text }: { text: string }) => void (badgeText = text), setBadgeBackgroundColor: async () => undefined },
+    action: {
+        setBadgeText: async ({ text }: { text: string }) => void (badgeText = text),
+        setBadgeBackgroundColor: async () => undefined,
+        setIcon: async (details: typeof icon) => void (icon = details),
+        setTitle: async (details: { title: string }) => void (title = details.title),
+    },
     tabs: { query: async () => [], sendMessage: async () => undefined, update: async () => undefined },
     windows: { get: async () => undefined, create: async () => ({ id: 1 }), update: async () => undefined },
     runtime: {
@@ -182,17 +214,23 @@ describe('weekSheet', () => {
     });
 });
 
-describe('badge', () => {
-    // The badge is the running timer's clock, as the menubar shows it (board #268).
-    test('a running timer shows its h:mm, banked minutes included; nothing running clears it', async () => {
+describe('toolbar icon', () => {
+    // The icon is the running timer's clock, as the menubar pill shows it
+    // (board #268): hours over minutes, drawn into the square rather than
+    // squeezed into the badge.
+    test('a running timer is drawn as hours over minutes, banked minutes included; nothing running restores the plain icon', async () => {
         vi.setSystemTime(new Date('2026-09-11T10:19:00Z'));
-        timesheet.mockResolvedValue(sheet({ ...entry, minutes: 12 }, 'tok-1'));
+        timesheet.mockResolvedValue(sheet({ ...entry, project: 'Website', task: 'Dev', minutes: 12 }, 'tok-1'));
         await background.refresh(true);
-        expect(badgeText).toBe('0:31');
+        expect(icon.imageData?.[16].texts).toEqual(['0h', '31m']);
+        expect(Object.keys(icon.imageData ?? {})).toEqual(['16', '32', '48', '64']);
+        expect(badgeText).toBe('');
+        expect(title).toBe('Website · Dev · 0:31');
 
         timesheet.mockResolvedValue(sheet(null, 'tok-2'));
         await background.refresh(true);
-        expect(badgeText).toBe('');
+        expect(icon.path?.[16]).toBe('icons/16.png');
+        expect(title).toBe('Zebu');
         vi.useRealTimers();
     });
 });

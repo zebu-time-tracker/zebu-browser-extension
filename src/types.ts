@@ -63,6 +63,8 @@ export interface WeekSheet {
     weekStart: string;
     /** An approved week: nothing in it can be edited, resumed or added to. */
     weekLocked: boolean;
+    /** Per-project totals for the rows' stats line, keyed by project id. */
+    projectStats: Record<string, ProjectStats>;
 }
 
 export interface Settings {
@@ -79,6 +81,8 @@ export interface Settings {
     idleMinutes: number;
     /** Where the workspace pushes timer changes (board #279), from GET /api/me at connect time; null when it does not broadcast. */
     broadcast: BroadcastConfig | null;
+    /** The popup's theme: follow the system, or force one, as the desktop's Appearance setting. */
+    appearance: 'system' | 'dark' | 'light';
 }
 
 /** The `broadcast` block of GET /api/me: where to open the socket and which private channel is this person's. */
@@ -129,6 +133,7 @@ export interface State {
     entries: Entry[];
     weekStart: string;
     weekLocked: boolean;
+    projectStats: Record<string, ProjectStats>;
     fetchedAt: number;
     /**
      * The pulse token this state is the answer to. Poll /api/timer/pulse and
@@ -167,7 +172,7 @@ export type Message =
     | { type: 'sheet:get'; date: string }
     | { type: 'timer:resume'; entryId: string; projectId: string }
     | { type: 'entry:add'; issue: Issue | null; projectId: string; taskId: string | null; date: string; minutes: number; notes: string }
-    | { type: 'entry:update'; id: string; projectId: string; taskId: string | null; notes: string; minutes: number | null }
+    | { type: 'entry:update'; id: string; projectId: string; taskId: string | null; notes: string; date: string; minutes: number | null }
     | { type: 'entry:delete'; id: string }
     // the last timer, resumed (board #268)
     | { type: 'timer:resume-last' }
@@ -183,4 +188,5 @@ export const DEFAULT_SETTINGS: Settings = {
     idleEnabled: true,
     idleMinutes: 10,
     broadcast: null,
+    appearance: 'system',
 };

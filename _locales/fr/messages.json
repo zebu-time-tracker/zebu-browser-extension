@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "Connectez d'abord l'extension à votre espace de travail Zebu"
     },
-    "popup_not_connected": {
-        "message": "Connectez l'extension à votre espace de travail Zebu pour démarrer des minuteurs depuis ici."
-    },
-    "popup_connect": {
-        "message": "Connecter l'espace de travail"
-    },
-    "popup_running": {
-        "message": "En cours"
-    },
-    "popup_started": {
-        "message": "démarré $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "Arrêter le minuteur"
-    },
-    "popup_open_zebu": {
-        "message": "Ouvrir dans Zebu"
-    },
-    "popup_new_timer": {
-        "message": "Nouveau minuteur"
-    },
-    "popup_for_issue": {
-        "message": "Pour ce ticket"
-    },
-    "popup_project": {
-        "message": "Projet"
     },
     "popup_project_search": {
         "message": "Rechercher des projets…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "Suggéré"
     },
-    "popup_all_projects": {
-        "message": "Tous les projets"
-    },
     "popup_no_projects": {
         "message": "Aucun projet ne correspond."
     },
-    "popup_task": {
-        "message": "Tâche"
-    },
     "popup_task_none": {
         "message": "Aucune tâche"
-    },
-    "popup_notes": {
-        "message": "Notes"
     },
     "popup_start": {
         "message": "Démarrer le minuteur"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "Paramètres"
-    },
-    "popup_today": {
-        "message": "Aujourd'hui : $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "Zebu pour Chrome"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "Suivre le temps : « %s »"
     },
-    "popup_for_page": {
-        "message": "Cette page"
-    },
     "popup_today_date": {
         "message": "Aujourd’hui, $1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "Jour précédent"
-    },
-    "popup_next_day": {
-        "message": "Jour suivant"
-    },
-    "popup_no_entries": {
-        "message": "Rien de suivi ce jour-là."
     },
     "popup_week_locked": {
         "message": "Cette semaine est approuvée et verrouillée."
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "Démarrer (arrête tout autre minuteur)"
-    },
-    "popup_duration": {
-        "message": "Durée"
     },
     "popup_error_duration": {
         "message": "Saisissez une durée comme 1:30, 1,5 ou 90m."
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "Reprendre"
-    },
-    "popup_resume_fresh_title": {
-        "message": "Cette entrée date du $1 — un nouveau minuteur démarre aujourd’hui avec le même projet, la même tâche et les mêmes notes.",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "Modèles"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "Mises à jour en direct actives"
+    },
+    "header_today": {
+        "message": "Aujourd'hui"
+    },
+    "header_jump_today": {
+        "message": "Aller à aujourd'hui"
+    },
+    "popup_prev_week": {
+        "message": "Semaine précédente"
+    },
+    "popup_next_week": {
+        "message": "Semaine suivante"
+    },
+    "summary_hours_per_month": {
+        "message": "Heures par mois · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "Minuteur en cours depuis le $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "Total"
+    },
+    "entry_uninvoiced": {
+        "message": "Non facturé"
+    },
+    "entry_budget": {
+        "message": "Budget"
+    },
+    "newday_title": {
+        "message": "Démarrer un nouveau minuteur aujourd'hui ?"
+    },
+    "newday_body": {
+        "message": "Cette entrée date du $1. Un nouveau minuteur démarre aujourd'hui avec le même projet, la même tâche et les mêmes notes — l'original reste intact.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "Démarrer aujourd'hui"
+    },
+    "popup_select_project": {
+        "message": "Choisir un projet…"
+    },
+    "popup_no_client": {
+        "message": "Sans client"
+    },
+    "popup_new_project_link": {
+        "message": "Nouveau projet dans Zebu ↗"
+    },
+    "popup_timer_running": {
+        "message": "Minuteur en cours"
+    },
+    "popup_notes_placeholder": {
+        "message": "Notes (facultatif)"
+    },
+    "popup_new_entry": {
+        "message": "Nouvelle entrée"
+    },
+    "settings_appearance": {
+        "message": "Apparence"
+    },
+    "settings_dark": {
+        "message": "Sombre"
+    },
+    "settings_light": {
+        "message": "Clair"
+    },
+    "settings_system": {
+        "message": "Système"
+    },
+    "settings_min": {
+        "message": "min"
+    },
+    "settings_open_browser": {
+        "message": "Ouvrir Zebu dans le navigateur"
+    },
+    "settings_disconnect": {
+        "message": "Déconnecter cet appareil"
+    },
+    "settings_more": {
+        "message": "Plus de réglages…"
+    },
+    "popup_loading": {
+        "message": "Chargement…"
+    },
+    "popup_login": {
+        "message": "Se connecter"
+    },
+    "popup_workspace": {
+        "message": "Espace de travail"
+    },
+    "popup_back_to_timers": {
+        "message": "Retour aux minuteurs"
     }
 }

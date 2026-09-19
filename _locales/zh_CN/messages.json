@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "请先将扩展程序连接到您的 Zebu 工作区"
     },
-    "popup_not_connected": {
-        "message": "将扩展程序连接到您的 Zebu 工作区，即可在此处启动计时器。"
-    },
-    "popup_connect": {
-        "message": "连接工作区"
-    },
-    "popup_running": {
-        "message": "运行中"
-    },
-    "popup_started": {
-        "message": "已开始 $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "停止计时器"
-    },
-    "popup_open_zebu": {
-        "message": "在 Zebu 中打开"
-    },
-    "popup_new_timer": {
-        "message": "新建计时器"
-    },
-    "popup_for_issue": {
-        "message": "针对此议题"
-    },
-    "popup_project": {
-        "message": "项目"
     },
     "popup_project_search": {
         "message": "搜索项目…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "建议"
     },
-    "popup_all_projects": {
-        "message": "所有项目"
-    },
     "popup_no_projects": {
         "message": "没有匹配的项目。"
     },
-    "popup_task": {
-        "message": "任务"
-    },
     "popup_task_none": {
         "message": "无任务"
-    },
-    "popup_notes": {
-        "message": "备注"
     },
     "popup_start": {
         "message": "开始计时"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "设置"
-    },
-    "popup_today": {
-        "message": "今天：$1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "适用于 Chrome 的 Zebu"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "记录时间：“%s”"
     },
-    "popup_for_page": {
-        "message": "此页面"
-    },
     "popup_today_date": {
         "message": "今天，$1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "前一天"
-    },
-    "popup_next_day": {
-        "message": "后一天"
-    },
-    "popup_no_entries": {
-        "message": "这一天没有记录。"
     },
     "popup_week_locked": {
         "message": "本周已批准并锁定。"
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "开始 (将停止其他计时器)"
-    },
-    "popup_duration": {
-        "message": "时长"
     },
     "popup_error_duration": {
         "message": "请输入 1:30、1.5 或 90m 这样的时长。"
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "继续"
-    },
-    "popup_resume_fresh_title": {
-        "message": "该条目属于 $1。今天将以相同的项目、任务和备注开始新的计时。",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "预设"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "实时更新已开启"
+    },
+    "header_today": {
+        "message": "今天"
+    },
+    "header_jump_today": {
+        "message": "回到今天"
+    },
+    "popup_prev_week": {
+        "message": "上一周"
+    },
+    "popup_next_week": {
+        "message": "下一周"
+    },
+    "summary_hours_per_month": {
+        "message": "每月时长 · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "计时器自 $1 运行中",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "合计"
+    },
+    "entry_uninvoiced": {
+        "message": "未开票"
+    },
+    "entry_budget": {
+        "message": "预算"
+    },
+    "newday_title": {
+        "message": "今天开始新的计时吗？"
+    },
+    "newday_body": {
+        "message": "该条目属于 $1。今天将以相同的项目、任务和备注开始新的计时，原条目保持不变。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "今天开始"
+    },
+    "popup_select_project": {
+        "message": "选择项目…"
+    },
+    "popup_no_client": {
+        "message": "无客户"
+    },
+    "popup_new_project_link": {
+        "message": "在 Zebu 中新建项目 ↗"
+    },
+    "popup_timer_running": {
+        "message": "计时进行中"
+    },
+    "popup_notes_placeholder": {
+        "message": "备注 (可选)"
+    },
+    "popup_new_entry": {
+        "message": "新建时间条目"
+    },
+    "settings_appearance": {
+        "message": "外观"
+    },
+    "settings_dark": {
+        "message": "深色"
+    },
+    "settings_light": {
+        "message": "浅色"
+    },
+    "settings_system": {
+        "message": "系统"
+    },
+    "settings_min": {
+        "message": "分钟"
+    },
+    "settings_open_browser": {
+        "message": "在浏览器中打开 Zebu"
+    },
+    "settings_disconnect": {
+        "message": "断开此设备"
+    },
+    "settings_more": {
+        "message": "更多设置…"
+    },
+    "popup_loading": {
+        "message": "加载中…"
+    },
+    "popup_login": {
+        "message": "登录"
+    },
+    "popup_workspace": {
+        "message": "工作区"
+    },
+    "popup_back_to_timers": {
+        "message": "返回计时器"
     }
 }

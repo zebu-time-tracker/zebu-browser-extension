@@ -39,37 +39,8 @@
     "button_connect_title": {
         "message": "Najpierw połącz rozszerzenie ze swoją przestrzenią Zebu"
     },
-    "popup_not_connected": {
-        "message": "Połącz rozszerzenie ze swoją przestrzenią Zebu, aby uruchamiać stopery stąd."
-    },
-    "popup_connect": {
-        "message": "Połącz przestrzeń"
-    },
-    "popup_running": {
-        "message": "Działa"
-    },
-    "popup_started": {
-        "message": "uruchomiono $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
-    },
     "popup_stop": {
         "message": "Zatrzymaj stoper"
-    },
-    "popup_open_zebu": {
-        "message": "Otwórz w Zebu"
-    },
-    "popup_new_timer": {
-        "message": "Nowy stoper"
-    },
-    "popup_for_issue": {
-        "message": "Dla tego zgłoszenia"
-    },
-    "popup_project": {
-        "message": "Projekt"
     },
     "popup_project_search": {
         "message": "Szukaj projektów…"
@@ -77,20 +48,11 @@
     "popup_suggested": {
         "message": "Proponowane"
     },
-    "popup_all_projects": {
-        "message": "Wszystkie projekty"
-    },
     "popup_no_projects": {
         "message": "Brak pasujących projektów."
     },
-    "popup_task": {
-        "message": "Zadanie"
-    },
     "popup_task_none": {
         "message": "Brak zadania"
-    },
-    "popup_notes": {
-        "message": "Notatki"
     },
     "popup_start": {
         "message": "Uruchom stoper"
@@ -122,14 +84,6 @@
     },
     "popup_settings": {
         "message": "Ustawienia"
-    },
-    "popup_today": {
-        "message": "Dziś: $1",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "options_title": {
         "message": "Zebu dla Chrome"
@@ -246,9 +200,6 @@
     "context_track_selection": {
         "message": "Śledź czas: „%s”"
     },
-    "popup_for_page": {
-        "message": "Ta strona"
-    },
     "popup_today_date": {
         "message": "Dziś, $1",
         "placeholders": {
@@ -256,15 +207,6 @@
                 "content": "$1"
             }
         }
-    },
-    "popup_prev_day": {
-        "message": "Poprzedni dzień"
-    },
-    "popup_next_day": {
-        "message": "Następny dzień"
-    },
-    "popup_no_entries": {
-        "message": "Nic nie zarejestrowano tego dnia."
     },
     "popup_week_locked": {
         "message": "Ten tydzień jest zatwierdzony i zablokowany."
@@ -280,9 +222,6 @@
     },
     "popup_resume_title": {
         "message": "Start (zatrzymuje inne stopery)"
-    },
-    "popup_duration": {
-        "message": "Czas trwania"
     },
     "popup_error_duration": {
         "message": "Podaj czas w formie 1:30, 1,5 lub 90m."
@@ -304,14 +243,6 @@
     },
     "popup_resume": {
         "message": "Wznów"
-    },
-    "popup_resume_fresh_title": {
-        "message": "Ten wpis pochodzi z $1 — nowy stoper wystartuje dziś z tym samym projektem, zadaniem i notatkami.",
-        "placeholders": {
-            "1": {
-                "content": "$1"
-            }
-        }
     },
     "popup_presets": {
         "message": "Szablony"
@@ -469,5 +400,110 @@
     },
     "popup_live": {
         "message": "Aktualizacje na żywo włączone"
+    },
+    "header_today": {
+        "message": "Dziś"
+    },
+    "header_jump_today": {
+        "message": "Przejdź do dziś"
+    },
+    "popup_prev_week": {
+        "message": "Poprzedni tydzień"
+    },
+    "popup_next_week": {
+        "message": "Następny tydzień"
+    },
+    "summary_hours_per_month": {
+        "message": "Godziny miesięcznie · $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_running_since": {
+        "message": "Stoper działa od $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "entry_total": {
+        "message": "Łącznie"
+    },
+    "entry_uninvoiced": {
+        "message": "Niezafakturowane"
+    },
+    "entry_budget": {
+        "message": "Budżet"
+    },
+    "newday_title": {
+        "message": "Uruchomić nowy stoper na dziś?"
+    },
+    "newday_body": {
+        "message": "Ten wpis pochodzi z $1. Nowy stoper wystartuje dziś z tym samym projektem, zadaniem i notatkami — oryginał pozostanie bez zmian.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "newday_confirm": {
+        "message": "Uruchom dziś"
+    },
+    "popup_select_project": {
+        "message": "Wybierz projekt…"
+    },
+    "popup_no_client": {
+        "message": "Bez klienta"
+    },
+    "popup_new_project_link": {
+        "message": "Nowy projekt w Zebu ↗"
+    },
+    "popup_timer_running": {
+        "message": "Stoper działa"
+    },
+    "popup_notes_placeholder": {
+        "message": "Notatki (opcjonalne)"
+    },
+    "popup_new_entry": {
+        "message": "Nowy wpis"
+    },
+    "settings_appearance": {
+        "message": "Wygląd"
+    },
+    "settings_dark": {
+        "message": "Ciemny"
+    },
+    "settings_light": {
+        "message": "Jasny"
+    },
+    "settings_system": {
+        "message": "Systemowy"
+    },
+    "settings_min": {
+        "message": "min"
+    },
+    "settings_open_browser": {
+        "message": "Otwórz Zebu w przeglądarce"
+    },
+    "settings_disconnect": {
+        "message": "Odłącz to urządzenie"
+    },
+    "settings_more": {
+        "message": "Więcej ustawień…"
+    },
+    "popup_loading": {
+        "message": "Wczytywanie…"
+    },
+    "popup_login": {
+        "message": "Zaloguj się"
+    },
+    "popup_workspace": {
+        "message": "Przestrzeń robocza"
+    },
+    "popup_back_to_timers": {
+        "message": "Wróć do stoperów"
     }
 }
