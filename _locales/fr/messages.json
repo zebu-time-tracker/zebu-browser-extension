@@ -138,7 +138,7 @@
         "message": "Votre espace de travail"
     },
     "options_workspace_hint": {
-        "message": "L'adresse où vous vous connectez, par ex. studio.app.zebu.work — ou simplement « studio »."
+        "message": "Le nom de votre espace de travail (ex. « studio »), son adresse (studio.zebu.work) ou une URL complète."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -165,6 +165,12 @@
     },
     "options_error_workspace": {
         "message": "Cela ne ressemble pas à une adresse d'espace de travail."
+    },
+    "options_error_central": {
+        "message": "C’est le site principal de Zebu — saisissez plutôt le nom de votre espace de travail."
+    },
+    "options_error_insecure": {
+        "message": "Les adresses d’espaces de travail doivent utiliser https."
     },
     "options_error_unreachable": {
         "message": "Cet espace de travail est injoignable. Vérifiez l'adresse."

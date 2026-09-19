@@ -1,12 +1,13 @@
 // Options page: connect a workspace (device flow — approve in Zebu, no
 // password typed into the extension), choose how timer notes are composed,
 // add self-hosted trackers, forget learned suggestions.
-import { api, ApiError, workspaceUrl } from '../api';
+import { api, ApiError } from '../api';
 import { t } from '../messaging';
 import { getSettings, saveMappings, saveSettings } from '../storage';
 import { ADAPTERS } from '../content/adapters';
 import { readBroadcast } from '../live';
 import type { Settings } from '../types';
+import { resolveWorkspace } from '../workspace';
 
 const app = document.getElementById('app')!;
 
@@ -46,12 +47,13 @@ function workspaceCard(settings: Settings): HTMLElement {
             return;
         }
 
-        const workspace = workspaceUrl(input.value);
+        const resolved = resolveWorkspace(input.value);
         status.className = 'status error';
-        if (!workspace) {
-            status.textContent = t('options_error_workspace');
+        if (!resolved.ok) {
+            status.textContent = t(resolved.reason === 'central' ? 'options_error_central' : resolved.reason === 'insecure' ? 'options_error_insecure' : 'options_error_workspace');
             return;
         }
+        const workspace = resolved.origin;
         if (!(await ensureHostPermission(workspace))) {
             status.textContent = t('options_sites_permission_denied');
             return;

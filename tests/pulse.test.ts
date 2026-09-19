@@ -21,7 +21,7 @@ vi.mock('../src/api', () => {
     return { ApiError, api: { timesheet: (date?: string) => timesheet(date), pulse: () => pulseCall() } };
 });
 
-const settings = { workspace: 'https://studio.app.zebu.work', token: 'tok' };
+const settings = { workspace: 'https://studio.zebu.work', token: 'tok' };
 
 const alarms = new Map<string, unknown>();
 let badgeText = '';

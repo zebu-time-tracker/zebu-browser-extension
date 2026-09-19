@@ -4,10 +4,19 @@
 import type { LastTimer } from './lastTimer';
 import { readPresets, type Preset } from './presets';
 import { DEFAULT_SETTINGS, type Issue, type Mappings, type Settings } from './types';
+import { migrateWorkspaceOrigin } from './workspace';
 
 export async function getSettings(): Promise<Settings> {
     const { settings } = await chrome.storage.local.get('settings');
-    return { ...DEFAULT_SETTINGS, ...(settings ?? {}) };
+    const merged: Settings = { ...DEFAULT_SETTINGS, ...(settings ?? {}) };
+    // Workspaces moved from {sub}.app.zebu.work to {sub}.zebu.work; the token
+    // is per workspace, so only the stored origin needs rewriting (board #270).
+    const migrated = migrateWorkspaceOrigin(merged.workspace);
+    if (migrated !== merged.workspace) {
+        merged.workspace = migrated;
+        await chrome.storage.local.set({ settings: merged });
+    }
+    return merged;
 }
 
 export async function saveSettings(patch: Partial<Settings>): Promise<Settings> {
