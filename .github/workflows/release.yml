@@ -1,0 +1,285 @@
+# Builds, signs and publishes the Zebu browser extension for Chrome, Firefox
+# and Safari (board #287).
+#
+# Trigger: push a tag `vX.Y.Z` (scripts/release.sh does that; docs/release.md).
+# The tag must match the version in package.json. One Linux job builds all
+# three targets from the one source, signs the Firefox package with AMO and
+# uploads the Chrome package to the Web Store; the `publish` job then puts
+# every package in the Cloudflare R2 bucket behind
+# https://app-downloads.zebu.work, where the downloads page and Firefox's
+# updater read from. Chrome copies update through the Web Store only, so the
+# R2 copy is the archive and the load-unpacked source; Firefox copies update
+# from R2 through `extension/firefox/updates.json`.
+#
+# `workflow_dispatch` runs the same build and the same publish without
+# touching anything real: it writes to `extension/_dryrun/<run id>/` instead
+# of `extension/` and skips the stores. Nothing in this workflow deletes
+# anything from the bucket.
+#
+# Store credentials are optional and switched on purely by which secrets exist:
+#   Firefox  AMO_JWT_ISSUER, AMO_JWT_SECRET                → signed .xpi + updates.json
+#            (without them the release ships a source zip and no Firefox auto-update)
+#   Chrome   CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN, CWS_EXTENSION_ID
+#            → upload + publish to the Web Store
+#   Safari   APPLE_TEAM_ID (+ the desktop's signing secrets later) → the Xcode
+#            project is built and attached as an artifact; App Store submission
+#            is not automated yet.
+# Publishing needs R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  R2_BUCKET: app-downloads
+  PUBLIC_BASE: https://app-downloads.zebu.work
+  GECKO_ID: extension@zebu.work
+
+jobs:
+  verify:
+    name: Version and release scripts
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Gate
+        run: |
+          npm run build
+          npm run typecheck
+          npm test
+          npm run i18n:check
+      - name: Test the release scripts
+        run: bash scripts/tests/publish-r2.test.sh
+      - name: Compare tag with package.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          # shellcheck disable=SC2016
+          node -e '
+            const tag = process.env.TAG.replace(/^v/, "");
+            const pkg = require("./package.json").version;
+            if (tag !== pkg) { console.error(`Tag v${tag} does not match package.json (${pkg}).`); process.exit(1); }
+            console.log(`Releasing ${tag}`);
+          '
+
+  build:
+    name: Build and sign the packages
+    needs: verify
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Build every target and zip it
+        id: version
+        run: |
+          npm run package
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          mkdir -p upload
+          cp dist/zebu-*-"$VERSION".zip upload/
+          ls -l upload
+
+      # AMO signs the Firefox build as an unlisted add-on: the .xpi installs
+      # from anywhere and updates from our bucket. Skipped without the
+      # credentials, in which case Firefox users get the source zip only.
+      - name: Sign the Firefox package with AMO
+        env:
+          HAS_AMO: ${{ secrets.AMO_JWT_ISSUER != '' && secrets.AMO_JWT_SECRET != '' }}
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+          DRY_RUN: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: |
+          if [ "$HAS_AMO" != "true" ]; then
+            echo "::warning::AMO_JWT_ISSUER / AMO_JWT_SECRET are not set: the Firefox package is unsigned and will not auto-update. See docs/release.md."
+            exit 0
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "dry run: not asking AMO to sign"
+            exit 0
+          fi
+          VERSION=${{ steps.version.outputs.version }}
+          npx --yes web-ext@8 sign \
+            --source-dir dist/firefox \
+            --artifacts-dir web-ext-artifacts \
+            --channel unlisted \
+            --approval-timeout 1800000
+          xpi=$(ls web-ext-artifacts/*.xpi | head -1)
+          [ -n "$xpi" ] || { echo "::error::AMO returned no .xpi"; exit 1; }
+          cp "$xpi" "upload/zebu-firefox-$VERSION.xpi"
+          ls -l upload
+
+      # The Chrome Web Store is the only place Chrome updates from. Uploads
+      # the new package and publishes it; the review happens on Google's side.
+      - name: Upload to the Chrome Web Store
+        env:
+          HAS_CWS: ${{ secrets.CWS_CLIENT_ID != '' && secrets.CWS_CLIENT_SECRET != '' && secrets.CWS_REFRESH_TOKEN != '' && secrets.CWS_EXTENSION_ID != '' }}
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          DRY_RUN: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: |
+          if [ "$HAS_CWS" != "true" ]; then
+            echo "::warning::CWS_* secrets are not set: the Chrome package was not uploaded to the Web Store. See docs/release.md."
+            exit 0
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "dry run: not touching the Web Store"
+            exit 0
+          fi
+          VERSION=${{ steps.version.outputs.version }}
+          token=$(curl -fsS -X POST https://oauth2.googleapis.com/token \
+            -d client_id="$CWS_CLIENT_ID" -d client_secret="$CWS_CLIENT_SECRET" \
+            -d refresh_token="$CWS_REFRESH_TOKEN" -d grant_type=refresh_token \
+            | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).access_token')
+          upload=$(curl -fsS -X PUT "https://www.googleapis.com/upload/chromewebstore/v1.1/items/$CWS_EXTENSION_ID" \
+            -H "Authorization: Bearer $token" -H "x-goog-api-version: 2" \
+            -T "upload/zebu-chrome-$VERSION.zip")
+          echo "$upload"
+          echo "$upload" | node -e 'const r=JSON.parse(require("fs").readFileSync(0,"utf8")); if (r.uploadState !== "SUCCESS") { console.error("upload not accepted"); process.exit(1); }'
+          curl -fsS -X POST "https://www.googleapis.com/chromewebstore/v1.1/items/$CWS_EXTENSION_ID/publish" \
+            -H "Authorization: Bearer $token" -H "x-goog-api-version: 2" -H "Content-Length: 0"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zebu-extension-packages
+          path: upload/
+          if-no-files-found: error
+
+  safari:
+    name: Safari app (Xcode project)
+    needs: build
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci && npm run build:safari
+      # The converter wraps dist/safari in a macOS app project. It is built
+      # here so a release always carries the exact project a store submission
+      # would use; signing and App Store Connect follow once the Apple side is
+      # confirmed (docs/release.md).
+      - name: Wrap the Safari build in an Xcode project
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcrun safari-web-extension-converter dist/safari \
+            --project-location safari-app --app-name Zebu --bundle-identifier work.zebu.extension \
+            --macos-only --no-open --no-prompt --force
+          (cd safari-app && zip -qr "../zebu-safari-xcode-${{ needs.build.outputs.version }}.zip" .)
+          ls -l zebu-safari-xcode-*.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zebu-safari-xcode
+          path: zebu-safari-xcode-*.zip
+
+  publish:
+    name: Publish to R2
+    needs: build
+    runs-on: ubuntu-24.04
+    env:
+      # The one variable that separates a release from a rehearsal.
+      DEST_BASE: ${{ startsWith(github.ref, 'refs/tags/v') && 'extension' || format('extension/_dryrun/{0}', github.run_id) }}
+      AWS_CLI_VERSION: 2.36.43
+      AWS_CLI_SHA256: ef606eb55f9a93ac404cc4a6869c0a791c234b898d93ec6af3bba8c491b391e9
+      VERSION: ${{ needs.build.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the R2 credentials are present
+        env:
+          HAS_R2: ${{ secrets.R2_ACCOUNT_ID != '' && secrets.R2_ACCESS_KEY_ID != '' && secrets.R2_SECRET_ACCESS_KEY != '' }}
+        run: |
+          if [ "$HAS_R2" != "true" ]; then
+            echo "::error::R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY are not set on $GITHUB_REPOSITORY (the same token the desktop repository uses works). See docs/release.md."
+            exit 1
+          fi
+
+      - name: Install the AWS CLI (pinned)
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -fsSL -o awscliv2.zip "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip"
+          echo "${AWS_CLI_SHA256}  awscliv2.zip" | sha256sum -c -
+          unzip -q awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: zebu-extension-packages
+          path: upload
+
+      - name: Build latest.json, the aliases and Firefox's updates.json
+        env:
+          CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+        run: |
+          store=""
+          [ -n "$CWS_EXTENSION_ID" ] && store="--chrome-store https://chromewebstore.google.com/detail/$CWS_EXTENSION_ID"
+          updates=""
+          [ -f "upload/zebu-firefox-$VERSION.xpi" ] && updates="--updates-out updates.json"
+          # shellcheck disable=SC2086
+          node scripts/extension-manifest.mjs \
+            --version "$VERSION" --dir upload \
+            --base-url "$PUBLIC_BASE/$DEST_BASE/$VERSION" \
+            --gecko-id "$GECKO_ID" \
+            --aliases-out aliases.tsv $updates $store > latest.json
+          echo "latest.json:"; cat latest.json
+          echo "aliases:"; cat aliases.tsv
+          if [ -f updates.json ]; then echo "updates.json:"; cat updates.json; echo "ALSO=--also firefox/updates.json=updates.json" >> "$GITHUB_ENV"; fi
+
+      - name: Publish to R2 and read it back
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          AWS_ENDPOINT_URL: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+        run: |
+          # shellcheck disable=SC2086
+          scripts/publish-r2.sh publish \
+            --bucket "$R2_BUCKET" --base "$DEST_BASE" --version "$VERSION" \
+            --dir upload --manifest latest.json --aliases aliases.tsv ${ALSO:-} \
+            --public-base "$PUBLIC_BASE"
+
+      - name: Summarise
+        run: |
+          {
+            if [ "$DEST_BASE" = extension ]; then
+              echo "### Published Zebu browser extension $VERSION"
+              echo
+              echo "- manifest: \`$PUBLIC_BASE/extension/latest.json\`"
+              echo "- this build: \`$PUBLIC_BASE/extension/$VERSION/\` (kept forever)"
+              echo "- download aliases: \`$PUBLIC_BASE/extension/latest/\`"
+              [ -n "${ALSO:-}" ] && echo "- Firefox updates: \`$PUBLIC_BASE/extension/firefox/updates.json\`"
+            else
+              echo "### Dry run — nothing real was written"
+              echo
+              echo "Everything went to \`$DEST_BASE/\`: the same code, credentials and ordering as a release."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

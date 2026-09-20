@@ -1,17 +1,21 @@
 {
-    "name": "zebu-chrome-extension",
+    "name": "zebu-browser-extension",
     "version": "0.2.0",
     "private": true,
-    "description": "Track time in Zebu from GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp.",
+    "description": "Track time in Zebu from GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp, in Chrome, Firefox and Safari.",
     "type": "module",
     "scripts": {
-        "build": "node build.mjs",
+        "build": "node build.mjs --target all",
+        "build:chrome": "node build.mjs --target chrome",
+        "build:firefox": "node build.mjs --target firefox",
+        "build:safari": "node build.mjs --target safari",
         "watch": "node build.mjs --watch",
         "icons": "node scripts/icons.mjs",
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
         "i18n:check": "node scripts/i18n-check.mjs",
-        "zip": "npm run build && cd dist && zip -qr ../zebu-chrome-extension.zip . && cd .. && echo zebu-chrome-extension.zip"
+        "package": "npm run build && node scripts/package.mjs",
+        "zip": "npm run package"
     },
     "devDependencies": {
         "@types/chrome": "^0.0.287",

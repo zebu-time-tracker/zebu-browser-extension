@@ -12,6 +12,7 @@ import { backoffMs, KEEPALIVE_MS, parseFrame, PING, PONG, readBroadcast, shouldR
 import { holdAfterRefusal, holdUntil, isHeld, POLL } from './maintenance';
 import { t } from './messaging';
 import { pageIssue, withSelection } from './page';
+import { hasIdle, hasNotifications, notificationOptions } from './platform';
 import { getLastTimer, getMappings, getPendingIssue, getSettings, saveMappings, saveSettings, setLastTimer, setPendingIssue } from './storage';
 import { composeNotes, remember } from './suggest';
 import type { Entry, Issue, Message, State, WeekSheet } from './types';
@@ -359,6 +360,7 @@ chrome.runtime.onStartup.addListener(() => {
 const IDLE_SINCE = 'idleSince';
 
 export async function applyIdleSettings(): Promise<void> {
+    if (!hasIdle()) return; // Safari: no idle API, no permission asked for
     const { idleMinutes: minutes } = await getSettings();
     chrome.idle.setDetectionInterval(detectionInterval(minutes));
 }
@@ -388,21 +390,27 @@ async function askAboutIdle(startedAt: number, seconds: number, running: Entry):
     const id = `zebu-idle-${startedAt}`;
     await chrome.storage.session.set({ [`idle:${id}`]: startedAt });
     const units = { hour: t('unit_hour'), minute: t('unit_minute'), day: t('unit_day'), week: t('unit_week') };
-    await chrome.notifications.create(id, {
-        type: 'basic',
-        iconUrl: 'icons/128.png',
-        title: t('idle_title', formatDurationHuman(idleMinutes(seconds), units)),
-        message: t('idle_message', running.project ?? ''),
-        contextMessage: t('idle_keep'),
-        buttons: [{ title: t('idle_remove') }, { title: t('idle_remove_stop') }],
-        requireInteraction: true,
-        priority: 2,
-    });
+    await chrome.notifications.create(
+        id,
+        notificationOptions(
+            {
+                type: 'basic' as const,
+                iconUrl: 'icons/128.png',
+                title: t('idle_title', formatDurationHuman(idleMinutes(seconds), units)),
+                message: t('idle_message', running.project ?? ''),
+                contextMessage: t('idle_keep'),
+                requireInteraction: true,
+                priority: 2,
+            },
+            // Firefox refuses a notification that carries buttons (src/platform.ts)
+            [{ title: t('idle_remove') }, { title: t('idle_remove_stop') }],
+        ),
+    );
 }
 
-chrome.idle.onStateChanged.addListener((state) => void onIdleState(state));
+if (hasIdle() && hasNotifications()) chrome.idle.onStateChanged.addListener((state) => void onIdleState(state));
 
-chrome.notifications.onButtonClicked.addListener((id, index) => {
+if (hasNotifications()) chrome.notifications.onButtonClicked.addListener((id, index) => {
     void (async () => {
         const key = `idle:${id}`;
         const { [key]: startedAt } = await chrome.storage.session.get(key);
@@ -414,8 +422,10 @@ chrome.notifications.onButtonClicked.addListener((id, index) => {
     })();
 });
 // dismissed, or clicked without choosing: the time stays
-chrome.notifications.onClosed.addListener((id) => void chrome.storage.session.remove(`idle:${id}`));
-chrome.notifications.onClicked.addListener((id) => chrome.notifications.clear(id));
+if (hasNotifications()) {
+    chrome.notifications.onClosed.addListener((id) => void chrome.storage.session.remove(`idle:${id}`));
+    chrome.notifications.onClicked.addListener((id) => chrome.notifications.clear(id));
+}
 
 // Keyboard shortcuts (manifest `commands`, rebindable at
 // chrome://extensions/shortcuts). The popup itself is `_execute_action`,

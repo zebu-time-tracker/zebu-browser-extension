@@ -1,4 +1,6 @@
 node_modules/
 dist/
-zebu-chrome-extension.zip
+*.zip
+*.xpi
+web-ext-artifacts/
 .DS_Store
