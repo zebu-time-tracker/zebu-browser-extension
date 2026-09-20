@@ -7,19 +7,48 @@
 // the decision mapping and the arithmetic live here, unit-tested.
 
 /** When the absence began: the interval before Chrome said "idle", never before the timer itself started. */
-export const idleWindowStart = (firedAt: number, intervalSeconds: number, timerStartedAt: string | null): number | null => {
-    const startedAt = firedAt - intervalSeconds * 1000;
-    if (!timerStartedAt) return null;
-    const timerAt = new Date(timerStartedAt).getTime();
-    // a timer started during the absence (from the web, say) has no idle stretch worth asking about
-    return startedAt >= timerAt ? startedAt : null;
+export const idleWindowStart = (
+  firedAt: number,
+  intervalSeconds: number,
+  timerStartedAt: string | null,
+): number | null => {
+  const startedAt = firedAt - intervalSeconds * 1000;
+  if (!timerStartedAt) return null;
+  const timerAt = new Date(timerStartedAt).getTime();
+  // a timer started during the absence (from the web, say) has no idle stretch worth asking about
+  return startedAt >= timerAt ? startedAt : null;
 };
 
 /** Whole minutes away, as the heading words it — an absence is never "0 minutes". */
-export const idleMinutes = (seconds: number): number => Math.max(1, Math.round(seconds / 60));
+export const idleMinutes = (seconds: number): number =>
+  Math.max(1, Math.round(seconds / 60));
 
 /** The notification's two buttons: remove the time and keep timing, or remove it and stop. Dismissing keeps the time. */
-export const idleActionForButton = (index: number): 'discard_keep' | 'discard_stop' => (index === 1 ? 'discard_stop' : 'discard_keep');
+export const idleActionForButton = (
+  index: number,
+): "discard_keep" | "discard_stop" =>
+  index === 1 ? "discard_stop" : "discard_keep";
 
 /** Chrome accepts no interval under 15 seconds; the setting is in minutes. */
-export const detectionInterval = (minutes: number): number => Math.max(15, Math.round(minutes * 60));
+export const detectionInterval = (minutes: number): number =>
+  Math.max(15, Math.round(minutes * 60));
+
+/**
+ * Whether an absence that began at `since` is worth asking about, given a
+ * fresh answer from the server (board #333). Not when the fetch failed
+ * (`fetchedAt` 0: the cache may still say "running" for a timer stopped
+ * from another machine while this one slept), not when nothing runs, and
+ * not when the running timer only started after the absence began (stopped
+ * and restarted elsewhere): none of that time was this machine's.
+ */
+export const idleWorthAsking = (
+  since: number,
+  state: {
+    fetchedAt: number;
+    running: { timer_started_at: string | null } | null;
+  },
+): boolean => {
+  if (state.fetchedAt <= 0 || !state.running || !state.running.timer_started_at)
+    return false;
+  return new Date(state.running.timer_started_at).getTime() <= since;
+};
