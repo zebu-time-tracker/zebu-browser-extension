@@ -6,7 +6,7 @@
 import { deflateSync } from 'node:zlib';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-const GREEN = [0x37, 0xcb, 0x16];
+const GREEN = [0x16, 0xa3, 0x4a]; // the app green (tailwind green-600), the same as the web favicon
 const WHITE = [0xff, 0xff, 0xff];
 
 const crcTable = new Uint32Array(256).map((_, n) => {
