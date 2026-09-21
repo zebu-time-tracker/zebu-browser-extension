@@ -1,13 +1,13 @@
 // Generates the extension icons (PNG) without any image library: the Zebu
-// mark (board #328) — a rounded square in Zebu green, a white Z and a faint
-// diagonal — traced from the brand SVG (1022 × 1022, corner radius 180) and
+// mark (board #328) — a rounded square on the mark's green, the Z and a faint
+// diagonal in its light ink — traced from the brand SVG (1022 × 1022, corner radius 180) and
 // supersampled for smooth edges. Run `npm run icons`; output goes to
 // icons/{16,32,48,128}.png.
 import { deflateSync } from 'node:zlib';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-const GREEN = [0x16, 0xa3, 0x4a]; // the app green (tailwind green-600), the same as the web favicon
-const WHITE = [0xff, 0xff, 0xff];
+const GREEN = [0x4c, 0xa1, 0x54]; // the mark's ground
+const INK = [0xd0, 0xff, 0xc5]; // the mark's ink: the Z and the faint diagonal
 
 const crcTable = new Uint32Array(256).map((_, n) => {
     let c = n;
@@ -33,14 +33,13 @@ const SIDE = 1022;
 const CORNER = 180 / SIDE;
 // The Z, as the closed polygon of the brand SVG's path.
 const Z = [
-    [300.309, 802], [300.309, 741.33], [631.599, 259.962], [657.144, 296.683], [309.889, 296.683],
-    [309.889, 227.232], [713.823, 227.232], [713.823, 287.902], [384.13, 767.674], [359.383, 732.549],
-    [720.209, 732.549], [720.209, 802],
+    [300.31, 802], [300.31, 741.33], [606.327, 296.684], [309.889, 296.684], [309.889, 227.232],
+    [713.823, 227.232], [713.823, 287.902], [408.267, 732.549], [720.209, 732.549], [720.209, 802],
 ].map(([x, y]) => [x / SIDE, y / SIDE]);
-// The faint diagonal behind the Z: a white line at 45 % over the green.
+// The faint diagonal behind the Z: the ink at 40 % over the ground.
 const LINE = { x1: 330.463 / SIDE, y1: 282.512 / SIDE, x2: 700.463 / SIDE, y2: 748.512 / SIDE, half: 49.893 / SIDE / 2 };
-const LINE_OPACITY = 0.45;
-const LINE_MIX = GREEN.map((g, i) => Math.round(g + (WHITE[i] - g) * LINE_OPACITY));
+const LINE_OPACITY = 0.4;
+const LINE_MIX = GREEN.map((g, i) => Math.round(g + (INK[i] - g) * LINE_OPACITY));
 
 function insideZ(u, v) {
     let inside = false;
@@ -66,7 +65,7 @@ function sample(u, v) {
     const cx = Math.min(Math.max(u, r), 1 - r);
     const cy = Math.min(Math.max(v, r), 1 - r);
     if ((u - cx) ** 2 + (v - cy) ** 2 > r * r) return null;
-    if (insideZ(u, v)) return WHITE;
+    if (insideZ(u, v)) return INK;
     if (onLine(u, v)) return LINE_MIX;
     return GREEN;
 }
