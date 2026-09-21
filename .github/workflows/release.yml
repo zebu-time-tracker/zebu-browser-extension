@@ -11,6 +11,10 @@
 # R2 copy is the archive and the load-unpacked source; Firefox copies update
 # from R2 through `extension/firefox/updates.json`.
 #
+# Every job runs on the self-hosted macOS runner (the same one the web app
+# deploys from: labels self-hosted, macOS), so a release costs no Actions
+# minutes and the Safari job has the Mac it needs.
+#
 # `workflow_dispatch` runs the same build and the same publish without
 # touching anything real: it writes to `extension/_dryrun/<run id>/` instead
 # of `extension/` and skips the stores. Nothing in this workflow deletes
@@ -45,7 +49,7 @@ env:
 jobs:
   verify:
     name: Version and release scripts
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, macOS]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -77,7 +81,7 @@ jobs:
   build:
     name: Build and sign the packages
     needs: verify
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, macOS]
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -169,7 +173,7 @@ jobs:
     name: Safari app (Xcode project)
     needs: build
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-    runs-on: macos-15
+    runs-on: [self-hosted, macOS]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -198,12 +202,10 @@ jobs:
   publish:
     name: Publish to R2
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, macOS]
     env:
       # The one variable that separates a release from a rehearsal.
       DEST_BASE: ${{ startsWith(github.ref, 'refs/tags/v') && 'extension' || format('extension/_dryrun/{0}', github.run_id) }}
-      AWS_CLI_VERSION: 2.36.43
-      AWS_CLI_SHA256: ef606eb55f9a93ac404cc4a6869c0a791c234b898d93ec6af3bba8c491b391e9
       VERSION: ${{ needs.build.outputs.version }}
     steps:
       - uses: actions/checkout@v4
@@ -220,13 +222,9 @@ jobs:
             exit 1
           fi
 
-      - name: Install the AWS CLI (pinned)
+      - name: AWS CLI (Homebrew on the self-hosted Mac; installed once, then reused)
         run: |
-          cd "$RUNNER_TEMP"
-          curl -fsSL -o awscliv2.zip "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip"
-          echo "${AWS_CLI_SHA256}  awscliv2.zip" | sha256sum -c -
-          unzip -q awscliv2.zip
-          sudo ./aws/install --update
+          command -v aws >/dev/null || brew install awscli
           aws --version
 
       - uses: actions/download-artifact@v4
