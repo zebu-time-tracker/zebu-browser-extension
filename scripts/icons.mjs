@@ -1,10 +1,12 @@
-// Generates the extension icons (PNG) without any image library: a rounded
-// square in Zebu green with a white "Z", supersampled for smooth edges.
-// Run `npm run icons`; output goes to icons/{16,32,48,128}.png.
+// Generates the extension icons (PNG) without any image library: the Zebu
+// mark (board #328) — a rounded square in Zebu green, a white Z and a faint
+// diagonal — traced from the brand SVG (1022 × 1022, corner radius 180) and
+// supersampled for smooth edges. Run `npm run icons`; output goes to
+// icons/{16,32,48,128}.png.
 import { deflateSync } from 'node:zlib';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-const GREEN = [0x19, 0x73, 0x00];
+const GREEN = [0x16, 0xa3, 0x4a]; // the app green (tailwind green-600), the same as the web favicon
 const WHITE = [0xff, 0xff, 0xff];
 
 const crcTable = new Uint32Array(256).map((_, n) => {
@@ -26,30 +28,47 @@ const chunk = (type, data) => {
     return Buffer.concat([len, body, crc]);
 };
 
-/** Coverage of one sample point (u, v in 0..1): 0 = transparent, 1 = green, 2 = white. */
-function sample(u, v) {
-    const r = 0.22;
-    const inRounded = (() => {
-        const cx = Math.min(Math.max(u, r), 1 - r);
-        const cy = Math.min(Math.max(v, r), 1 - r);
-        return (u - cx) ** 2 + (v - cy) ** 2 <= r * r;
-    })();
-    if (!inRounded) return 0;
+// The mark's geometry in its own 1022 × 1022 space, scaled to 0..1 below.
+const SIDE = 1022;
+const CORNER = 180 / SIDE;
+// The Z, as the closed polygon of the brand SVG's path.
+const Z = [
+    [300.309, 802], [300.309, 741.33], [631.599, 259.962], [657.144, 296.683], [309.889, 296.683],
+    [309.889, 227.232], [713.823, 227.232], [713.823, 287.902], [384.13, 767.674], [359.383, 732.549],
+    [720.209, 732.549], [720.209, 802],
+].map(([x, y]) => [x / SIDE, y / SIDE]);
+// The faint diagonal behind the Z: a white line at 45 % over the green.
+const LINE = { x1: 330.463 / SIDE, y1: 282.512 / SIDE, x2: 700.463 / SIDE, y2: 748.512 / SIDE, half: 49.893 / SIDE / 2 };
+const LINE_OPACITY = 0.45;
+const LINE_MIX = GREEN.map((g, i) => Math.round(g + (WHITE[i] - g) * LINE_OPACITY));
 
-    // The Z: two bars and a diagonal, inside a 0.22..0.78 box.
-    const left = 0.24, right = 0.76, top = 0.25, bottom = 0.75, thick = 0.13;
-    const inX = u >= left && u <= right;
-    if (inX && v >= top && v <= top + thick) return 2;
-    if (inX && v >= bottom - thick && v <= bottom) return 2;
-    // Diagonal from (right, top + thick) to (left, bottom - thick).
-    const x1 = right, y1 = top + thick, x2 = left, y2 = bottom - thick;
-    const dx = x2 - x1, dy = y2 - y1;
-    const tt = ((u - x1) * dx + (v - y1) * dy) / (dx * dx + dy * dy);
-    if (tt >= 0 && tt <= 1) {
-        const px = x1 + tt * dx, py = y1 + tt * dy;
-        if (Math.hypot(u - px, v - py) <= thick * 0.62) return 2;
+function insideZ(u, v) {
+    let inside = false;
+    for (let i = 0, j = Z.length - 1; i < Z.length; j = i++) {
+        const [xi, yi] = Z[i];
+        const [xj, yj] = Z[j];
+        if (yi > v !== yj > v && u < ((xj - xi) * (v - yi)) / (yj - yi) + xi) inside = !inside;
     }
-    return 1;
+    return inside;
+}
+
+function onLine(u, v) {
+    const dx = LINE.x2 - LINE.x1, dy = LINE.y2 - LINE.y1;
+    const tt = ((u - LINE.x1) * dx + (v - LINE.y1) * dy) / (dx * dx + dy * dy);
+    if (tt < 0 || tt > 1) return false;
+    const px = LINE.x1 + tt * dx, py = LINE.y1 + tt * dy;
+    return Math.hypot(u - px, v - py) <= LINE.half;
+}
+
+/** Colour of one sample point (u, v in 0..1), or null outside the rounded square. */
+function sample(u, v) {
+    const r = CORNER;
+    const cx = Math.min(Math.max(u, r), 1 - r);
+    const cy = Math.min(Math.max(v, r), 1 - r);
+    if ((u - cx) ** 2 + (v - cy) ** 2 > r * r) return null;
+    if (insideZ(u, v)) return WHITE;
+    if (onLine(u, v)) return LINE_MIX;
+    return GREEN;
 }
 
 function png(size) {
@@ -61,9 +80,8 @@ function png(size) {
             let alpha = 0, rr = 0, gg = 0, bb = 0;
             for (let sy = 0; sy < ss; sy++) {
                 for (let sx = 0; sx < ss; sx++) {
-                    const s = sample((x + (sx + 0.5) / ss) / size, (y + (sy + 0.5) / ss) / size);
-                    if (s === 0) continue;
-                    const c = s === 2 ? WHITE : GREEN;
+                    const c = sample((x + (sx + 0.5) / ss) / size, (y + (sy + 0.5) / ss) / size);
+                    if (c === null) continue;
                     alpha++; rr += c[0]; gg += c[1]; bb += c[2];
                 }
             }

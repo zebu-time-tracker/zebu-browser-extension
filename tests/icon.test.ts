@@ -1,7 +1,7 @@
 // The toolbar icon: the clock as hours over minutes in the green square, the
 // Z in a green outline when nothing runs — drawn as strokes so it never
 // depends on a font the worker cannot reach.
-import { clockLines, drawClock, drawIdle, textStrokes, textWidth, type ClockContext, type Stroke } from '../src/icon';
+import { clockLines, drawClock, drawIdle, textStrokes, textWidth, type ClockContext, type Stroke, CLOCK_GREEN } from '../src/icon';
 
 test('the clock splits into an hours line and a minutes line', () => {
     expect(clockLines(0)).toEqual({ top: '0h', bottom: '0m' });
@@ -73,7 +73,7 @@ test('a running timer is the clock in monospace, both lines right-aligned on one
 
     drawClock(ctx, 32, clockLines(95));
 
-    expect(fills).toEqual(['#197300']);
+    expect(fills).toEqual([CLOCK_GREEN]);
     expect(ctx.textAlign).toBe('right');
     expect(ctx.font).toContain('monospace');
     expect(texts.map((t) => t.text)).toEqual(['1h', '35m']);
@@ -86,7 +86,7 @@ test('without a font the same lines are stroked, right-aligned and the same size
 
     drawClock(ctx, 32, clockLines(95), 'strokes');
 
-    expect(fills).toEqual(['#197300']);
+    expect(fills).toEqual([CLOCK_GREEN]);
     expect(ctx.strokeStyle).toBe('#fff');
     const hours = bounds(strokes.filter((s) => s.every(([, y]) => y < 16)));
     const minutes = bounds(strokes.filter((s) => s.every(([, y]) => y > 16)));
@@ -102,7 +102,7 @@ test('nothing running is the Z in a green outline, nothing filled', () => {
     drawIdle(ctx, 32);
 
     expect(fills).toEqual([]);
-    expect(ctx.strokeStyle).toBe('#197300');
+    expect(ctx.strokeStyle).toBe(CLOCK_GREEN);
     expect(rects).toHaveLength(1);
     expect(strokes.length).toBeGreaterThan(0);
 });
