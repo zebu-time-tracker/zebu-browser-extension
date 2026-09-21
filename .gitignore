@@ -4,3 +4,6 @@ dist/
 *.xpi
 web-ext-artifacts/
 .DS_Store
+
+# Store-listing screenshots: regenerate with `npm run listing:shots`.
+listing/
