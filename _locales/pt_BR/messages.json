@@ -3,7 +3,7 @@
         "message": "Zebu Controle de tempo"
     },
     "ext_description": {
-        "message": "Inicie um timer do Zebu a partir do GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp — com os detalhes da issue preenchidos e o projeto sugerido."
+        "message": "Inicie um timer do Zebu no GitHub, GitLab, Jira, Linear, Trello e mais — com os detalhes da issue e o projeto sugerido."
     },
     "button_track": {
         "message": "Registrar tempo"

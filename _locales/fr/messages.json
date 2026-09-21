@@ -3,7 +3,7 @@
         "message": "Zebu Suivi du temps"
     },
     "ext_description": {
-        "message": "Démarrez un minuteur Zebu depuis GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp et Basecamp — les détails du ticket sont renseignés, un projet est suggéré."
+        "message": "Démarrez un minuteur Zebu depuis GitHub, GitLab, Jira, Linear, Trello et plus — détails du ticket et projet suggérés."
     },
     "button_track": {
         "message": "Suivre le temps"

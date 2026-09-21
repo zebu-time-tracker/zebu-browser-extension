@@ -3,7 +3,7 @@
         "message": "Zebu Tijdregistratie"
     },
     "ext_description": {
-        "message": "Start een Zebu-timer vanuit GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp en Basecamp — issuedetails ingevuld, project voorgesteld."
+        "message": "Start een Zebu-timer vanuit GitHub, GitLab, Jira, Linear, Trello en meer — issuedetails ingevuld, project voorgesteld."
     },
     "button_track": {
         "message": "Tijd registreren"

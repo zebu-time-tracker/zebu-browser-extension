@@ -3,7 +3,7 @@
         "message": "Zebu Śledzenie czasu"
     },
     "ext_description": {
-        "message": "Uruchom stoper Zebu z GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp i Basecamp — z uzupełnionymi danymi zgłoszenia i zaproponowanym projektem."
+        "message": "Uruchom stoper Zebu z GitHub, GitLab, Jira, Linear, Trello i innych — z danymi zgłoszenia i proponowanym projektem."
     },
     "button_track": {
         "message": "Śledź czas"
