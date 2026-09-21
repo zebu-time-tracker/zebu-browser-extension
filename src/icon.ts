@@ -89,7 +89,7 @@ export type ClockContext = Pick<
     | 'clearRect'
 >;
 
-export const CLOCK_GREEN = '#197300';
+export const CLOCK_GREEN = '#37cb16'; // the mark's green (board #328)
 
 const strokeAll = (ctx: ClockContext, strokes: Stroke[]) => {
     for (const stroke of strokes) {
