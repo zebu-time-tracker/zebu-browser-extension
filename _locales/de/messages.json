@@ -3,7 +3,7 @@
         "message": "Zebu Zeiterfassung"
     },
     "ext_description": {
-        "message": "Starte einen Zebu-Timer direkt von GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp und Basecamp aus — mit ausgefüllten Issue-Details und vorgeschlagenem Projekt."
+        "message": "Zebu-Timer direkt aus GitHub, GitLab, Jira, Linear, Trello und mehr starten — mit Issue-Details und vorgeschlagenem Projekt."
     },
     "button_track": {
         "message": "Zeit erfassen"

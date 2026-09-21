@@ -3,7 +3,7 @@
         "message": "Zebu 시간 추적"
     },
     "ext_description": {
-        "message": "GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp, Basecamp에서 Zebu 타이머를 시작하세요 — 이슈 세부 정보가 채워지고 프로젝트가 제안됩니다."
+        "message": "GitHub, GitLab, Jira, Linear, Trello 등에서 Zebu 타이머를 시작하세요 — 이슈 정보가 채워지고 프로젝트가 제안됩니다."
     },
     "button_track": {
         "message": "시간 기록"

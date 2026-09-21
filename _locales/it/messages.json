@@ -3,7 +3,7 @@
         "message": "Zebu Tracciamento tempo"
     },
     "ext_description": {
-        "message": "Avvia un timer di Zebu da GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp — con i dettagli del problema già compilati e il progetto suggerito."
+        "message": "Avvia un timer Zebu da GitHub, GitLab, Jira, Linear, Trello e altri — dettagli del problema compilati e progetto suggerito."
     },
     "button_track": {
         "message": "Traccia tempo"
