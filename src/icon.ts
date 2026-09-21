@@ -89,7 +89,7 @@ export type ClockContext = Pick<
     | 'clearRect'
 >;
 
-export const CLOCK_GREEN = '#16a34a'; // the app green, the same as the web favicon (board #328)
+export const CLOCK_GREEN = '#4ca154'; // the mark's green (board #328)
 
 const strokeAll = (ctx: ClockContext, strokes: Stroke[]) => {
     for (const stroke of strokes) {
