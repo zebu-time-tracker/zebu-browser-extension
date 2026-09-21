@@ -52,10 +52,14 @@ jobs:
     runs-on: [self-hosted, macOS]
     steps:
       - uses: actions/checkout@v4
+      # No `cache: npm` on any job here, deliberately: on the self-hosted Mac
+      # the cache-save step that setup-node adds after the job hung for half an
+      # hour and took the v0.2.1 release with it (board #347). The runner keeps
+      # its own npm cache between runs anyway, so the action's cache buys
+      # nothing and can only cost us a release.
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - run: npm ci
       - name: Gate
         run: |
@@ -89,7 +93,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - run: npm ci
 
       - name: Build every target and zip it
@@ -179,7 +182,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
       - run: npm ci && npm run build:safari
       # The converter wraps dist/safari in a macOS app project. It is built
       # here so a release always carries the exact project a store submission
