@@ -241,6 +241,14 @@
     "popup_resume": {
         "message": "继续"
     },
+    "popup_start_working_on": {
+        "message": "开始工作：$WORK$",
+        "placeholders": {
+            "work": {
+                "content": "$1"
+            }
+        }
+    },
     "popup_presets": {
         "message": "预设"
     },
@@ -394,9 +402,6 @@
     },
     "unit_week": {
         "message": "周"
-    },
-    "popup_live": {
-        "message": "实时更新已开启"
     },
     "header_today": {
         "message": "今天"

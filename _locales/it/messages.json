@@ -241,6 +241,14 @@
     "popup_resume": {
         "message": "Riprendi"
     },
+    "popup_start_working_on": {
+        "message": "Inizia a lavorare su $WORK$",
+        "placeholders": {
+            "work": {
+                "content": "$1"
+            }
+        }
+    },
     "popup_presets": {
         "message": "Modelli"
     },
@@ -394,9 +402,6 @@
     },
     "unit_week": {
         "message": "sett"
-    },
-    "popup_live": {
-        "message": "Aggiornamenti in tempo reale attivi"
     },
     "header_today": {
         "message": "Oggi"

@@ -241,6 +241,14 @@
     "popup_resume": {
         "message": "Wznów"
     },
+    "popup_start_working_on": {
+        "message": "Rozpocznij pracę: $WORK$",
+        "placeholders": {
+            "work": {
+                "content": "$1"
+            }
+        }
+    },
     "popup_presets": {
         "message": "Szablony"
     },
@@ -394,9 +402,6 @@
     },
     "unit_week": {
         "message": "tyg"
-    },
-    "popup_live": {
-        "message": "Aktualizacje na żywo włączone"
     },
     "header_today": {
         "message": "Dziś"

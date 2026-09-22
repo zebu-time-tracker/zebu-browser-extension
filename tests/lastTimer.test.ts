@@ -1,4 +1,4 @@
-import { lastTimerFor, lastTimerFrom } from '../src/lastTimer';
+import { lastTimerFor, lastTimerFrom, resumeLabelKey } from '../src/lastTimer';
 import type { Entry } from '../src/types';
 
 const entry: Entry = { id: 'e1', date: '2026-09-18', minutes: 5, notes: 'Footer', project: 'Billing API', project_id: 'p2', task: 'Development', task_id: 't1', is_billable: true, locked: false, timer_started_at: null };
@@ -16,4 +16,9 @@ test('junk in storage is nothing to resume', () => {
     expect(lastTimerFor('x', 'w')).toBeNull();
     expect(lastTimerFor({ entry_id: 'e1' }, 'w')).toBeNull();
     expect(lastTimerFor({ entry_id: 'e1', project_id: 'p', date: '2026-09-18', workspace: 'w', task_id: 7 }, 'w')).toMatchObject({ task_id: null, notes: null });
+});
+
+test('the bar resumes a timer from today and starts afresh on an older one (board #361)', () => {
+    expect(resumeLabelKey({ date: '2026-09-22' }, '2026-09-22')).toBe('popup_resume');
+    expect(resumeLabelKey({ date: '2026-09-18' }, '2026-09-22')).toBe('popup_start_working_on');
 });

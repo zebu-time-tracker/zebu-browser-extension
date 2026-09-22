@@ -241,6 +241,14 @@
     "popup_resume": {
         "message": "再開"
     },
+    "popup_start_working_on": {
+        "message": "$WORK$ の作業を開始",
+        "placeholders": {
+            "work": {
+                "content": "$1"
+            }
+        }
+    },
     "popup_presets": {
         "message": "プリセット"
     },
@@ -394,9 +402,6 @@
     },
     "unit_week": {
         "message": "週"
-    },
-    "popup_live": {
-        "message": "ライブ更新オン"
     },
     "header_today": {
         "message": "今日"
