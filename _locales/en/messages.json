@@ -3,7 +3,7 @@
         "message": "Zebu Time Tracking"
     },
     "ext_description": {
-        "message": "Start a Zebu timer from GitHub, GitLab, Jira, Linear, Trello and more — issue details filled in, project suggested."
+        "message": "Start Zebu timers from GitHub, GitLab, Jira, Linear, Trello and more. Fills in the issue and suggests a project."
     },
     "button_track": {
         "message": "Track time"
@@ -26,7 +26,7 @@
         "message": "Track time"
     },
     "button_switch_title": {
-        "message": "A timer is running on $1 — starting one here stops it",
+        "message": "Stops the timer on $1 and starts one here",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Your workspace"
     },
     "options_workspace_hint": {
-        "message": "The name of your workspace — the part before .zebu.work."
+        "message": "The part before .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Disconnect"
     },
     "options_error_workspace": {
-        "message": "That doesn’t look like a workspace name — letters, numbers and dashes only."
+        "message": "Use only letters, numbers and dashes."
     },
     "options_error_central": {
-        "message": "That’s the main Zebu site — enter your own workspace’s name instead."
+        "message": "That’s the main Zebu site. Enter your workspace name."
     },
     "options_error_unreachable": {
         "message": "That workspace can’t be reached. Check the address."
@@ -136,7 +136,7 @@
         "message": "Timer notes"
     },
     "options_notes_hint": {
-        "message": "What a timer started from an issue is labelled with."
+        "message": "Notes for timers started from an issue."
     },
     "options_notes_identifier_title_url": {
         "message": "Identifier, title and link (e.g. “#123 Fix login” + URL)"
@@ -151,7 +151,7 @@
         "message": "Self-hosted trackers"
     },
     "options_sites_hint": {
-        "message": "Run GitLab, Jira or another tracker on your own domain? Add its address and pick the tracker type."
+        "message": "Add GitLab, Jira or other trackers hosted on your own domain."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome didn’t grant access to that site."
     },
     "options_sites_none": {
-        "message": "None yet — the public GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp sites work out of the box."
+        "message": "None yet. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp work without setup."
     },
     "options_forget_heading": {
         "message": "Suggestions"
     },
     "options_forget_hint": {
-        "message": "The extension remembers which project you pick for each repo or board and suggests it next time."
+        "message": "Zebu suggests the project you last picked for each repo or board."
     },
     "options_forget": {
         "message": "Forget remembered choices"
@@ -303,7 +303,7 @@
         "message": "Keyboard shortcuts"
     },
     "options_shortcuts_hint": {
-        "message": "Toggle the timer, start one for the page you are on, or open this popup from the keyboard. Chrome sets the keys."
+        "message": "Start or stop the timer, track the current page, or open the popup. Set the keys in Chrome."
     },
     "options_shortcuts_open": {
         "message": "Change shortcuts in Chrome"
@@ -340,7 +340,7 @@
         "message": "Idle detection"
     },
     "options_idle_hint": {
-        "message": "While a timer runs, Chrome notices when you stop using the computer and asks whether that time should count."
+        "message": "If you step away while a timer runs, Zebu asks whether to keep that time."
     },
     "options_idle_after": {
         "message": "Detect idle after"
@@ -444,7 +444,7 @@
         "message": "Start a new timer for today?"
     },
     "newday_body": {
-        "message": "That entry is from $1. A fresh timer starts today with the same project, task and notes — the original stays as it is.",
+        "message": "That entry is from $1. A new timer starts today with the same project, task and notes. The original entry stays unchanged.",
         "placeholders": {
             "1": {
                 "content": "$1"

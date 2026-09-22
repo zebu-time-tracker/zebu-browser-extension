@@ -3,7 +3,7 @@
         "message": "Zebu Tracciamento tempo"
     },
     "ext_description": {
-        "message": "Avvia un timer Zebu da GitHub, GitLab, Jira, Linear, Trello e altri — dettagli del problema compilati e progetto suggerito."
+        "message": "Avvia timer Zebu da GitHub, GitLab, Jira, Linear, Trello e altro. Compila l'issue e suggerisce un progetto."
     },
     "button_track": {
         "message": "Traccia tempo"
@@ -26,7 +26,7 @@
         "message": "Traccia tempo"
     },
     "button_switch_title": {
-        "message": "C'è un timer in corso su $1 — avviarne uno qui lo ferma",
+        "message": "Ferma il timer su $1 e ne avvia uno qui",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Il tuo workspace"
     },
     "options_workspace_hint": {
-        "message": "Il nome del tuo spazio di lavoro: la parte prima di .zebu.work."
+        "message": "La parte prima di .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Disconnetti"
     },
     "options_error_workspace": {
-        "message": "Non sembra il nome di uno spazio di lavoro: solo lettere, numeri e trattini."
+        "message": "Usa solo lettere, numeri e trattini."
     },
     "options_error_central": {
-        "message": "Quello è il sito principale di Zebu — inserisci invece il nome del tuo workspace."
+        "message": "Quello è il sito principale di Zebu. Inserisci il nome del tuo workspace."
     },
     "options_error_unreachable": {
         "message": "Quel workspace non è raggiungibile. Controlla l'indirizzo."
@@ -136,7 +136,7 @@
         "message": "Note del timer"
     },
     "options_notes_hint": {
-        "message": "Con cosa viene etichettato un timer avviato da un problema."
+        "message": "Note dei timer avviati da un'issue."
     },
     "options_notes_identifier_title_url": {
         "message": "Identificativo, titolo e link (es. «#123 Correggi login» + URL)"
@@ -151,7 +151,7 @@
         "message": "Tracker self-hosted"
     },
     "options_sites_hint": {
-        "message": "Usi GitLab, Jira o un altro tracker sul tuo dominio? Aggiungi il suo indirizzo e scegli il tipo di tracker."
+        "message": "Aggiungi GitLab, Jira o altri tracker ospitati sul tuo dominio."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome non ha concesso l'accesso a quel sito."
     },
     "options_sites_none": {
-        "message": "Ancora nessuno — i siti pubblici GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp funzionano subito."
+        "message": "Ancora nessuno. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp funzionano senza configurazione."
     },
     "options_forget_heading": {
         "message": "Suggerimenti"
     },
     "options_forget_hint": {
-        "message": "L'estensione ricorda quale progetto scegli per ogni repo o board e lo suggerisce la volta successiva."
+        "message": "Zebu suggerisce l'ultimo progetto scelto per ogni repo o board."
     },
     "options_forget": {
         "message": "Dimentica le scelte ricordate"
@@ -303,7 +303,7 @@
         "message": "Scorciatoie da tastiera"
     },
     "options_shortcuts_hint": {
-        "message": "Avvia o ferma il timer, avviane uno per la pagina corrente o apri questo pannello dalla tastiera. I tasti li imposta Chrome."
+        "message": "Avvia o ferma il timer, traccia la pagina corrente o apri il popup. Imposta i tasti in Chrome."
     },
     "options_shortcuts_open": {
         "message": "Modifica le scorciatoie in Chrome"
@@ -340,7 +340,7 @@
         "message": "Rilevamento inattività"
     },
     "options_idle_hint": {
-        "message": "Mentre un timer è attivo, Chrome nota quando smetti di usare il computer e chiede se quel tempo deve contare."
+        "message": "Se ti allontani mentre un timer è attivo, Zebu chiede se tenere quel tempo."
     },
     "options_idle_after": {
         "message": "Rileva inattività dopo"
@@ -444,7 +444,7 @@
         "message": "Avviare un nuovo timer per oggi?"
     },
     "newday_body": {
-        "message": "Quella voce è del $1. Oggi parte un nuovo timer con lo stesso progetto, attività e note — l'originale resta invariata.",
+        "message": "Quella voce è del $1. Oggi parte un nuovo timer con lo stesso progetto, attività e note. La voce originale non cambia.",
         "placeholders": {
             "1": {
                 "content": "$1"

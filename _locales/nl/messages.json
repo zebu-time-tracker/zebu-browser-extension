@@ -3,7 +3,7 @@
         "message": "Zebu Tijdregistratie"
     },
     "ext_description": {
-        "message": "Start een Zebu-timer vanuit GitHub, GitLab, Jira, Linear, Trello en meer — issuedetails ingevuld, project voorgesteld."
+        "message": "Start Zebu-timers vanuit GitHub, GitLab, Jira, Linear, Trello en meer. Vult het issue in en stelt een project voor."
     },
     "button_track": {
         "message": "Tijd registreren"
@@ -26,7 +26,7 @@
         "message": "Tijd registreren"
     },
     "button_switch_title": {
-        "message": "Er loopt een timer op $1 — als je er hier een start, wordt die gestopt",
+        "message": "Stopt de timer op $1 en start er hier een",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Je werkruimte"
     },
     "options_workspace_hint": {
-        "message": "De naam van je werkruimte — het deel vóór .zebu.work."
+        "message": "Het deel vóór .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Verbinding verbreken"
     },
     "options_error_workspace": {
-        "message": "Dat ziet er niet uit als een werkruimtenaam — alleen letters, cijfers en streepjes."
+        "message": "Gebruik alleen letters, cijfers en streepjes."
     },
     "options_error_central": {
-        "message": "Dat is de hoofdsite van Zebu — voer in plaats daarvan de naam van je eigen werkruimte in."
+        "message": "Dat is de hoofdsite van Zebu. Voer de naam van je werkruimte in."
     },
     "options_error_unreachable": {
         "message": "Die werkruimte is niet bereikbaar. Controleer het adres."
@@ -136,7 +136,7 @@
         "message": "Timernotities"
     },
     "options_notes_hint": {
-        "message": "Waarmee een timer die vanuit een issue is gestart, wordt gelabeld."
+        "message": "Notities voor timers die vanuit een issue starten."
     },
     "options_notes_identifier_title_url": {
         "message": "Kenmerk, titel en link (bijv. “#123 Login repareren” + URL)"
@@ -151,7 +151,7 @@
         "message": "Self-hosted trackers"
     },
     "options_sites_hint": {
-        "message": "Draai je GitLab, Jira of een andere tracker op je eigen domein? Voeg het adres toe en kies het type tracker."
+        "message": "Voeg GitLab, Jira of andere trackers op je eigen domein toe."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome heeft geen toegang tot die site verleend."
     },
     "options_sites_none": {
-        "message": "Nog geen — de publieke GitHub-, GitLab-, Jira Cloud-, Linear-, Asana-, Trello-, Bitbucket-, ClickUp- en Basecamp-sites werken meteen."
+        "message": "Nog geen. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp en Basecamp werken zonder instellen."
     },
     "options_forget_heading": {
         "message": "Suggesties"
     },
     "options_forget_hint": {
-        "message": "De extensie onthoudt welk project je kiest voor elke repo of elk board en stelt dat de volgende keer voor."
+        "message": "Zebu stelt per repo of bord het laatst gekozen project voor."
     },
     "options_forget": {
         "message": "Onthouden keuzes vergeten"
@@ -303,7 +303,7 @@
         "message": "Sneltoetsen"
     },
     "options_shortcuts_hint": {
-        "message": "Schakel de timer, start er een voor de huidige pagina of open deze pop-up via het toetsenbord. Chrome bepaalt de toetsen."
+        "message": "Start of stop de timer, registreer de huidige pagina of open de pop-up. Stel de toetsen in Chrome in."
     },
     "options_shortcuts_open": {
         "message": "Sneltoetsen wijzigen in Chrome"
@@ -340,7 +340,7 @@
         "message": "Inactiviteit detecteren"
     },
     "options_idle_hint": {
-        "message": "Terwijl een timer loopt, merkt Chrome wanneer je de computer niet meer gebruikt en vraagt of die tijd moet meetellen."
+        "message": "Ben je weg terwijl een timer loopt, dan vraagt Zebu of je die tijd wilt houden."
     },
     "options_idle_after": {
         "message": "Detecteer inactiviteit na"
@@ -444,7 +444,7 @@
         "message": "Nieuwe timer voor vandaag starten?"
     },
     "newday_body": {
-        "message": "Die registratie is van $1. Er start vandaag een nieuwe timer met hetzelfde project, dezelfde taak en notities — het origineel blijft staan.",
+        "message": "Die registratie is van $1. Vandaag start een nieuwe timer met hetzelfde project, dezelfde taak en notities. De oorspronkelijke registratie blijft ongewijzigd.",
         "placeholders": {
             "1": {
                 "content": "$1"
