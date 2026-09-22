@@ -20,3 +20,19 @@ export async function call<T>(message: Message): Promise<T> {
 }
 
 export const t = (key: string, ...subs: string[]): string => chrome.i18n.getMessage(key, subs) || key;
+
+/**
+ * What to show someone when a call fails.
+ *
+ * Two of the three answers are ours, and one is the server's. A 402 is a plan
+ * gate — the workspace has no seat free for this person — and the sentence it
+ * comes with is written for the person reading it and names the owner to ask
+ * (board #348). Wrapping that in "Something went wrong" would turn an answer
+ * they can act on into an apology, so it is shown exactly as it came.
+ */
+export const errorText = (error: unknown): string => {
+    if (error instanceof CallError && error.status === 0) return t('popup_error_unreachable');
+    if (error instanceof CallError && error.status === 402 && error.message) return error.message;
+
+    return t('popup_error_generic', error instanceof Error ? error.message : String(error));
+};

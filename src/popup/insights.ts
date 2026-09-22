@@ -8,7 +8,7 @@
 // live minutes are added on every tick so the figures count up with the clock.
 import { toDateString } from '../dates';
 import { formatDurationHuman, formatMinutes } from '../duration';
-import { call, CallError, t } from '../messaging';
+import { call, errorText, t } from '../messaging';
 import { liveSummary } from '../summary';
 import type { Entry, Summary } from '../types';
 import { el } from './dom';
@@ -108,7 +108,7 @@ export function insightsPanel(deps: InsightsDeps): Insights {
             if (alive) draw();
         } catch (e) {
             if (!alive || summary) return;
-            const text = e instanceof CallError && e.status === 0 ? t('popup_error_unreachable') : t('popup_error_generic', e instanceof Error ? e.message : String(e));
+            const text = errorText(e);
             root.replaceChildren(el('p', { class: 'error', text }));
         }
     };
