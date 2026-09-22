@@ -25,7 +25,7 @@ const settings = { workspace: 'https://studio.zebu.work', token: 'tok' };
 
 const alarms = new Map<string, unknown>();
 let badgeText = '';
-let icon: { imageData?: Record<number, { fills: number; strokes: number }>; path?: Record<number, string> } = {};
+let icon: { imageData?: Record<number, { fills: number; strokes: number; first?: 'fill' | 'stroke' }>; path?: Record<number, string> } = {};
 let title = '';
 
 // jsdom has no canvas: a stand-in that counts what was painted on it, so the
@@ -36,7 +36,11 @@ class FakeCanvas {
         public height: number,
     ) {}
     getContext() {
-        const painted = { fills: 0, strokes: 0 };
+        // `first` is what the drawing began with, which is the whole design
+        // rule: a filled square means a timer is running, an outline means
+        // nothing is (board #353).
+        const painted: { fills: number; strokes: number; first?: 'fill' | 'stroke' } = { fills: 0, strokes: 0 };
+        const mark = (what: 'fill' | 'stroke') => void (painted.first ??= what);
         return {
             fillStyle: '',
             strokeStyle: '',
@@ -50,8 +54,8 @@ class FakeCanvas {
             font: '',
             textAlign: '',
             textBaseline: '',
-            fill: () => void painted.fills++,
-            stroke: () => void painted.strokes++,
+            fill: () => void (mark('fill'), painted.fills++),
+            stroke: () => void (mark('stroke'), painted.strokes++),
             fillText: () => void painted.strokes++,
             clearRect: () => undefined,
             // one white pixel, so the drawn text counts as having rendered
@@ -226,19 +230,22 @@ describe('toolbar icon', () => {
     // The icon is the running timer's clock, as the menubar pill shows it
     // (board #268): hours over minutes, drawn into the square rather than
     // squeezed into the badge.
-    test('a running timer fills the square with its clock, banked minutes included; nothing running draws the outline', async () => {
+    test('a running timer fills the square with its clock, banked minutes included; nothing running draws the mark', async () => {
         vi.setSystemTime(new Date('2026-09-11T10:19:00Z'));
         timesheet.mockResolvedValue(sheet({ ...entry, project: 'Website', task: 'Dev', minutes: 12 }, 'tok-1'));
         await background.refresh(true);
         expect(Object.keys(icon.imageData ?? {})).toEqual(['16', '32', '48', '64']);
-        expect(icon.imageData?.[16].fills).toBe(1);
+        expect(icon.imageData?.[16].first).toBe('fill'); // the square, filled: timing
         expect(icon.imageData?.[16].strokes).toBeGreaterThan(0);
         expect(badgeText).toBe('');
         expect(title).toBe('Website · Dev · 0:31');
 
         timesheet.mockResolvedValue(sheet(null, 'tok-2'));
         await background.refresh(true);
-        expect(icon.imageData?.[16].fills).toBe(0);
+        // Idle is the mark (board #353): the square is stroked, not filled,
+        // and the one fill that follows is the Z itself.
+        expect(icon.imageData?.[16].first).toBe('stroke');
+        expect(icon.imageData?.[16].fills).toBe(1);
         expect(icon.imageData?.[16].strokes).toBeGreaterThan(0);
         expect(title).toBe('Zebu');
         vi.useRealTimers();

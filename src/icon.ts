@@ -1,6 +1,6 @@
 // The toolbar icon: the running timer's clock on two lines — hours above,
 // minutes below, right-aligned in the green square — and, when nothing runs,
-// the Z in a green outline, so a filled square always means "timing".
+// the Zebu mark in a green outline, so a filled square always means "timing".
 // Chrome's badge (the strip under the icon) can only hold four characters,
 // rendered tiny and cramped; the desktop's tray pill is the model instead.
 //
@@ -9,7 +9,7 @@
 // fonts, and a platform where fillText paints nothing would leave a blank
 // green square — so the drawn pixels are checked, and a stroke font of
 // digits, "h" and "m" (which cannot fail) takes over when they are empty.
-// The idle Z is always strokes.
+// The idle mark is geometry, never text, so it cannot fail that way at all.
 
 export interface ClockLines {
     top: string;
@@ -42,7 +42,6 @@ const GLYPHS: Record<string, Glyph> = {
     '9': { width: 3, strokes: [[[3, 3], [0, 3], [0, 0], [3, 0], [3, 6], [0, 6]]] },
     h: { width: 3, strokes: [[[0, 0], [0, 6]], [[0, 2.5], [3, 2.5], [3, 6]]] },
     m: { width: 5, strokes: [[[0, 6], [0, 2.5], [5, 2.5], [5, 6]], [[2.5, 2.5], [2.5, 6]]] },
-    Z: { width: 4, strokes: [[[0, 0], [4, 0], [0, 6], [4, 6]]] },
 };
 const GLYPH_HEIGHT = 6;
 const GAP = 1.25;
@@ -59,13 +58,6 @@ export function strokesAt(text: string, x: number, top: number, unit: number): S
         x += (glyph.width + GAP) * unit;
     }
     return out;
-}
-
-/** `text` centred on (cx, cy), `height` pixels tall and never wider than `maxWidth`. */
-export function textStrokes(text: string, cx: number, cy: number, height: number, maxWidth: number): Stroke[] {
-    const width = textWidth(text);
-    const unit = Math.min(height / GLYPH_HEIGHT, maxWidth / width);
-    return strokesAt(text, cx - (width * unit) / 2, cy - (GLYPH_HEIGHT * unit) / 2, unit);
 }
 
 /** The 2D-context methods the drawing uses, so a test or a preview page can supply its own. */
@@ -146,15 +138,56 @@ export function drawClock(ctx: ClockContext, size: number, lines: ClockLines, mo
     }
 }
 
-/** Nothing running: the Z inside a green outline, so only a timer fills the square. */
+/**
+ * The mark, drawn from Alan's artwork rather than approximated: the outlined
+ * square, the slash at half strength, and the solid Z (board #353). Every
+ * figure below is his, divided by the 1022-unit square he drew them in, so
+ * the toolbar shows the same Z as the app, the site and the app icon.
+ */
+const MARK = {
+    /** The square: how far in it sits, how round its corners are, how heavy its line is. */
+    inset: 20 / 1022,
+    radius: 160 / 1022,
+    stroke: 40 / 1022,
+    /** The slash, behind the Z and at half strength. */
+    slash: { from: [748.175 / 1022, 802.276 / 1022], to: [286.615 / 1022, 220.96 / 1022], stroke: 62.2396 / 1022 },
+    /** The Z itself, as the corners of one filled shape. */
+    z: [
+        [249, 869],
+        [249, 793.317],
+        [630.744, 238.638],
+        [260.95, 238.638],
+        [260.95, 152],
+        [764.842, 152],
+        [764.842, 227.683],
+        [383.673, 782.363],
+        [772.808, 782.363],
+        [772.808, 869],
+    ].map(([x, y]) => [x / 1022, y / 1022] as const),
+};
+
+/** Nothing running: the mark in its outline, so only a timer fills the square. */
 export function drawIdle(ctx: ClockContext, size: number): void {
     ctx.clearRect(0, 0, size, size);
-    const inset = Math.max(0.75, size / 16);
-    pen(ctx, size, CLOCK_GREEN, 1 / 9);
+
+    // The outline. A hair of inset at any size, so the line is never clipped
+    // by the edge of the 16px tile Chrome hands us.
+    const inset = Math.max(0.75, size * MARK.inset);
+    pen(ctx, size, CLOCK_GREEN, MARK.stroke);
     ctx.beginPath();
-    ctx.roundRect(inset, inset, size - 2 * inset, size - 2 * inset, size * 0.2);
+    ctx.roundRect(inset, inset, size - 2 * inset, size - 2 * inset, size * MARK.radius);
     ctx.stroke();
-    strokeAll(ctx, textStrokes('Z', size / 2, size / 2, size * 0.42, size * 0.5));
+
+    // The slash first: the Z is painted over it, as in the artwork. Half
+    // strength comes from the colour rather than globalAlpha, which the
+    // drawing's own small slice of the canvas API does not include.
+    pen(ctx, size, `${CLOCK_GREEN}80`, MARK.slash.stroke);
+    strokeAll(ctx, [[MARK.slash.from, MARK.slash.to].map(([x, y]) => [x * size, y * size])]);
+
+    ctx.fillStyle = CLOCK_GREEN;
+    ctx.beginPath();
+    MARK.z.forEach(([x, y], i) => (i ? ctx.lineTo(x * size, y * size) : ctx.moveTo(x * size, y * size)));
+    ctx.fill();
 }
 
 /** The sizes Chrome asks the action icon for, at 1x through 4x. */
