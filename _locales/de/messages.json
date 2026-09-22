@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Schließen, um die Zeit zu behalten."
+    "idle_message_plain": {
+        "message": "Dein Timer lief weiter, während du weg warst."
     },
-    "idle_remove": {
-        "message": "Leerlaufzeit entfernen"
+    "idle_remove_keep": {
+        "message": "Weiter messen und $1 entfernen",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "Entfernen und Timer stoppen"
+        "message": "Timer stoppen und $1 entfernen",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Klicken, um $1 als neuen Eintrag hinzuzufügen. Schließen, um die Zeit zu behalten.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Inaktivität erkennen"

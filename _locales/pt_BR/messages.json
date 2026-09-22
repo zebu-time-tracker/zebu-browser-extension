@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Feche para manter o tempo."
+    "idle_message_plain": {
+        "message": "Seu timer continuou rodando enquanto você esteve fora."
     },
-    "idle_remove": {
-        "message": "Remover o tempo inativo"
+    "idle_remove_keep": {
+        "message": "Continuar e remover $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "Remover e parar o timer"
+        "message": "Parar o timer e remover $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Clique para adicionar $1 como nova entrada. Feche para manter o tempo.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Detecção de inatividade"

@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "閉じると時間はそのまま残ります。"
+    "idle_message_plain": {
+        "message": "離席中もタイマーは動き続けていました。"
     },
-    "idle_remove": {
-        "message": "無操作時間を削除"
+    "idle_remove_keep": {
+        "message": "$1 を削除して計測を続ける",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "削除してタイマーを停止"
+        "message": "$1 を削除してタイマーを停止",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "クリックで $1 を新しいエントリーとして追加。閉じると時間はそのまま残ります。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "無操作の検出"

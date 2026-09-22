@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "关闭此通知即保留该时间。"
+    "idle_message_plain": {
+        "message": "您离开期间，计时器一直在运行。"
     },
-    "idle_remove": {
-        "message": "移除闲置时间"
+    "idle_remove_keep": {
+        "message": "继续计时并移除 $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "移除并停止计时"
+        "message": "停止计时并移除 $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "点击将 $1 添加为新条目；关闭即保留该时间。",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "闲置检测"

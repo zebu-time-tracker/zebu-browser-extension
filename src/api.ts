@@ -2,6 +2,7 @@
 // app uses. The workspace base URL and the Sanctum token come from settings;
 // requests only run from the service worker and the extension pages.
 import { getSettings, saveSettings } from './storage';
+import type { IdleAction, IdleSpan, IdleState } from './idle';
 import type { Entry, ProjectOption, ProjectStats, Summary } from './types';
 
 /** GET /api/timesheet, the shape the desktop's src/api.ts reads. */
@@ -99,6 +100,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
         const data = await response.json().catch(() => null);
         throw new ApiError(data?.message ?? `request failed (${response.status})`, response.status);
     }
+    if (response.status === 204) return undefined as T;
     return response.json() as Promise<T>;
 }
 
@@ -142,9 +144,16 @@ export const api = {
     startTimer: (payload: { project_id: string; task_id?: string | null; notes?: string | null; entry_id?: string }) =>
         request<{ entry: Entry }>('POST', '/timer/start', payload),
     stopTimer: () => request<{ entry: Entry | null }>('POST', '/timer/stop', {}),
-    /** Drop an idle stretch from the running timer, keeping it running or stopping it (board #269). */
-    idleTimer: (payload: { idle_started_at: string; action: 'discard_keep' | 'discard_stop' }) =>
-        request<{ entry: Entry | null }>('POST', '/timer/idle', payload),
+    /** This machine saw input while a timer runs (board #333); the server throttles, a report a minute is plenty. Always 204. */
+    reportActivity: (at?: string) => request<void>('POST', '/timer/activity', at ? { at } : {}),
+    /** What to ask about: the pending gap, else the live stretch since the person was last seen on any device (board #333). */
+    idleState: () => request<IdleState>('GET', '/timer/idle'),
+    /**
+     * Answer an idle prompt (board #269, #333). `entry_id` makes a stale
+     * answer do nothing; so does a second answer to the same stretch.
+     */
+    idleTimer: (payload: { idle_started_at: string; action: IdleAction; entry_id?: string }) =>
+        request<{ applied?: boolean; entry: Entry | null; idle?: IdleSpan | null }>('POST', '/timer/idle', payload),
     summary: () => request<Summary>('GET', '/summary'),
     // Finished blocks, the same calls the desktop makes (board #267). The
     // server refuses edits to locked entries and approved weeks.

@@ -34,8 +34,8 @@ export const hasNotifications = (target: Target = TARGET): boolean => target !==
 /**
  * Whether a notification may carry buttons. Firefox rejects the whole
  * notification when `buttons` is present rather than ignoring the field, so
- * on Firefox the idle prompt is shown without them: clicking it keeps the
- * time, the choices live in the popup.
+ * on Firefox the idle prompt is shown without them: clicking it adds the idle
+ * time as a new entry, closing it keeps the time (board #333).
  */
 export const hasNotificationButtons = (target: Target = TARGET): boolean => target === 'chrome';
 

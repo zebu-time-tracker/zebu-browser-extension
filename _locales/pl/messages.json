@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Zamknij, aby zachować ten czas."
+    "idle_message_plain": {
+        "message": "Stoper działał dalej, gdy Cię nie było."
     },
-    "idle_remove": {
-        "message": "Usuń bezczynność"
+    "idle_remove_keep": {
+        "message": "Mierz dalej i usuń $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "Usuń i zatrzymaj stoper"
+        "message": "Zatrzymaj stoper i usuń $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Kliknij, aby dodać $1 jako nowy wpis. Zamknij, aby zachować czas.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Wykrywanie bezczynności"
