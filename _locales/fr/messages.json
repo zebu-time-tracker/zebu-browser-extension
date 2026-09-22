@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Fermez ceci pour conserver le temps."
+    "idle_message_plain": {
+        "message": "Votre minuteur a continué pendant votre absence."
     },
-    "idle_remove": {
-        "message": "Retirer l’inactivité"
+    "idle_remove_keep": {
+        "message": "Continuer et retirer $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "La retirer et arrêter le minuteur"
+        "message": "Arrêter le minuteur et retirer $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Cliquez pour ajouter $1 comme nouvelle entrée. Fermez pour conserver le temps.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Détection d’inactivité"

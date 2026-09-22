@@ -8,10 +8,18 @@ import { elapsedMinutes, formatDurationHuman, formatMinutes } from "./duration";
 import { CLOCK_GREEN, clockImages } from "./icon";
 import {
   detectionInterval,
+  IDLE_ACTION_ON_CLICK,
+  IDLE_ACTION_ON_CLOSE,
   idleActionForButton,
-  idleMinutes,
-  idleWindowStart,
-  idleWorthAsking,
+  idlePrefill,
+  idlePrefillQuery,
+  idlePrompt,
+  onInput,
+  promptStands,
+  type ActivityMarks,
+  type IdleAction,
+  type IdlePrompt,
+  type IdleState,
 } from "./idle";
 import { lastTimerFor, lastTimerFrom } from "./lastTimer";
 import {
@@ -82,6 +90,7 @@ export async function refresh(force = false): Promise<State> {
 
   try {
     const sheet = await api.timesheet();
+    const moved = (sheet.pulse_token ?? "") !== cache.pulseToken;
     cache = {
       connected: true,
       running: sheet.running,
@@ -106,6 +115,9 @@ export async function refresh(force = false): Promise<State> {
     // not send `active`; the running entry is the next best answer.
     const current = sheet.active ?? sheet.running;
     if (current) await setLastTimer(lastTimerFrom(current, settings.workspace));
+    // Something changed (here, elsewhere, or pushed): an open idle prompt
+    // may have been answered on another device (board #333).
+    if (moved) void recheckIdlePrompt();
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
       cache = empty();
@@ -278,8 +290,8 @@ async function broadcast(state: State): Promise<void> {
 
 // One timer window at a time: its id is kept in session storage (no "tabs"
 // permission needed to find it again) and reused if it is still open.
-async function openTimerWindow(): Promise<void> {
-  const url = chrome.runtime.getURL("popup.html?window=1");
+async function openTimerWindow(query = "window=1"): Promise<void> {
+  const url = chrome.runtime.getURL(`popup.html?${query}`);
   const { timerWindowId } = await chrome.storage.session.get("timerWindowId");
   if (typeof timerWindowId === "number") {
     try {
@@ -491,6 +503,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "refresh") {
     void refresh(true).then(broadcast);
     void relearnBroadcast().then(connectLive);
+    void watchInput();
   }
 });
 
@@ -505,18 +518,24 @@ chrome.runtime.onStartup.addListener(() => {
   void applyIdleSettings();
 });
 
-// ---- idle detection (board #269) -------------------------------------------
+// ---- idle detection (board #269, #333) ---------------------------------------
 //
-// Chrome watches the machine's input for us (chrome.idle) and says "idle"
-// once the detection interval has passed without any, then "active" on the
-// first keypress or click. The absence therefore began an interval before the
-// first event; it is noted in session storage (the worker may be gone by the
-// time the user is back) and asked about as a notification on return, with
-// the desktop's choices: remove the time and keep timing, remove it and stop,
-// or dismiss to keep it. The server does the arithmetic on `idle_started_at`.
+// The server decides (web app PR 303, docs/idle-detection.md): while a timer
+// runs, this machine reports input at most once a minute, and every device's
+// reports together say when the person was last seen. On coming back —
+// Chrome says "active" after "idle", the minute alarm finds input after a
+// silence, the worker or the browser starts — it first asks the server what
+// there is to ask about, and only then reports, so its own report cannot end
+// the stretch unasked. The prompt is a notification: continue timing and
+// remove the time, stop and remove it, click it to add the time as a new
+// entry, or close it to keep the time. Every answer goes to the server, which
+// tells the other devices; a change pushed back makes an open prompt check
+// whether it still stands. Safari has no idle API: nothing here runs there.
 
-/** Session storage: when the absence in progress began (epoch ms). */
-const IDLE_SINCE = "idleSince";
+/** Session storage: when this machine last saw input and last reported it. Tick bookkeeping only; the absence itself is the server's. */
+const ACTIVITY = "idleActivity";
+/** Local storage: the prompt on screen, so an answer after a worker restart still knows what it is about. */
+const PROMPT = "idlePrompt";
 
 export async function applyIdleSettings(): Promise<void> {
   if (!hasIdle()) return; // Safari: no idle API, no permission asked for
@@ -524,100 +543,185 @@ export async function applyIdleSettings(): Promise<void> {
   chrome.idle.setDetectionInterval(detectionInterval(minutes));
 }
 
-async function onIdleState(state: chrome.idle.IdleState): Promise<void> {
-  const settings = await getSettings();
-  if (!settings.idleEnabled) return;
-  if (state === "active") {
-    const { [IDLE_SINCE]: since } =
-      await chrome.storage.session.get(IDLE_SINCE);
-    await chrome.storage.session.remove(IDLE_SINCE);
-    if (typeof since !== "number") return;
-    // Only a fresh answer counts (board #333): straight after a wake the
-    // network may not be back, and the cache would still say "running"
-    // for a timer stopped from another machine while this one slept.
-    let state = await refresh(true);
-    if (state.fetchedAt <= 0) {
-      await new Promise((r) => setTimeout(r, 3000));
-      state = await refresh(true);
-    }
-    if (!idleWorthAsking(since, state) || !state.running) return;
-    await askAboutIdle(since, (Date.now() - since) / 1000, state.running);
-    return;
+/** One sighting at a time: Chrome's "active" and the alarm can land together. */
+let inputQueue: Promise<void> = Promise.resolve();
+
+/** The alarm's (and a waking worker's) look at the machine: input in the last minute counts. */
+async function watchInput(): Promise<void> {
+  if (!hasIdle()) return;
+  try {
+    if ((await chrome.idle.queryState(60)) === "active") await sawInput(false);
+  } catch {
+    // no idle API after all, or the worker is going away
   }
-  // idle or locked: an absence begins, unless one is already in progress (idle → locked)
-  const { [IDLE_SINCE]: since } = await chrome.storage.session.get(IDLE_SINCE);
-  if (typeof since === "number") return;
-  const current = await refresh();
-  if (!current.running) return;
-  const startedAt = idleWindowStart(
-    Date.now(),
-    detectionInterval(settings.idleMinutes),
-    current.running.timer_started_at,
-  );
-  if (startedAt !== null)
-    await chrome.storage.session.set({ [IDLE_SINCE]: startedAt });
 }
 
-async function askAboutIdle(
-  startedAt: number,
-  seconds: number,
-  running: Entry,
-): Promise<void> {
-  const id = `zebu-idle-${startedAt}`;
-  await chrome.storage.session.set({ [`idle:${id}`]: startedAt });
-  const units = {
+function sawInput(returned: boolean): Promise<void> {
+  inputQueue = inputQueue.then(() => handleInput(returned)).catch(() => undefined);
+  return inputQueue;
+}
+
+async function handleInput(returned: boolean): Promise<void> {
+  const settings = await getSettings();
+  if (!settings.workspace || !settings.token) return;
+  const now = Date.now();
+  const marks = ((await chrome.storage.session.get(ACTIVITY))[ACTIVITY] ?? {}) as ActivityMarks;
+  const plan = onInput(marks, now, returned);
+  let running: boolean | null = null;
+  // Only this device's prompt needs the question; with the setting off it
+  // still reports below.
+  if (plan.check && settings.idleEnabled && hasNotifications()) {
+    const state = await idleState();
+    // Unreachable straight after a wake: leave the marks, so the next tick
+    // asks again before anything is reported.
+    if (state === undefined) return;
+    if (state) {
+      running = state.entry_id !== null;
+      const prompt = idlePrompt(state, settings.idleMinutes);
+      if (prompt) await showIdlePrompt(prompt);
+    }
+  }
+  const next: ActivityMarks = { ...marks, activeAt: now };
+  // Reported whether or not this device prompts: the others rely on it.
+  if (plan.report && (running ?? !!(await refresh()).running)) {
+    try {
+      await api.reportActivity(new Date(now).toISOString());
+      next.sentAt = now;
+    } catch {
+      // the next minute tries again
+    }
+  }
+  await chrome.storage.session.set({ [ACTIVITY]: next });
+}
+
+/**
+ * The server's answer, retried once after a few seconds (the network is
+ * often not back the moment the machine wakes). Undefined when unreachable;
+ * null when the workspace answered but has no idle route (not upgraded yet).
+ */
+async function idleState(): Promise<IdleState | null | undefined> {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      return await api.idleState();
+    } catch (e) {
+      if (!(e instanceof ApiError) || e.status !== 0) return null;
+      if (attempt === 0) await new Promise((r) => setTimeout(r, 3000));
+    }
+  }
+  return undefined;
+}
+
+async function storedPrompt(): Promise<IdlePrompt | null> {
+  return ((await chrome.storage.local.get(PROMPT))[PROMPT] as IdlePrompt | undefined) ?? null;
+}
+
+async function showIdlePrompt(prompt: IdlePrompt): Promise<void> {
+  const open = await storedPrompt();
+  if (open?.id === prompt.id) {
+    // Already on screen: leave it be rather than pop it up again.
+    const shown = await new Promise<object>((resolve) =>
+      chrome.notifications.getAll((all) => resolve(all ?? {})),
+    ).catch(() => ({}));
+    if (prompt.id in shown) return;
+  } else if (open) {
+    await forgetPrompt(open.id);
+  }
+  await chrome.storage.local.set({ [PROMPT]: prompt });
+  const span = formatDurationHuman(prompt.minutes, {
     hour: t("unit_hour"),
     minute: t("unit_minute"),
     day: t("unit_day"),
     week: t("unit_week"),
-  };
+  });
+  const running = cache.running?.id === prompt.entryId ? cache.running : null;
   await chrome.notifications.create(
-    id,
+    prompt.id,
     notificationOptions(
       {
         type: "basic" as const,
         iconUrl: "icons/128.png",
-        title: t(
-          "idle_title",
-          formatDurationHuman(idleMinutes(seconds), units),
-        ),
-        message: t("idle_message", running.project ?? ""),
-        contextMessage: t("idle_keep"),
+        title: t("idle_title", span),
+        message: running?.project
+          ? t("idle_message", running.project)
+          : t("idle_message_plain"),
+        contextMessage: t("idle_click_new_entry", span),
         requireInteraction: true,
         priority: 2,
       },
-      // Firefox refuses a notification that carries buttons (src/platform.ts)
-      [{ title: t("idle_remove") }, { title: t("idle_remove_stop") }],
+      // Firefox refuses a notification that carries buttons (src/platform.ts):
+      // there, click adds a new entry and closing keeps the time.
+      [
+        { title: t("idle_remove_keep", span) },
+        { title: t("idle_remove_stop", span) },
+      ],
     ),
   );
 }
 
-if (hasIdle() && hasNotifications())
-  chrome.idle.onStateChanged.addListener((state) => void onIdleState(state));
+/** Take the prompt off screen without answering it. Forgotten first, so onClosed does not read it as "keep". */
+async function forgetPrompt(id: string): Promise<void> {
+  const open = await storedPrompt();
+  if (open?.id === id) await chrome.storage.local.remove(PROMPT);
+  await chrome.notifications.clear(id);
+}
 
-if (hasNotifications())
-  chrome.notifications.onButtonClicked.addListener((id, index) => {
-    void (async () => {
-      const key = `idle:${id}`;
-      const { [key]: startedAt } = await chrome.storage.session.get(key);
-      await chrome.storage.session.remove(key);
-      chrome.notifications.clear(id);
-      if (typeof startedAt !== "number") return;
-      await api.idleTimer({
-        idle_started_at: new Date(startedAt).toISOString(),
-        action: idleActionForButton(index),
-      });
-      await changed();
-    })();
+/** Answer the prompt `id` with `action`; a new entry opens the form with the removed stretch. */
+async function answerPrompt(id: string, action: IdleAction): Promise<void> {
+  const prompt = await storedPrompt();
+  if (!prompt || prompt.id !== id) return;
+  await forgetPrompt(id);
+  try {
+    const answer = await api.idleTimer({
+      idle_started_at: prompt.since,
+      action,
+      entry_id: prompt.entryId,
+    });
+    // Only the first device to answer gets a span back, so only it opens the form.
+    const prefill =
+      action === "discard_new_entry" && answer.applied !== false && answer.idle
+        ? idlePrefill(answer.idle)
+        : null;
+    if (prefill) {
+      await setPendingIssue(null);
+      await openTimerWindow(idlePrefillQuery(prefill));
+    }
+  } finally {
+    await changed();
+  }
+}
+
+/** After a change: close the prompt if nothing runs, another timer runs, or it was answered elsewhere. */
+async function recheckIdlePrompt(): Promise<void> {
+  const prompt = await storedPrompt();
+  if (!prompt) return;
+  let state: IdleState;
+  try {
+    state = await api.idleState();
+  } catch {
+    return; // ask again on the next change
+  }
+  if (!promptStands(prompt, state)) await forgetPrompt(prompt.id);
+}
+
+if (hasIdle()) {
+  chrome.idle.onStateChanged.addListener((state) => {
+    if (state === "active") void sawInput(true);
   });
-// dismissed, or clicked without choosing: the time stays
-if (hasNotifications()) {
-  chrome.notifications.onClosed.addListener(
-    (id) => void chrome.storage.session.remove(`idle:${id}`),
+  // Every worker start may be the first sign of a return (a wake, a browser start).
+  void watchInput();
+}
+
+if (hasIdle() && hasNotifications()) {
+  chrome.notifications.onButtonClicked.addListener(
+    (id, index) => void answerPrompt(id, idleActionForButton(index)),
   );
-  chrome.notifications.onClicked.addListener((id) =>
-    chrome.notifications.clear(id),
+  chrome.notifications.onClicked.addListener(
+    (id) => void answerPrompt(id, IDLE_ACTION_ON_CLICK),
   );
+  // Closed by the person: keep the time, and say so, so the other devices stop asking.
+  chrome.notifications.onClosed.addListener((id, byUser) => {
+    if (byUser) void answerPrompt(id, IDLE_ACTION_ON_CLOSE);
+  });
 }
 
 // Keyboard shortcuts (manifest `commands`, rebindable at

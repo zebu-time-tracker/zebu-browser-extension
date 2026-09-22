@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Close this to keep the time."
+    "idle_message_plain": {
+        "message": "Your timer kept running while you were away."
     },
-    "idle_remove": {
-        "message": "Remove idle time"
+    "idle_remove_keep": {
+        "message": "Continue timing and remove $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "Remove it and stop the timer"
+        "message": "Stop timer and remove $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Click to add $1 as a new entry. Close to keep it.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Idle detection"

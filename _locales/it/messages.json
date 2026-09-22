@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Chiudi per mantenere il tempo."
+    "idle_message_plain": {
+        "message": "Il timer ha continuato mentre eri via."
     },
-    "idle_remove": {
-        "message": "Rimuovi l’inattività"
+    "idle_remove_keep": {
+        "message": "Continua e rimuovi $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "Rimuovila e ferma il timer"
+        "message": "Ferma il timer e rimuovi $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Clicca per aggiungere $1 come nuova voce. Chiudi per mantenere il tempo.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Rilevamento inattività"

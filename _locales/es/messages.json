@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Cierra esto para conservar el tiempo."
+    "idle_message_plain": {
+        "message": "Tu temporizador siguió contando mientras no estabas."
     },
-    "idle_remove": {
-        "message": "Quitar la inactividad"
+    "idle_remove_keep": {
+        "message": "Seguir contando y quitar $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "Quitarla y detener el temporizador"
+        "message": "Detener y quitar $1",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Haz clic para añadir $1 como entrada nueva. Cierra para conservar el tiempo.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Detección de inactividad"

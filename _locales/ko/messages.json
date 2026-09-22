@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "닫으면 시간이 그대로 유지됩니다."
+    "idle_message_plain": {
+        "message": "자리를 비운 동안 타이머가 계속 실행되었습니다."
     },
-    "idle_remove": {
-        "message": "유휴 시간 제거"
+    "idle_remove_keep": {
+        "message": "$1 제거하고 계속 측정",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "제거하고 타이머 정지"
+        "message": "$1 제거하고 타이머 정지",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "클릭하면 $1을(를) 새 항목으로 추가합니다. 닫으면 시간이 유지됩니다.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "유휴 감지"

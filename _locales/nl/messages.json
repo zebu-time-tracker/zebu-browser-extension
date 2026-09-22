@@ -327,14 +327,32 @@
             }
         }
     },
-    "idle_keep": {
-        "message": "Sluit dit om de tijd te houden."
+    "idle_message_plain": {
+        "message": "Je timer liep door terwijl je weg was."
     },
-    "idle_remove": {
-        "message": "Inactieve tijd verwijderen"
+    "idle_remove_keep": {
+        "message": "Doortellen en $1 verwijderen",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "idle_remove_stop": {
-        "message": "Verwijderen en timer stoppen"
+        "message": "Timer stoppen en $1 verwijderen",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "idle_click_new_entry": {
+        "message": "Klik om $1 als nieuwe invoer toe te voegen. Sluit om de tijd te houden.",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
     },
     "options_idle_heading": {
         "message": "Inactiviteit detecteren"

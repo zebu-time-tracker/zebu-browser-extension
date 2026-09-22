@@ -9,6 +9,7 @@
 // purpose — it starts instantly.
 import { shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
+import { readIdlePrefill } from '../idle';
 import { lastTimerFor, resumeLabelKey, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
 import { call, CallError, errorText, t } from '../messaging';
@@ -25,6 +26,8 @@ import { projectPicker } from './picker';
 
 const app = document.getElementById('app')!;
 const isWindow = new URLSearchParams(location.search).has('window');
+/** Idle time removed from a timer, opened here to be added as a new entry (board #333). */
+const idleEntry = isWindow ? readIdlePrefill(location.search) : null;
 if (isWindow) document.body.classList.add('window');
 
 let state: State = { connected: false, running: null, projects: [], entries: [], weekStart: '', weekLocked: false, projectStats: {}, fetchedAt: 0, pulseToken: '', skewMs: 0, downUntil: null, live: false };
@@ -451,7 +454,7 @@ function entrySheet(): HTMLElement {
     const date = el('input', { type: 'date', class: 'sheet-date' });
     date.value = editing ? editing.date : selectedDate;
     // The prefill: only a changed duration rebases a live timer.
-    const openedDuration = editing ? formatMinutes(elapsedMinutes(editing, now())) : '';
+    const openedDuration = editing ? formatMinutes(elapsedMinutes(editing, now())) : idleEntry ? formatMinutes(idleEntry.minutes) : '';
     const duration = el('input', { type: 'text', class: `duration${editing?.timer_started_at ? ' live' : ''}`, placeholder: '0:00', autocomplete: 'off' });
     duration.value = openedDuration;
     const notes = el('textarea', { rows: '2', class: 'sheet-notes', placeholder: t('popup_notes_placeholder') });
@@ -961,7 +964,8 @@ document.addEventListener('visibilitychange', () => {
         state = await call<State>({ type: 'state:get' });
         // The toolbar popup is handed no issue, but it has the page it was
         // opened over: title, link and selection prefill a new timer.
-        issue = isWindow ? await call<Issue | null>({ type: 'issue:pending:get' }) : await capturePage();
+        issue = idleEntry ? null : isWindow ? await call<Issue | null>({ type: 'issue:pending:get' }) : await capturePage();
+        if (idleEntry) selectedDate = idleEntry.date;
         if (state.connected) await loadSheet();
         await loadLocal();
         // The detached window is the sheet for one issue — unless that very
