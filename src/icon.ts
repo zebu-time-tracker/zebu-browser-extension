@@ -1,6 +1,7 @@
-// The toolbar icon: the running timer's clock on two lines — hours above,
-// minutes below, right-aligned in the green square — and, when nothing runs,
-// the Zebu mark in a green outline, so a filled square always means "timing".
+// The toolbar icon while a timer runs: the clock on two lines — hours above,
+// minutes below, right-aligned in the green square — as the menubar pill
+// shows it. Nothing running is the hollow mark, which is a shipped PNG rather
+// than a drawing (board #353), so a filled square always means "timing".
 // Chrome's badge (the strip under the icon) can only hold four characters,
 // rendered tiny and cramped; the desktop's tray pill is the model instead.
 //
@@ -9,7 +10,6 @@
 // fonts, and a platform where fillText paints nothing would leave a blank
 // green square — so the drawn pixels are checked, and a stroke font of
 // digits, "h" and "m" (which cannot fail) takes over when they are empty.
-// The idle mark is geometry, never text, so it cannot fail that way at all.
 
 export interface ClockLines {
     top: string;
@@ -138,58 +138,6 @@ export function drawClock(ctx: ClockContext, size: number, lines: ClockLines, mo
     }
 }
 
-/**
- * The mark, drawn from Alan's artwork rather than approximated: the outlined
- * square, the slash at half strength, and the solid Z (board #353). Every
- * figure below is his, divided by the 1022-unit square he drew them in, so
- * the toolbar shows the same Z as the app, the site and the app icon.
- */
-const MARK = {
-    /** The square: how far in it sits, how round its corners are, how heavy its line is. */
-    inset: 20 / 1022,
-    radius: 160 / 1022,
-    stroke: 40 / 1022,
-    /** The slash, behind the Z and at half strength. */
-    slash: { from: [748.175 / 1022, 802.276 / 1022], to: [286.615 / 1022, 220.96 / 1022], stroke: 62.2396 / 1022 },
-    /** The Z itself, as the corners of one filled shape. */
-    z: [
-        [249, 869],
-        [249, 793.317],
-        [630.744, 238.638],
-        [260.95, 238.638],
-        [260.95, 152],
-        [764.842, 152],
-        [764.842, 227.683],
-        [383.673, 782.363],
-        [772.808, 782.363],
-        [772.808, 869],
-    ].map(([x, y]) => [x / 1022, y / 1022] as const),
-};
-
-/** Nothing running: the mark in its outline, so only a timer fills the square. */
-export function drawIdle(ctx: ClockContext, size: number): void {
-    ctx.clearRect(0, 0, size, size);
-
-    // The outline. A hair of inset at any size, so the line is never clipped
-    // by the edge of the 16px tile Chrome hands us.
-    const inset = Math.max(0.75, size * MARK.inset);
-    pen(ctx, size, CLOCK_GREEN, MARK.stroke);
-    ctx.beginPath();
-    ctx.roundRect(inset, inset, size - 2 * inset, size - 2 * inset, size * MARK.radius);
-    ctx.stroke();
-
-    // The slash first: the Z is painted over it, as in the artwork. Half
-    // strength comes from the colour rather than globalAlpha, which the
-    // drawing's own small slice of the canvas API does not include.
-    pen(ctx, size, `${CLOCK_GREEN}80`, MARK.slash.stroke);
-    strokeAll(ctx, [[MARK.slash.from, MARK.slash.to].map(([x, y]) => [x * size, y * size])]);
-
-    ctx.fillStyle = CLOCK_GREEN;
-    ctx.beginPath();
-    MARK.z.forEach(([x, y], i) => (i ? ctx.lineTo(x * size, y * size) : ctx.moveTo(x * size, y * size)));
-    ctx.fill();
-}
-
 /** The sizes Chrome asks the action icon for, at 1x through 4x. */
 export const ICON_SIZES = [16, 32, 48, 64];
 
@@ -222,4 +170,3 @@ export function clockImages(minutes: number): Record<number, ImageData> | null {
 }
 
 /** The idle icon at every size, or null where there is no canvas to draw on. */
-export const idleImages = (): Record<number, ImageData> | null => render(drawIdle);

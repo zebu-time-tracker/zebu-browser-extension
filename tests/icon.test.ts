@@ -1,7 +1,8 @@
-// The toolbar icon: the clock as hours over minutes in the green square,
-// drawn as strokes when the worker's canvas can reach no font, and the Zebu
-// mark in a green outline when nothing runs (board #353).
-import { clockLines, drawClock, drawIdle, textWidth, type ClockContext, type Stroke, CLOCK_GREEN } from '../src/icon';
+// The toolbar icon while a timer runs: the clock as hours over minutes in the
+// green square, drawn as strokes when the worker's canvas can reach no font.
+// Idle is a shipped PNG rather than a drawing (board #353), so there is
+// nothing to test here for it.
+import { clockLines, drawClock, textWidth, type ClockContext, type Stroke, CLOCK_GREEN } from '../src/icon';
 
 test('the clock splits into an hours line and a minutes line', () => {
     expect(clockLines(0)).toEqual({ top: '0h', bottom: '0m' });
@@ -85,41 +86,3 @@ test('without a font the same lines are stroked, right-aligned and the same size
     expect(minutes.right).toBeLessThanOrEqual(32 * 0.88 + 1e-9);
 });
 
-test('nothing running is the mark: an outlined square, the slash, the solid Z', () => {
-    const { ctx, strokes, fills, rects } = recorder();
-
-    drawIdle(ctx, 32);
-
-    // The square is an outline and the Z is the only fill, so a filled tile
-    // still means a timer is running and nothing else does.
-    expect(rects).toHaveLength(1);
-    expect(fills).toEqual([CLOCK_GREEN]);
-
-    // The slash runs corner to corner, at half strength so the Z reads over it.
-    const slash = strokes.find((s) => s.length === 2);
-    expect(slash).toBeDefined();
-    const [[x1, y1], [x2, y2]] = slash!;
-    expect(Math.abs(x2 - x1)).toBeGreaterThan(32 * 0.4);
-    expect(Math.abs(y2 - y1)).toBeGreaterThan(32 * 0.5);
-});
-
-test('the mark stays inside its tile at every size Chrome asks for', () => {
-    for (const size of [16, 32, 48, 64]) {
-        const { ctx, strokes, rects } = recorder();
-        drawIdle(ctx, size);
-
-        const [x, y, w, h] = rects[0];
-        expect(x).toBeGreaterThan(0);
-        expect(y).toBeGreaterThan(0);
-        expect(x + w).toBeLessThanOrEqual(size);
-        expect(y + h).toBeLessThanOrEqual(size);
-
-        // The slash and the Z are drawn from the artwork's own square, so
-        // nothing can wander outside the tile at any scale.
-        const inside = (v: number) => v >= 0 && v <= size;
-        expect(strokes.flat().every(([sx, sy]) => inside(sx) && inside(sy))).toBe(true);
-
-        // Even at 16px the outline is at least a whole pixel wide.
-        expect(ctx.lineWidth).toBeGreaterThanOrEqual(1);
-    }
-});

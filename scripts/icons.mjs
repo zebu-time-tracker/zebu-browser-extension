@@ -1,8 +1,18 @@
-// Generates the extension icons (PNG) without any image library: the Zebu
-// mark (board #328) — a rounded square on the mark's green, the Z and a faint
-// diagonal in its light ink — traced from the brand SVG (1022 × 1022, corner radius 180) and
-// supersampled for smooth edges. Run `npm run icons`; output goes to
-// icons/{16,32,48,128}.png.
+// Generates the extension icons (PNG) without any image library, both traced
+// from the brand SVGs in their own 1022 × 1022 space and supersampled for
+// smooth edges. Run `npm run icons`.
+//
+//   icons/{16,32,48,128}.png       the app icon (board #328): the Z and a
+//                                  faint diagonal in light ink on the green
+//   icons/idle-{16,32,48,128}.png  the toolbar icon while no timer runs
+//                                  (board #353): the same mark hollow — a
+//                                  stroked square on nothing, the Z in green,
+//                                  the diagonal at half strength — so a
+//                                  filled square always means "timing"
+//
+// The hollow one is Alan's drawing figure for figure, which is why its
+// numbers differ from the app icon's: with no ground to sit on, the Z is
+// drawn larger and the square is an outline rather than a fill.
 import { deflateSync } from 'node:zlib';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
@@ -38,25 +48,62 @@ const Z = [
 ].map(([x, y]) => [x / SIDE, y / SIDE]);
 // The faint diagonal behind the Z: the ink at 40 % over the ground.
 const LINE = { x1: 330.463 / SIDE, y1: 282.512 / SIDE, x2: 700.463 / SIDE, y2: 748.512 / SIDE, half: 49.893 / SIDE / 2 };
+
+// ---- the hollow toolbar icon (board #353), from Chrome Icon - Inactive.svg
+// The square is stroked, not filled: a rect inset 20 with corner radius 160,
+// under a 40-wide line centred on its path.
+const HOLLOW = {
+    inset: 20 / SIDE,
+    corner: 160 / SIDE,
+    halfStroke: 40 / SIDE / 2,
+    // The diagonal, at half strength, behind the Z.
+    line: { x1: 748.175 / SIDE, y1: 802.276 / SIDE, x2: 286.615 / SIDE, y2: 220.96 / SIDE, half: 62.2396 / SIDE / 2, alpha: 0.5 },
+    z: [
+        [249, 869], [249, 793.317], [630.744, 238.638], [260.95, 238.638], [260.95, 152],
+        [764.842, 152], [764.842, 227.683], [383.673, 782.363], [772.808, 782.363], [772.808, 869],
+    ].map(([x, y]) => [x / SIDE, y / SIDE]),
+};
 const LINE_OPACITY = 0.4;
 const LINE_MIX = GREEN.map((g, i) => Math.round(g + (INK[i] - g) * LINE_OPACITY));
 
-function insideZ(u, v) {
+function insidePolygon(poly, u, v) {
     let inside = false;
-    for (let i = 0, j = Z.length - 1; i < Z.length; j = i++) {
-        const [xi, yi] = Z[i];
-        const [xj, yj] = Z[j];
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        const [xi, yi] = poly[i];
+        const [xj, yj] = poly[j];
         if (yi > v !== yj > v && u < ((xj - xi) * (v - yi)) / (yj - yi) + xi) inside = !inside;
     }
     return inside;
 }
 
-function onLine(u, v) {
-    const dx = LINE.x2 - LINE.x1, dy = LINE.y2 - LINE.y1;
-    const tt = ((u - LINE.x1) * dx + (v - LINE.y1) * dy) / (dx * dx + dy * dy);
+const insideZ = (u, v) => insidePolygon(Z, u, v);
+
+function onLine(line, u, v) {
+    const dx = line.x2 - line.x1, dy = line.y2 - line.y1;
+    const tt = ((u - line.x1) * dx + (v - line.y1) * dy) / (dx * dx + dy * dy);
     if (tt < 0 || tt > 1) return false;
-    const px = LINE.x1 + tt * dx, py = LINE.y1 + tt * dy;
-    return Math.hypot(u - px, v - py) <= LINE.half;
+    const px = line.x1 + tt * dx, py = line.y1 + tt * dy;
+    return Math.hypot(u - px, v - py) <= line.half;
+}
+
+/**
+ * How far (u, v) is from the edge of the hollow icon's rounded square —
+ * negative inside, positive outside. The stroke is drawn where that distance
+ * is within half a stroke of zero, which is what "centred on the path" means.
+ */
+function edgeDistance(u, v) {
+    const half = 0.5 - HOLLOW.inset - HOLLOW.corner;
+    const qx = Math.abs(u - 0.5) - half;
+    const qy = Math.abs(v - 0.5) - half;
+    return Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - HOLLOW.corner;
+}
+
+/** The hollow icon: [r, g, b, alpha 0..1] at one sample point, alpha 0 for the empty ground. */
+function sampleHollow(u, v) {
+    if (Math.abs(edgeDistance(u, v)) <= HOLLOW.halfStroke) return [...GREEN, 1];
+    if (insidePolygon(HOLLOW.z, u, v)) return [...GREEN, 1];
+    if (onLine(HOLLOW.line, u, v)) return [...GREEN, HOLLOW.line.alpha];
+    return [0, 0, 0, 0];
 }
 
 /** Colour of one sample point (u, v in 0..1), or null outside the rounded square. */
@@ -66,11 +113,11 @@ function sample(u, v) {
     const cy = Math.min(Math.max(v, r), 1 - r);
     if ((u - cx) ** 2 + (v - cy) ** 2 > r * r) return null;
     if (insideZ(u, v)) return INK;
-    if (onLine(u, v)) return LINE_MIX;
+    if (onLine(LINE, u, v)) return LINE_MIX;
     return GREEN;
 }
 
-function png(size) {
+function png(size, sampler = sample) {
     const ss = 4; // supersampling factor
     const raw = Buffer.alloc((size * 4 + 1) * size);
     for (let y = 0; y < size; y++) {
@@ -79,9 +126,13 @@ function png(size) {
             let alpha = 0, rr = 0, gg = 0, bb = 0;
             for (let sy = 0; sy < ss; sy++) {
                 for (let sx = 0; sx < ss; sx++) {
-                    const c = sample((x + (sx + 0.5) / ss) / size, (y + (sy + 0.5) / ss) / size);
+                    const c = sampler((x + (sx + 0.5) / ss) / size, (y + (sy + 0.5) / ss) / size);
                     if (c === null) continue;
-                    alpha++; rr += c[0]; gg += c[1]; bb += c[2];
+                    // A sampler may carry its own alpha (the hollow icon's
+                    // half-strength diagonal); the filled one is solid.
+                    const a = c.length > 3 ? c[3] : 1;
+                    if (a === 0) continue;
+                    alpha += a; rr += c[0] * a; gg += c[1] * a; bb += c[2] * a;
                 }
             }
             const o = y * (size * 4 + 1) + 1 + x * 4;
@@ -106,5 +157,8 @@ function png(size) {
 }
 
 mkdirSync('icons', { recursive: true });
-for (const size of [16, 32, 48, 128]) writeFileSync(`icons/${size}.png`, png(size));
-console.log('icons/16.png … icons/128.png written');
+for (const size of [16, 32, 48, 128]) {
+    writeFileSync(`icons/${size}.png`, png(size));
+    writeFileSync(`icons/idle-${size}.png`, png(size, sampleHollow));
+}
+console.log('icons/16.png … icons/128.png and icons/idle-16.png … icons/idle-128.png written');

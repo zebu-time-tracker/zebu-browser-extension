@@ -242,11 +242,11 @@ describe('toolbar icon', () => {
 
         timesheet.mockResolvedValue(sheet(null, 'tok-2'));
         await background.refresh(true);
-        // Idle is the mark (board #353): the square is stroked, not filled,
-        // and the one fill that follows is the Z itself.
-        expect(icon.imageData?.[16].first).toBe('stroke');
-        expect(icon.imageData?.[16].fills).toBe(1);
-        expect(icon.imageData?.[16].strokes).toBeGreaterThan(0);
+        // Idle is the hollow mark as Alan drew it, shipped as a file rather
+        // than drawn (board #353) — the same picture the manifest hands
+        // Chrome before this worker has woken.
+        expect(icon.imageData).toBeUndefined();
+        expect(icon.path?.[16]).toBe('icons/idle-16.png');
         expect(title).toBe('Zebu');
         vi.useRealTimers();
     });
