@@ -15,8 +15,9 @@
         "default_title": "Zebu",
         "default_popup": "popup.html",
         "default_icon": {
-            "16": "icons/16.png",
-            "32": "icons/32.png"
+            "16": "icons/idle-16.png",
+            "32": "icons/idle-32.png",
+            "48": "icons/idle-48.png"
         }
     },
     "options_page": "options.html",

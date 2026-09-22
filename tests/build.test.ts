@@ -71,3 +71,30 @@ describe('the manifest for each browser', () => {
         expect(packageName('firefox', '0.3.0', 'xpi')).toBe('zebu-firefox-0.3.0.xpi');
     });
 });
+
+// What is actually in icons/, enumerated by the bundler rather than read
+// from disk, so this needs no filesystem types.
+const shipped = new Set(Object.keys(import.meta.glob('../icons/*.png')).map((path) => path.replace('../', '')));
+
+describe('the icons the manifest promises', () => {
+    // A manifest that names a file Chrome cannot find shows a blank square in
+    // the toolbar and says nothing about it, on every browser, silently.
+    test('every icon the manifest names is a real file', () => {
+        for (const target of TARGETS) {
+            const m = build(target);
+            for (const path of [...Object.values(m.action.default_icon ?? {}), ...Object.values(m.icons ?? {})]) {
+                expect(shipped.has(path as string), `${target}: ${path}`).toBe(true);
+            }
+        }
+    });
+
+    test('the toolbar starts on the hollow mark, so a filled square only ever means a timer', () => {
+        // Board #353: the icon Chrome shows before the worker wakes is the
+        // same one the worker sets while nothing runs.
+        expect(build('chrome').action.default_icon).toEqual({
+            16: 'icons/idle-16.png',
+            32: 'icons/idle-32.png',
+            48: 'icons/idle-48.png',
+        });
+    });
+});

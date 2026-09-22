@@ -5,7 +5,7 @@
 import { api, ApiError } from "./api";
 import { inWeek, toDateString } from "./dates";
 import { elapsedMinutes, formatDurationHuman, formatMinutes } from "./duration";
-import { CLOCK_GREEN, clockImages, idleImages } from "./icon";
+import { CLOCK_GREEN, clockImages } from "./icon";
 import {
   detectionInterval,
   idleActionForButton,
@@ -192,11 +192,17 @@ async function changed(): Promise<State> {
   return state;
 }
 
-const DEFAULT_ICON = {
-  16: "icons/16.png",
-  32: "icons/32.png",
-  48: "icons/48.png",
-  128: "icons/128.png",
+/**
+ * The mark, hollow, as Alan drew it (board #353): what the toolbar shows
+ * while no timer runs, and what the manifest hands Chrome before this worker
+ * has woken, so the two are the same picture rather than nearly the same.
+ * Generated from the drawing by `npm run icons`.
+ */
+const IDLE_ICON = {
+  16: "icons/idle-16.png",
+  32: "icons/idle-32.png",
+  48: "icons/idle-48.png",
+  128: "icons/idle-128.png",
 };
 /** What the icon last showed, so a pulse every two seconds redraws nothing; 'unset' so the first call always applies. */
 let shownClock = "unset";
@@ -204,8 +210,9 @@ let shownClock = "unset";
 /**
  * The toolbar icon is the running timer's clock (board #268): hours over
  * minutes, drawn into the green square, as the menubar pill shows it. Nothing
- * running: the Z in a green outline, so a filled square always means a timer.
- * The badge and the shipped icon are the fallbacks where the worker cannot draw.
+ * running: the mark hollow, shipped as PNGs rather than drawn, so a filled
+ * square always means a timer. The badge is the fallback where the worker
+ * cannot draw the clock.
  */
 async function badge(running: Entry | null): Promise<void> {
   const minutes = running
@@ -215,10 +222,7 @@ async function badge(running: Entry | null): Promise<void> {
   if (key === shownClock) return;
   shownClock = key;
   if (!running || minutes === null) {
-    const idle = idleImages();
-    await chrome.action.setIcon(
-      idle ? { imageData: idle } : { path: DEFAULT_ICON },
-    );
+    await chrome.action.setIcon({ path: IDLE_ICON });
     await chrome.action.setBadgeText({ text: "" });
     await chrome.action.setTitle({ title: "Zebu" });
     return;
