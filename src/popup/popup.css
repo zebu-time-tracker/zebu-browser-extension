@@ -295,20 +295,16 @@ textarea:focus {
     font-weight: 600;
     padding: 2px 7px;
 }
-/* live updates (board #279): the socket to the workspace is up */
-.live-dot {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    margin-left: 8px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
-    vertical-align: middle;
-}
 .icon-chart,
 .icon-pencil {
     fill: currentColor;
+    display: block;
+}
+.icon-gear {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linejoin: round;
     display: block;
 }
 

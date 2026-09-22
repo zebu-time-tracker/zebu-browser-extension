@@ -241,6 +241,14 @@
     "popup_resume": {
         "message": "Resume"
     },
+    "popup_start_working_on": {
+        "message": "Start working on $WORK$",
+        "placeholders": {
+            "work": {
+                "content": "$1"
+            }
+        }
+    },
     "popup_presets": {
         "message": "Presets"
     },
@@ -394,9 +402,6 @@
     },
     "unit_week": {
         "message": "w"
-    },
-    "popup_live": {
-        "message": "Live updates on"
     },
     "header_today": {
         "message": "Today"

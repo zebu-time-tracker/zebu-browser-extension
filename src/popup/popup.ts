@@ -9,7 +9,7 @@
 // purpose — it starts instantly.
 import { shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
-import { lastTimerFor, type LastTimer } from '../lastTimer';
+import { lastTimerFor, resumeLabelKey, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
 import { call, CallError, errorText, t } from '../messaging';
 import { pageIssue, withSelection } from '../page';
@@ -19,7 +19,7 @@ import { composeNotes, entryMatchesIssue, suggest } from '../suggest';
 import { DEFAULT_SETTINGS, type Entry, type Issue, type Mappings, type ProjectStats, type Settings, type State, type WeekSheet } from '../types';
 import { weekDays } from '../week';
 import { DEFAULT_DOMAIN, isWorkspaceName, workspaceName } from '../workspace';
-import { el, ICON_CHART, ICON_PENCIL, svg } from './dom';
+import { el, ICON_CHART, ICON_GEAR, ICON_PENCIL, svg } from './dom';
 import { insightsPanel, type Insights } from './insights';
 import { projectPicker } from './picker';
 
@@ -242,8 +242,6 @@ function header(): HTMLElement {
     chart.addEventListener('click', toggleInsights);
     actions.append(chart);
     const title = el('span', { class: 'header-title' }, [headerLabel()]);
-    // the socket to the workspace is up (board #279): changes made elsewhere arrive as they happen
-    if (state.live) title.append(el('span', { class: 'live-dot', title: t('popup_live') }));
     return el('header', { class: 'header' }, [title, actions]);
 }
 
@@ -269,12 +267,17 @@ function weekStrip(): HTMLElement {
 }
 
 /** The desktop's ▶ Resume bar: one click on the last timer when nothing runs. */
+function resumeLabel(l: LastTimer): string {
+    const work = [l.project, l.task].filter(Boolean).join(' · ');
+    return resumeLabelKey(l, today()) === 'popup_resume' ? `${t('popup_resume')} — ${work}` : t('popup_start_working_on', work);
+}
+
 function resumeBar(): HTMLElement | '' {
     if (state.running || !last) return '';
     const l = last;
     const button = el('button', { type: 'button', class: 'running-elsewhere resume-last' }, [
         el('span', { class: 'resume-play', text: '▶' }),
-        el('span', { class: 'running-elsewhere-text', text: `${t('popup_resume')} — ${[l.project, l.task].filter(Boolean).join(' · ')}` }),
+        el('span', { class: 'running-elsewhere-text', text: resumeLabel(l) }),
     ]);
     button.addEventListener('click', resumeLast);
     return button;
@@ -396,7 +399,7 @@ function footer(): HTMLElement {
         });
         left.append(add, star);
     }
-    const gear = el('button', { type: 'button', class: settingsOpen ? 'active' : '', title: t('popup_settings'), text: '⚙' });
+    const gear = el('button', { type: 'button', class: settingsOpen ? 'active' : '', title: t('popup_settings') }, [svg('icon-gear', 15, ICON_GEAR)]);
     gear.addEventListener('click', () => {
         settingsOpen = !settingsOpen;
         settingsTab = 'settings';

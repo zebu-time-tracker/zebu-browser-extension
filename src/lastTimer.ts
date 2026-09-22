@@ -52,3 +52,11 @@ export const lastTimerFor = (stored: unknown, workspace: string): LastTimer | nu
     if (!last.entry_id || !last.project_id || !last.date || !workspace || last.workspace !== workspace) return null;
     return last;
 };
+
+/**
+ * What the ▶ bar offers for `last` on `today`. The same day resumes the
+ * entry; an earlier one starts a new timer today, so saying "Resume" would
+ * promise the wrong thing (board #361).
+ */
+export const resumeLabelKey = (last: Pick<LastTimer, 'date'>, today: string): 'popup_resume' | 'popup_start_working_on' =>
+    last.date === today ? 'popup_resume' : 'popup_start_working_on';

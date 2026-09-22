@@ -241,6 +241,14 @@
     "popup_resume": {
         "message": "다시 시작"
     },
+    "popup_start_working_on": {
+        "message": "$WORK$ 작업 시작",
+        "placeholders": {
+            "work": {
+                "content": "$1"
+            }
+        }
+    },
     "popup_presets": {
         "message": "프리셋"
     },
@@ -394,9 +402,6 @@
     },
     "unit_week": {
         "message": "주"
-    },
-    "popup_live": {
-        "message": "실시간 업데이트 켜짐"
     },
     "header_today": {
         "message": "오늘"

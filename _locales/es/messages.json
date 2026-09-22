@@ -241,6 +241,14 @@
     "popup_resume": {
         "message": "Reanudar"
     },
+    "popup_start_working_on": {
+        "message": "Empezar a trabajar en $WORK$",
+        "placeholders": {
+            "work": {
+                "content": "$1"
+            }
+        }
+    },
     "popup_presets": {
         "message": "Plantillas"
     },
@@ -394,9 +402,6 @@
     },
     "unit_week": {
         "message": "sem"
-    },
-    "popup_live": {
-        "message": "Actualizaciones en directo activas"
     },
     "header_today": {
         "message": "Hoy"
