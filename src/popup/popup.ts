@@ -11,7 +11,7 @@ import { shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
 import { lastTimerFor, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
-import { call, CallError, t } from '../messaging';
+import { call, CallError, errorText, t } from '../messaging';
 import { pageIssue, withSelection } from '../page';
 import { defaultPresetName, filterPresets, hasPreset, presetRows, presetsFor, removePreset, renamePreset, savePreset, type Preset, type PresetRow } from '../presets';
 import { getLastTimer, getMappings, getPresets, getSettings, savePresets, saveSettings } from '../storage';
@@ -70,11 +70,6 @@ const headerLabel = (): string => {
     const d = new Date(`${selectedDate}T00:00:00`);
     if (selectedDate === today()) return t('popup_today_date', d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }));
     return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short' });
-};
-
-const errorText = (error: unknown): string => {
-    if (error instanceof CallError && error.status === 0) return t('popup_error_unreachable');
-    return t('popup_error_generic', error instanceof Error ? error.message : String(error));
 };
 
 /** The Appearance setting, as the desktop applies it: no attribute follows the system. */
