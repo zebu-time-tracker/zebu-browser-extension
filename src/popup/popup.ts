@@ -8,7 +8,8 @@
 // time" button (the sheet open over the day, for that issue). Vanilla DOM on
 // purpose — it starts instantly.
 import { shiftDate, toDateString } from '../dates';
-import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
+import { elapsedMinutes, formatDurationHuman, formatMinutes } from '../duration';
+import { durationToSave, isApplePlatform, isSaveShortcut, saveShortcutHint } from '../entryForm';
 import { readIdlePrefill } from '../idle';
 import { lastTimerFor, resumeLabelKey, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
@@ -448,7 +449,13 @@ function entrySheet(): HTMLElement {
     const error = el('p', { class: 'error' });
     const taskSelect = el('select');
     const presetButton = el('button', { type: 'button', class: 'link preset-save' });
-    const submit = el('button', { type: 'button', class: 'btn-primary' });
+    // ⌘↵ / Ctrl+↵ saves from any field (board #398); the keycap says so.
+    const apple = isApplePlatform((navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform || navigator.platform);
+    const submitLabel = el('span');
+    const submit = el('button', { type: 'button', class: 'btn-primary', 'aria-keyshortcuts': apple ? 'Meta+Enter' : 'Control+Enter' }, [
+        submitLabel,
+        el('kbd', { class: 'kbd-hint', 'aria-hidden': 'true', text: saveShortcutHint(apple, t('popup_key_ctrl')) }),
+    ]);
     const notice = el('p', { class: 'muted notice' });
 
     const date = el('input', { type: 'date', class: 'sheet-date' });
@@ -469,7 +476,7 @@ function entrySheet(): HTMLElement {
     // starts a timer, a value logs a finished block. A timer can only start today.
     const syncSubmit = () => {
         const logging = duration.value.trim() !== '' || date.value !== today();
-        submit.textContent = editing ? t('popup_save') : logging ? t('popup_log') : t('popup_start');
+        submitLabel.textContent = editing ? t('popup_save') : logging ? t('popup_log') : t('popup_start');
         submit.disabled = !projectId;
         notice.textContent = t('popup_switch_note', state.running?.project ?? '');
         notice.hidden = !(state.running && !editing && !logging);
@@ -535,20 +542,24 @@ function entrySheet(): HTMLElement {
 
     submit.addEventListener('click', async () => {
         if (!projectId) return;
-        const typed = duration.value.trim();
-        const minutes = typed ? parseDuration(typed) : null;
-        // A block needs a real duration; a timer can only start today.
-        if ((typed && (minutes === null || minutes <= 0)) || (!editing && !typed && date.value !== today())) {
+        const checked = durationToSave({
+            typed: duration.value,
+            opened: openedDuration,
+            mode: !editing ? 'new' : editing.timer_started_at ? 'running' : 'stopped',
+            today: date.value === today(),
+        });
+        if (!checked.ok) {
             error.textContent = t('popup_error_duration');
             return;
         }
+        const { minutes } = checked;
         const taskIdOrNull = taskId || null;
         submit.disabled = true;
-        if (!editing && minutes === null) submit.textContent = t('popup_starting');
+        if (!editing && minutes === null) submitLabel.textContent = t('popup_starting');
         try {
             let entry: Entry | null;
             if (editing) {
-                entry = await call<Entry>({ type: 'entry:update', id: editing.id, projectId, taskId: taskIdOrNull, notes: notes.value, date: date.value, minutes: typed !== openedDuration && minutes !== null ? minutes : null });
+                entry = await call<Entry>({ type: 'entry:update', id: editing.id, projectId, taskId: taskIdOrNull, notes: notes.value, date: date.value, minutes });
             } else if (minutes !== null) {
                 entry = await call<Entry>({ type: 'entry:add', issue: from, projectId, taskId: taskIdOrNull, date: date.value, minutes, notes: notes.value });
             } else {
@@ -604,6 +615,11 @@ function entrySheet(): HTMLElement {
         error,
         actions,
     ]);
+    card.addEventListener('keydown', (e) => {
+        if (!isSaveShortcut(e, apple)) return;
+        e.preventDefault();
+        if (!submit.disabled) submit.click();
+    });
     const overlay = el('div', { class: 'sheet-overlay' }, [card]);
     // click-away closes the sheet; in the detached window the sheet is the point of the window
     overlay.addEventListener('click', (e) => {
