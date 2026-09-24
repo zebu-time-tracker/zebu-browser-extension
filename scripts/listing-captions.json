@@ -1,0 +1,80 @@
+{
+    "_comment": "Store-listing copy for scripts/listing-shots.mjs. Not shipped in the extension: these are the captions burned into the 1280x800 screenshots and the 440x280 promo tile. Keep titles short enough to sit on two lines at 46px. Translations are drafts — review them the way the UI strings are reviewed.",
+    "en": {
+        "1-timer": { "title": "One click, and the clock runs", "body": "Start from the page you are already on. Zebu fills in the project and the notes." },
+        "2-day": { "title": "Your whole day, in the toolbar", "body": "Every entry for the day, and one click to pick any of them back up." },
+        "3-insights": { "title": "See where the hours went", "body": "Today, this week and this month at a glance, with what is still uninvoiced." },
+        "4-options": { "title": "Connect once, in seconds", "body": "Sign in to your Zebu workspace and choose which sites offer a Track time button." },
+        "tile": "Time tracking, one click away"
+    },
+    "de": {
+        "1-timer": { "title": "Ein Klick, und die Uhr läuft", "body": "Starte direkt auf der Seite, auf der du bist. Zebu füllt Projekt und Notiz aus." },
+        "2-day": { "title": "Dein ganzer Tag, in der Symbolleiste", "body": "Alle Einträge des Tages – ein Klick genügt, um weiterzuarbeiten." },
+        "3-insights": { "title": "Sieh, wohin die Stunden gehen", "body": "Heute, diese Woche und dieser Monat auf einen Blick, samt offener Beträge." },
+        "4-options": { "title": "Einmal verbinden, in Sekunden", "body": "Melde dich in deinem Zebu-Workspace an und wähle, welche Seiten einen Button bekommen." },
+        "tile": "Zeiterfassung mit einem Klick"
+    },
+    "es": {
+        "1-timer": { "title": "Un clic y el reloj corre", "body": "Empieza desde la página en la que estás. Zebu rellena el proyecto y las notas." },
+        "2-day": { "title": "Todo tu día, en la barra", "body": "Cada entrada del día, y un clic para retomar cualquiera de ellas." },
+        "3-insights": { "title": "Mira adónde van las horas", "body": "Hoy, esta semana y este mes de un vistazo, con lo que falta por facturar." },
+        "4-options": { "title": "Conecta una vez, en segundos", "body": "Entra en tu espacio de Zebu y elige en qué sitios aparece el botón." },
+        "tile": "Control de tiempo en un clic"
+    },
+    "fr": {
+        "1-timer": { "title": "Un clic, et le chrono tourne", "body": "Démarrez depuis la page où vous êtes. Zebu remplit le projet et les notes." },
+        "2-day": { "title": "Toute votre journée, dans la barre", "body": "Chaque saisie du jour, et un clic pour reprendre n'importe laquelle." },
+        "3-insights": { "title": "Voyez où passent les heures", "body": "Aujourd'hui, cette semaine et ce mois d'un coup d'œil, avec le non facturé." },
+        "4-options": { "title": "Connectez-vous une fois, en quelques secondes", "body": "Reliez votre espace Zebu et choisissez les sites qui affichent le bouton." },
+        "tile": "Le suivi du temps en un clic"
+    },
+    "it": {
+        "1-timer": { "title": "Un clic e il cronometro parte", "body": "Parti dalla pagina in cui sei. Zebu compila progetto e note." },
+        "2-day": { "title": "Tutta la giornata, nella barra", "body": "Ogni voce del giorno, e un clic per riprendere quella che vuoi." },
+        "3-insights": { "title": "Guarda dove vanno le ore", "body": "Oggi, questa settimana e questo mese a colpo d'occhio, con il non fatturato." },
+        "4-options": { "title": "Collega una volta, in pochi secondi", "body": "Accedi al tuo spazio Zebu e scegli su quali siti mostrare il pulsante." },
+        "tile": "Tracciare il tempo in un clic"
+    },
+    "ja": {
+        "1-timer": { "title": "ワンクリックで計測が始まる", "body": "開いているページからそのまま開始。プロジェクトとメモは Zebu が入力します。" },
+        "2-day": { "title": "一日の記録を、ツールバーに", "body": "その日のすべての記録を一覧で。ワンクリックで作業を再開できます。" },
+        "3-insights": { "title": "時間の行き先がわかる", "body": "今日・今週・今月をひと目で。未請求の分もあわせて確認できます。" },
+        "4-options": { "title": "接続は一度きり、数秒で", "body": "Zebu ワークスペースにサインインし、ボタンを表示するサイトを選びます。" },
+        "tile": "ワンクリックの時間管理"
+    },
+    "ko": {
+        "1-timer": { "title": "클릭 한 번이면 타이머가 돕니다", "body": "보고 있던 페이지에서 바로 시작하세요. 프로젝트와 메모는 Zebu가 채웁니다." },
+        "2-day": { "title": "하루 전체를 툴바에서", "body": "그날의 모든 기록을 한눈에, 클릭 한 번으로 이어서 작업합니다." },
+        "3-insights": { "title": "시간이 어디로 갔는지 확인", "body": "오늘, 이번 주, 이번 달을 한눈에. 미청구 금액까지 함께." },
+        "4-options": { "title": "한 번만 연결하면 끝", "body": "Zebu 워크스페이스에 로그인하고 버튼을 표시할 사이트를 고르세요." },
+        "tile": "클릭 한 번의 시간 기록"
+    },
+    "nl": {
+        "1-timer": { "title": "Eén klik en de klok loopt", "body": "Start vanaf de pagina waar je bent. Zebu vult project en notitie in." },
+        "2-day": { "title": "Je hele dag, in de werkbalk", "body": "Elke regel van vandaag, met één klik om er weer mee verder te gaan." },
+        "3-insights": { "title": "Zie waar de uren heen gaan", "body": "Vandaag, deze week en deze maand in één oogopslag, met wat nog niet gefactureerd is." },
+        "4-options": { "title": "Eén keer koppelen, in seconden", "body": "Meld je aan bij je Zebu-workspace en kies op welke sites de knop verschijnt." },
+        "tile": "Tijd bijhouden met één klik"
+    },
+    "pl": {
+        "1-timer": { "title": "Jedno kliknięcie i zegar rusza", "body": "Zacznij na stronie, na której jesteś. Zebu uzupełni projekt i notatkę." },
+        "2-day": { "title": "Cały dzień w pasku narzędzi", "body": "Każdy wpis z dnia i jedno kliknięcie, by wrócić do pracy." },
+        "3-insights": { "title": "Zobacz, dokąd idą godziny", "body": "Dziś, ten tydzień i ten miesiąc na pierwszy rzut oka, razem z niezafakturowanym." },
+        "4-options": { "title": "Połącz raz, w kilka sekund", "body": "Zaloguj się do przestrzeni Zebu i wybierz, na których stronach pokazać przycisk." },
+        "tile": "Śledzenie czasu jednym kliknięciem"
+    },
+    "pt_BR": {
+        "1-timer": { "title": "Um clique e o relógio corre", "body": "Comece pela página em que você está. O Zebu preenche projeto e notas." },
+        "2-day": { "title": "O seu dia inteiro, na barra", "body": "Cada lançamento do dia, e um clique para retomar qualquer um deles." },
+        "3-insights": { "title": "Veja para onde vão as horas", "body": "Hoje, esta semana e este mês de relance, com o que ainda não foi faturado." },
+        "4-options": { "title": "Conecte uma vez, em segundos", "body": "Entre no seu espaço Zebu e escolha em quais sites mostrar o botão." },
+        "tile": "Controle de tempo em um clique"
+    },
+    "zh_CN": {
+        "1-timer": { "title": "一次点击，计时开始", "body": "从当前页面直接开始，项目和备注由 Zebu 自动填好。" },
+        "2-day": { "title": "一整天的记录，就在工具栏", "body": "当天的每一条记录，点一下就能继续之前的工作。" },
+        "3-insights": { "title": "看清时间花在哪里", "body": "今天、本周和本月一目了然，还能看到尚未开票的部分。" },
+        "4-options": { "title": "连接一次，只需几秒", "body": "登录你的 Zebu 工作区，选择要显示按钮的网站。" },
+        "tile": "一键记录工时"
+    }
+}
