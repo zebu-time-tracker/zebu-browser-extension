@@ -270,16 +270,16 @@ function weekStrip(): HTMLElement {
 }
 
 /**
- * The two lines the resume bar and the new-day sheet share (board #411): the
- * action as a small label, then "Client – Project · Task" on one line.
- * A value stored before the client was looks it up in today's project list.
+ * The resume bar's work, drawn as an entry row draws it (board #411): the
+ * client small and muted on its own line, the project (and task) below. A
+ * value stored before the client was looks it up in today's project list.
  */
-function resumeLines(l: LastTimer, action: string): HTMLElement {
+function resumeText(l: LastTimer): HTMLElement {
     const client = l.client ?? state.projects.find((p) => p.id === l.project_id)?.client ?? null;
-    const work = resumeWork(l, client);
-    return el('span', { class: 'resume-lines' }, [
-        el('span', { class: 'resume-action', text: action }),
-        el('span', { class: 'resume-work', text: work, title: work }),
+    const work = resumeWork(l);
+    return el('span', { class: 'entry-text resume-text' }, [
+        client ? el('span', { class: 'entry-client', text: client }) : '',
+        el('span', { class: 'entry-project', text: work, title: work }),
     ]);
 }
 
@@ -288,8 +288,8 @@ function resumeBar(): HTMLElement | '' {
     if (state.running || !last) return '';
     const l = last;
     const button = el('button', { type: 'button', class: 'running-elsewhere resume-last' }, [
-        el('span', { class: 'resume-play', text: '▶' }),
-        resumeLines(l, t(resumeLabelKey(l, today()))),
+        resumeText(l),
+        el('span', { class: 'resume-action', text: `▶ ${t(resumeLabelKey(l, today()))}` }),
     ]);
     button.addEventListener('click', resumeLast);
     return button;
@@ -434,7 +434,8 @@ function newDaySheet(): HTMLElement {
     confirm.addEventListener('click', () => void act(() => call<State>({ type: 'timer:resume-last' }).then((s) => showEntry(s.running)), undefined, confirm));
     const overlay = el('div', { class: 'sheet-overlay' }, [
         el('div', { class: 'sheet' }, [
-            last ? el('div', { class: 'newday-head' }, [resumeLines(last, t('newday_title'))]) : el('p', { class: 'sheet-title', text: t('newday_title') }),
+            el('p', { class: 'sheet-title', text: t('newday_title') }),
+            last ? el('div', { class: 'newday-head' }, [resumeText(last)]) : '',
             el('p', { class: 'muted', text: t('newday_body', last ? shortDate(last.date) : '') }),
             el('div', { class: 'sheet-actions' }, [cancel, confirm]),
         ]),

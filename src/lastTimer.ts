@@ -67,10 +67,7 @@ export const resumeLabelKey = (last: Pick<LastTimer, 'date'>, today: string): 'p
     last.date === today ? 'popup_resume' : 'popup_start_new_timer';
 
 /**
- * The bar's second line: "Client – Project · Task" (board #411). `client`
- * falls back to the caller's lookup for values stored before the client was.
+ * The bar's project line, "Project · Task" (board #411); the client sits
+ * above it on its own line, as on an entry row.
  */
-export const resumeWork = (last: Pick<LastTimer, 'client' | 'project' | 'task'>, client: string | null = last.client): string => {
-    const where = [client, last.project].filter(Boolean).join(' – ');
-    return [where, last.task].filter(Boolean).join(' · ');
-};
+export const resumeWork = (last: Pick<LastTimer, 'project' | 'task'>): string => [last.project, last.task].filter(Boolean).join(' · ');

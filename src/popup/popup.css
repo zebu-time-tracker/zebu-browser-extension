@@ -616,34 +616,21 @@ textarea:focus {
     background: var(--bg-raised);
     border-color: var(--border);
 }
-.resume-last .resume-play {
-    color: var(--accent);
-    font-size: 11px;
-}
 .resume-last:hover {
     border-color: var(--accent);
     background: var(--accent-soft);
 }
-/* Action above, "Client – Project · Task" below (board #411). */
-.resume-lines {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
+/* Client over project, as an entry row; the action on the right (board #411). */
+.resume-text {
+    font-size: 13px;
+    gap: 2px;
 }
 .resume-action {
-    color: var(--muted);
-    font-size: 10px;
-    line-height: 1.2;
-}
-.resume-work {
-    font-size: 13px;
+    flex: none;
+    color: var(--accent);
+    font-size: 12px;
     font-weight: 600;
-    line-height: 1.3;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .newday-head {
     padding: 10px 12px;

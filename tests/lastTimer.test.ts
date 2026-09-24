@@ -36,9 +36,7 @@ test('a value stored before the client was still reads back', () => {
     expect(lastTimerFor(old, 'w')).toMatchObject({ project: 'Billing API', client: null });
 });
 
-test('the second line reads client – project · task, skipping what is missing', () => {
-    expect(resumeWork({ client: 'Acme Corp', project: 'Billing API', task: 'Development' })).toBe('Acme Corp – Billing API · Development');
-    expect(resumeWork({ client: null, project: 'Billing API', task: null })).toBe('Billing API');
-    expect(resumeWork({ client: null, project: 'Billing API', task: 'QA' }, 'Looked Up')).toBe('Looked Up – Billing API · QA');
-    expect(resumeWork({ client: 'Acme Corp', project: null, task: null })).toBe('Acme Corp');
+test('the project line reads project · task, skipping what is missing', () => {
+    expect(resumeWork({ project: 'Billing API', task: 'Development' })).toBe('Billing API · Development');
+    expect(resumeWork({ project: 'Billing API', task: null })).toBe('Billing API');
 });
