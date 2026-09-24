@@ -9,18 +9,20 @@
         "build:chrome": "node build.mjs --target chrome",
         "build:firefox": "node build.mjs --target firefox",
         "build:safari": "node build.mjs --target safari",
-        "watch": "node build.mjs --watch",
-        "icons": "node scripts/icons.mjs",
-        "typecheck": "tsc --noEmit",
-        "test": "vitest run",
         "i18n:check": "node scripts/i18n-check.mjs",
+        "icons": "node scripts/icons.mjs",
+        "listing:shots": "node scripts/listing-shots.mjs",
         "package": "npm run build && node scripts/package.mjs",
+        "test": "vitest run",
+        "typecheck": "tsc --noEmit",
+        "watch": "node build.mjs --watch",
         "zip": "npm run package"
     },
     "devDependencies": {
         "@types/chrome": "^0.0.287",
         "esbuild": "^0.24.2",
         "jsdom": "^25.0.1",
+        "puppeteer-core": "^24.0.0",
         "typescript": "^5.7.2",
         "vitest": "^2.1.8"
     }

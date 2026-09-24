@@ -26,7 +26,7 @@
         "message": "時間を記録"
     },
     "button_switch_title": {
-        "message": "$1 でタイマーが実行中です — ここで開始すると停止します",
+        "message": "$1 のタイマーを停止し、ここで開始します",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "ワークスペース"
     },
     "options_workspace_hint": {
-        "message": "ワークスペース名（.zebu.work の前の部分）"
+        "message": ".zebu.work の前の部分です。"
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "切断"
     },
     "options_error_workspace": {
-        "message": "ワークスペース名として無効です。英数字とハイフンのみ使えます。"
+        "message": "英数字とハイフンのみ使用できます。"
     },
     "options_error_central": {
-        "message": "それは Zebu のメインサイトです。ご自身のワークスペース名を入力してください。"
+        "message": "それは Zebu のメインサイトです。ワークスペース名を入力してください。"
     },
     "options_error_unreachable": {
         "message": "そのワークスペースに接続できません。アドレスを確認してください。"
@@ -136,7 +136,7 @@
         "message": "タイマーのメモ"
     },
     "options_notes_hint": {
-        "message": "課題から開始したタイマーに何が表示されるかを設定します。"
+        "message": "課題から開始したタイマーのメモ。"
     },
     "options_notes_identifier_title_url": {
         "message": "識別子・タイトル・リンク（例: 「#123 ログインを修正」＋URL）"
@@ -151,7 +151,7 @@
         "message": "セルフホストのトラッカー"
     },
     "options_sites_hint": {
-        "message": "GitLab、Jiraなどのトラッカーを自社ドメインで運用していますか？ アドレスを追加してトラッカーの種類を選んでください。"
+        "message": "独自ドメインで運用している GitLab や Jira などを追加します。"
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chromeがそのサイトへのアクセスを許可しませんでした。"
     },
     "options_sites_none": {
-        "message": "まだありません — 公開のGitHub、GitLab、Jira Cloud、Linear、Asana、Trello、Bitbucket、ClickUp、Basecampのサイトはそのまま利用できます。"
+        "message": "まだありません。GitHub、GitLab、Jira Cloud、Linear、Asana、Trello、Bitbucket、ClickUp、Basecamp は設定なしで使えます。"
     },
     "options_forget_heading": {
         "message": "候補"
     },
     "options_forget_hint": {
-        "message": "拡張機能は、各リポジトリやボードで選んだプロジェクトを記憶し、次回それを候補として表示します。"
+        "message": "リポジトリやボードごとに、前回選んだプロジェクトを提案します。"
     },
     "options_forget": {
         "message": "記憶した選択を忘れる"
@@ -228,6 +228,10 @@
     },
     "popup_save": {
         "message": "保存"
+    },
+    "popup_key_ctrl": {
+        "message": "Ctrl",
+        "description": "The Control key as keyboards in this language label it, shown in the save shortcut hint (Ctrl+Enter)."
     },
     "popup_delete": {
         "message": "削除"
@@ -301,7 +305,7 @@
         "message": "キーボードショートカット"
     },
     "options_shortcuts_hint": {
-        "message": "タイマーの切り替え、現在のページのタイマー開始、このポップアップの表示をキーボードから行えます。キーは Chrome で設定します。"
+        "message": "タイマーの開始・停止、現在のページの記録、ポップアップを開く操作ができます。キーは Chrome で設定します。"
     },
     "options_shortcuts_open": {
         "message": "Chrome でショートカットを変更"
@@ -356,7 +360,7 @@
         "message": "無操作の検出"
     },
     "options_idle_hint": {
-        "message": "タイマー実行中にパソコンの操作が止まると Chrome が検出し、その時間を含めるかどうかを尋ねます。"
+        "message": "タイマー実行中に席を外すと、その時間を残すかどうか Zebu が確認します。"
     },
     "options_idle_after": {
         "message": "無操作を検出:"

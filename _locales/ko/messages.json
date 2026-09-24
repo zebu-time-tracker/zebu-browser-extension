@@ -26,7 +26,7 @@
         "message": "시간 기록"
     },
     "button_switch_title": {
-        "message": "$1 에서 타이머가 실행 중입니다 — 여기서 시작하면 정지됩니다",
+        "message": "$1 의 타이머를 정지하고 여기서 시작합니다",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "내 워크스페이스"
     },
     "options_workspace_hint": {
-        "message": "워크스페이스 이름 — .zebu.work 앞부분"
+        "message": ".zebu.work 앞부분입니다."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "연결 해제"
     },
     "options_error_workspace": {
-        "message": "워크스페이스 이름이 아닌 것 같습니다. 영문, 숫자, 하이픈만 사용할 수 있습니다."
+        "message": "영문자, 숫자, 하이픈만 사용할 수 있습니다."
     },
     "options_error_central": {
-        "message": "그것은 Zebu 메인 사이트입니다. 대신 내 워크스페이스 이름을 입력하세요."
+        "message": "Zebu 메인 사이트입니다. 워크스페이스 이름을 입력하세요."
     },
     "options_error_unreachable": {
         "message": "해당 워크스페이스에 연결할 수 없습니다. 주소를 확인하세요."
@@ -136,7 +136,7 @@
         "message": "타이머 메모"
     },
     "options_notes_hint": {
-        "message": "이슈에서 시작한 타이머에 어떤 이름이 붙는지 설정합니다."
+        "message": "이슈에서 시작한 타이머의 메모입니다."
     },
     "options_notes_identifier_title_url": {
         "message": "식별자, 제목, 링크 (예: “#123 로그인 수정” + URL)"
@@ -151,7 +151,7 @@
         "message": "자체 호스팅 트래커"
     },
     "options_sites_hint": {
-        "message": "GitLab, Jira 또는 다른 트래커를 자체 도메인에서 운영하시나요? 주소를 추가하고 트래커 종류를 선택하세요."
+        "message": "자체 도메인에서 운영하는 GitLab, Jira 등의 트래커를 추가하세요."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome이 해당 사이트에 대한 접근 권한을 허용하지 않았습니다."
     },
     "options_sites_none": {
-        "message": "아직 없습니다 — 공개 GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp, Basecamp 사이트는 바로 작동합니다."
+        "message": "아직 없습니다. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp, Basecamp는 설정 없이 작동합니다."
     },
     "options_forget_heading": {
         "message": "제안"
     },
     "options_forget_hint": {
-        "message": "확장 프로그램은 각 저장소나 보드에서 선택한 프로젝트를 기억했다가 다음에 제안합니다."
+        "message": "저장소나 보드마다 마지막으로 선택한 프로젝트를 추천합니다."
     },
     "options_forget": {
         "message": "기억된 선택 잊기"
@@ -228,6 +228,10 @@
     },
     "popup_save": {
         "message": "저장"
+    },
+    "popup_key_ctrl": {
+        "message": "Ctrl",
+        "description": "The Control key as keyboards in this language label it, shown in the save shortcut hint (Ctrl+Enter)."
     },
     "popup_delete": {
         "message": "삭제"
@@ -301,7 +305,7 @@
         "message": "키보드 단축키"
     },
     "options_shortcuts_hint": {
-        "message": "키보드로 타이머를 전환하거나 현재 페이지의 타이머를 시작하거나 이 팝업을 열 수 있습니다. 키는 Chrome에서 설정합니다."
+        "message": "타이머 시작·정지, 현재 페이지 기록, 팝업 열기를 할 수 있습니다. 키는 Chrome에서 설정합니다."
     },
     "options_shortcuts_open": {
         "message": "Chrome에서 단축키 변경"
@@ -356,7 +360,7 @@
         "message": "유휴 감지"
     },
     "options_idle_hint": {
-        "message": "타이머가 실행 중일 때 컴퓨터 사용이 멈추면 Chrome이 감지하고 그 시간을 포함할지 묻습니다."
+        "message": "타이머 실행 중 자리를 비우면 그 시간을 유지할지 Zebu가 묻습니다."
     },
     "options_idle_after": {
         "message": "유휴 감지 시간"

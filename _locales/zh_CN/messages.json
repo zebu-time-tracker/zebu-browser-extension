@@ -26,7 +26,7 @@
         "message": "记录时间"
     },
     "button_switch_title": {
-        "message": "$1 上有一个正在运行的计时器 —— 在此处启动会将其停止",
+        "message": "停止 $1 上的计时器并在此处启动",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "您的工作区"
     },
     "options_workspace_hint": {
-        "message": "你的工作区名称，即 .zebu.work 前面的部分。"
+        "message": ".zebu.work 前面的部分。"
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "断开连接"
     },
     "options_error_workspace": {
-        "message": "这不像是工作区名称，只能包含字母、数字和连字符。"
+        "message": "只能使用字母、数字和连字符。"
     },
     "options_error_central": {
-        "message": "那是 Zebu 主站，请改为输入您自己的工作区名称。"
+        "message": "那是 Zebu 主站。请输入您的工作区名称。"
     },
     "options_error_unreachable": {
         "message": "无法连接到该工作区，请检查地址。"
@@ -136,7 +136,7 @@
         "message": "计时器备注"
     },
     "options_notes_hint": {
-        "message": "从议题启动的计时器将以此方式标注。"
+        "message": "从议题启动的计时器的备注。"
     },
     "options_notes_identifier_title_url": {
         "message": "标识符、标题和链接（例如“#123 修复登录”+ URL）"
@@ -151,7 +151,7 @@
         "message": "自托管跟踪工具"
     },
     "options_sites_hint": {
-        "message": "在您自己的域名上运行 GitLab、Jira 或其他跟踪工具？添加其地址并选择跟踪工具类型。"
+        "message": "添加托管在您自己域名上的 GitLab、Jira 或其他工具。"
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome 未授予该站点访问权限。"
     },
     "options_sites_none": {
-        "message": "尚无站点 —— 公共的 GitHub、GitLab、Jira Cloud、Linear、Asana、Trello、Bitbucket、ClickUp 和 Basecamp 站点开箱即用。"
+        "message": "尚无站点。GitHub、GitLab、Jira Cloud、Linear、Asana、Trello、Bitbucket、ClickUp 和 Basecamp 无需设置即可使用。"
     },
     "options_forget_heading": {
         "message": "建议"
     },
     "options_forget_hint": {
-        "message": "扩展程序会记住您为每个仓库或看板选择的项目，并在下次提供建议。"
+        "message": "Zebu 会为每个仓库或看板推荐您上次选择的项目。"
     },
     "options_forget": {
         "message": "忘记已记住的选择"
@@ -228,6 +228,10 @@
     },
     "popup_save": {
         "message": "保存"
+    },
+    "popup_key_ctrl": {
+        "message": "Ctrl",
+        "description": "The Control key as keyboards in this language label it, shown in the save shortcut hint (Ctrl+Enter)."
     },
     "popup_delete": {
         "message": "删除"
@@ -301,7 +305,7 @@
         "message": "键盘快捷键"
     },
     "options_shortcuts_hint": {
-        "message": "通过键盘切换计时、为当前页面开始计时或打开此弹出窗口。按键由 Chrome 设置。"
+        "message": "启动或停止计时器、为当前页面计时或打开弹窗。按键在 Chrome 中设置。"
     },
     "options_shortcuts_open": {
         "message": "在 Chrome 中更改快捷键"
@@ -356,7 +360,7 @@
         "message": "闲置检测"
     },
     "options_idle_hint": {
-        "message": "计时进行中时，Chrome 会察觉您停止使用电脑，并询问这段时间是否计入。"
+        "message": "计时进行中离开电脑时，Zebu 会询问是否保留这段时间。"
     },
     "options_idle_after": {
         "message": "闲置检测时间"

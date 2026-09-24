@@ -26,7 +26,7 @@
         "message": "Śledź czas"
     },
     "button_switch_title": {
-        "message": "Na $1 działa stoper — uruchomienie go tutaj go zatrzyma",
+        "message": "Zatrzymuje stoper na $1 i uruchamia nowy tutaj",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Twoja przestrzeń"
     },
     "options_workspace_hint": {
-        "message": "Nazwa Twojej przestrzeni roboczej — część przed .zebu.work."
+        "message": "Część przed .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Rozłącz"
     },
     "options_error_workspace": {
-        "message": "To nie wygląda na nazwę przestrzeni roboczej — tylko litery, cyfry i myślniki."
+        "message": "Używaj tylko liter, cyfr i myślników."
     },
     "options_error_central": {
-        "message": "To główna strona Zebu — wpisz zamiast tego nazwę swojej przestrzeni."
+        "message": "To główna strona Zebu. Wpisz nazwę swojej przestrzeni."
     },
     "options_error_unreachable": {
         "message": "Nie można połączyć się z tą przestrzenią. Sprawdź adres."
@@ -136,7 +136,7 @@
         "message": "Notatki stopera"
     },
     "options_notes_hint": {
-        "message": "Czym jest opisywany stoper uruchomiony ze zgłoszenia."
+        "message": "Notatki stoperów uruchomionych ze zgłoszenia."
     },
     "options_notes_identifier_title_url": {
         "message": "Identyfikator, tytuł i link (np. „#123 Napraw logowanie” + URL)"
@@ -151,7 +151,7 @@
         "message": "Trackery self-hosted"
     },
     "options_sites_hint": {
-        "message": "Uruchamiasz GitLab, Jira lub inny tracker na własnej domenie? Dodaj jego adres i wybierz typ trackera."
+        "message": "Dodaj GitLab, Jira lub inne narzędzia na własnej domenie."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome nie przyznał dostępu do tej witryny."
     },
     "options_sites_none": {
-        "message": "Jeszcze żadnych — publiczne witryny GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp i Basecamp działają od razu."
+        "message": "Jeszcze żadnych. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp i Basecamp działają bez konfiguracji."
     },
     "options_forget_heading": {
         "message": "Sugestie"
     },
     "options_forget_hint": {
-        "message": "Rozszerzenie zapamiętuje, jaki projekt wybierasz dla każdego repozytorium lub tablicy, i proponuje go następnym razem."
+        "message": "Zebu podpowiada ostatnio wybrany projekt dla każdego repozytorium lub tablicy."
     },
     "options_forget": {
         "message": "Zapomnij zapamiętane wybory"
@@ -228,6 +228,10 @@
     },
     "popup_save": {
         "message": "Zapisz"
+    },
+    "popup_key_ctrl": {
+        "message": "Ctrl",
+        "description": "The Control key as keyboards in this language label it, shown in the save shortcut hint (Ctrl+Enter)."
     },
     "popup_delete": {
         "message": "Usuń"
@@ -301,7 +305,7 @@
         "message": "Skróty klawiszowe"
     },
     "options_shortcuts_hint": {
-        "message": "Przełączaj stoper, uruchom go dla bieżącej strony albo otwórz to okno z klawiatury. Klawisze ustawia Chrome."
+        "message": "Uruchom lub zatrzymaj stoper, mierz czas na bieżącej stronie albo otwórz okienko. Klawisze ustawisz w Chrome."
     },
     "options_shortcuts_open": {
         "message": "Zmień skróty w Chrome"
@@ -356,7 +360,7 @@
         "message": "Wykrywanie bezczynności"
     },
     "options_idle_hint": {
-        "message": "Gdy stoper działa, Chrome zauważa, kiedy przestajesz używać komputera, i pyta, czy ten czas ma się liczyć."
+        "message": "Jeśli odejdziesz od komputera, gdy stoper działa, Zebu zapyta, czy zachować ten czas."
     },
     "options_idle_after": {
         "message": "Wykryj bezczynność po"

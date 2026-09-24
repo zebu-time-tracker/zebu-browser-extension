@@ -13,7 +13,9 @@
 #
 # Every job runs on the self-hosted macOS runner (the same one the web app
 # deploys from: labels self-hosted, macOS), so a release costs no Actions
-# minutes and the Safari job has the Mac it needs.
+# minutes and the Safari job has the Mac it needs. No `cache: npm` on
+# setup-node: on a persistent machine that would upload the runner's whole
+# ~/.npm (gigabytes) to GitHub's cache after every job, for nothing.
 #
 # `workflow_dispatch` runs the same build and the same publish without
 # touching anything real: it writes to `extension/_dryrun/<run id>/` instead

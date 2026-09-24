@@ -26,7 +26,7 @@
         "message": "Zeit erfassen"
     },
     "button_switch_title": {
-        "message": "Auf $1 läuft ein Timer — wenn du hier einen startest, wird er gestoppt",
+        "message": "Stoppt den Timer auf $1 und startet einen hier",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Dein Workspace"
     },
     "options_workspace_hint": {
-        "message": "Der Name deines Arbeitsbereichs — der Teil vor .zebu.work."
+        "message": "Der Teil vor .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Trennen"
     },
     "options_error_workspace": {
-        "message": "Das sieht nicht nach einem Arbeitsbereichsnamen aus — nur Buchstaben, Ziffern und Bindestriche."
+        "message": "Nur Buchstaben, Ziffern und Bindestriche verwenden."
     },
     "options_error_central": {
-        "message": "Das ist die zentrale Zebu-Seite — gib stattdessen den Namen deines Arbeitsbereichs ein."
+        "message": "Das ist die zentrale Zebu-Seite. Gib den Namen deines Arbeitsbereichs ein."
     },
     "options_error_unreachable": {
         "message": "Dieser Workspace ist nicht erreichbar. Prüfe die Adresse."
@@ -136,7 +136,7 @@
         "message": "Timer-Notizen"
     },
     "options_notes_hint": {
-        "message": "Womit ein von einem Issue gestarteter Timer beschriftet wird."
+        "message": "Notizen für Timer, die aus einem Issue gestartet werden."
     },
     "options_notes_identifier_title_url": {
         "message": "Kennung, Titel und Link (z. B. „#123 Login fixen“ + URL)"
@@ -151,7 +151,7 @@
         "message": "Selbst gehostete Tracker"
     },
     "options_sites_hint": {
-        "message": "Betreibst du GitLab, Jira oder einen anderen Tracker auf deiner eigenen Domain? Füge die Adresse hinzu und wähle den Tracker-Typ."
+        "message": "GitLab, Jira oder andere Tracker auf deiner eigenen Domain hinzufügen."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome hat den Zugriff auf diese Seite nicht gewährt."
     },
     "options_sites_none": {
-        "message": "Noch keine — die öffentlichen GitHub-, GitLab-, Jira-Cloud-, Linear-, Asana-, Trello-, Bitbucket-, ClickUp- und Basecamp-Seiten funktionieren sofort."
+        "message": "Noch keine. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp und Basecamp funktionieren ohne Einrichtung."
     },
     "options_forget_heading": {
         "message": "Vorschläge"
     },
     "options_forget_hint": {
-        "message": "Die Erweiterung merkt sich, welches Projekt du für jedes Repo oder Board wählst, und schlägt es beim nächsten Mal vor."
+        "message": "Zebu schlägt für jedes Repo oder Board das zuletzt gewählte Projekt vor."
     },
     "options_forget": {
         "message": "Gemerkte Auswahl vergessen"
@@ -228,6 +228,10 @@
     },
     "popup_save": {
         "message": "Speichern"
+    },
+    "popup_key_ctrl": {
+        "message": "Strg",
+        "description": "The Control key as keyboards in this language label it, shown in the save shortcut hint (Ctrl+Enter)."
     },
     "popup_delete": {
         "message": "Löschen"
@@ -301,7 +305,7 @@
         "message": "Tastenkürzel"
     },
     "options_shortcuts_hint": {
-        "message": "Timer umschalten, einen für die aktuelle Seite starten oder dieses Popup per Tastatur öffnen. Die Tasten legt Chrome fest."
+        "message": "Timer starten oder stoppen, die aktuelle Seite erfassen oder das Popup öffnen. Die Tasten legst du in Chrome fest."
     },
     "options_shortcuts_open": {
         "message": "Tastenkürzel in Chrome ändern"
@@ -356,7 +360,7 @@
         "message": "Inaktivität erkennen"
     },
     "options_idle_hint": {
-        "message": "Während ein Timer läuft, bemerkt Chrome, wenn du den Rechner nicht mehr benutzt, und fragt, ob diese Zeit zählen soll."
+        "message": "Wenn du während eines laufenden Timers weg bist, fragt Zebu, ob diese Zeit bleiben soll."
     },
     "options_idle_after": {
         "message": "Inaktivität erkennen nach"
