@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Reanudar"
     },
-    "popup_start_working_on": {
-        "message": "Empezar a trabajar en $WORK$",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Iniciar temporizador nuevo"
     },
     "popup_presets": {
         "message": "Plantillas"
@@ -458,19 +453,22 @@
     "entry_budget": {
         "message": "Presupuesto"
     },
-    "newday_title": {
-        "message": "¿Iniciar un temporizador nuevo hoy?"
-    },
     "newday_body": {
-        "message": "Esa entrada es del $1. Hoy se inicia un temporizador nuevo con el mismo proyecto, tarea y notas; la original no cambia.",
+        "message": "¿Reanudar el temporizador de $WHEN$ o iniciar uno nuevo hoy?",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
-        "message": "Iniciar hoy"
+    "newday_resume_old": {
+        "message": "Reanudar el anterior"
+    },
+    "newday_start_today": {
+        "message": "Empezar hoy"
+    },
+    "popup_close": {
+        "message": "Cerrar"
     },
     "popup_select_project": {
         "message": "Elegir proyecto…"

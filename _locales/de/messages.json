@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Fortsetzen"
     },
-    "popup_start_working_on": {
-        "message": "Arbeit an $WORK$ starten",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Neuen Timer starten"
     },
     "popup_presets": {
         "message": "Vorlagen"
@@ -458,19 +453,22 @@
     "entry_budget": {
         "message": "Budget"
     },
-    "newday_title": {
-        "message": "Neuen Timer für heute starten?"
-    },
     "newday_body": {
-        "message": "Dieser Eintrag ist vom $1. Ein neuer Timer startet heute mit demselben Projekt, derselben Aufgabe und den Notizen — das Original bleibt unverändert.",
+        "message": "Den alten Timer von $WHEN$ fortsetzen oder heute einen neuen starten?",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
+    "newday_resume_old": {
+        "message": "Alten Timer fortsetzen"
+    },
+    "newday_start_today": {
         "message": "Heute starten"
+    },
+    "popup_close": {
+        "message": "Schließen"
     },
     "popup_select_project": {
         "message": "Projekt wählen…"

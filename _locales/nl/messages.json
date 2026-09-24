@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Hervatten"
     },
-    "popup_start_working_on": {
-        "message": "Aan de slag met $WORK$",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Nieuwe timer starten"
     },
     "popup_presets": {
         "message": "Sjablonen"
@@ -458,19 +453,22 @@
     "entry_budget": {
         "message": "Budget"
     },
-    "newday_title": {
-        "message": "Nieuwe timer voor vandaag starten?"
-    },
     "newday_body": {
-        "message": "Die registratie is van $1. Er start vandaag een nieuwe timer met hetzelfde project, dezelfde taak en notities — het origineel blijft staan.",
+        "message": "De oude timer van $WHEN$ hervatten of vandaag een nieuwe starten?",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
+    "newday_resume_old": {
+        "message": "Oude timer hervatten"
+    },
+    "newday_start_today": {
         "message": "Vandaag starten"
+    },
+    "popup_close": {
+        "message": "Sluiten"
     },
     "popup_select_project": {
         "message": "Project kiezen…"

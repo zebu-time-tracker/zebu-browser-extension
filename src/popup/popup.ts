@@ -7,10 +7,10 @@
 // underneath when ＋ is pressed) and as a small window from a page's "Track
 // time" button (the sheet open over the day, for that issue). Vanilla DOM on
 // purpose — it starts instantly.
-import { shiftDate, toDateString } from '../dates';
+import { relativeDay, shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
 import { readIdlePrefill } from '../idle';
-import { lastTimerFor, resumeLabelKey, type LastTimer } from '../lastTimer';
+import { lastTimerFor, resumeLabelKey, resumeWork, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
 import { call, CallError, errorText, t } from '../messaging';
 import { pageIssue, withSelection } from '../page';
@@ -182,7 +182,7 @@ const stopTimer = (busy?: HTMLButtonElement) => void act(() => call({ type: 'tim
 const resumeEntry = (entry: Entry, busy?: HTMLButtonElement) =>
     void act(() => call<State>({ type: 'timer:resume', entryId: entry.id, projectId: entry.project_id }).then(() => showEntry(entry)), undefined, busy);
 
-/** One-click resume of the last timer; an older day's entry asks first, because it starts a fresh timer today. */
+/** One-click resume of the last timer; an older day's entry asks first: resume it on its own day, or start today. */
 const resumeLast = () => {
     if (!last || state.running) return;
     if (last.date !== today()) {
@@ -269,18 +269,27 @@ function weekStrip(): HTMLElement {
     return strip;
 }
 
-/** The desktop's ▶ Resume bar: one click on the last timer when nothing runs. */
-function resumeLabel(l: LastTimer): string {
-    const work = [l.project, l.task].filter(Boolean).join(' · ');
-    return resumeLabelKey(l, today()) === 'popup_resume' ? `${t('popup_resume')} — ${work}` : t('popup_start_working_on', work);
+/**
+ * The resume bar's work, drawn as an entry row draws it (board #411): the
+ * client small and muted on its own line, the project (and task) below. A
+ * value stored before the client was looks it up in today's project list.
+ */
+function resumeText(l: LastTimer): HTMLElement {
+    const client = l.client ?? state.projects.find((p) => p.id === l.project_id)?.client ?? null;
+    const work = resumeWork(l);
+    return el('span', { class: 'entry-text resume-text' }, [
+        client ? el('span', { class: 'entry-client', text: client }) : '',
+        el('span', { class: 'entry-project', text: work, title: work }),
+    ]);
 }
 
+/** The desktop's ▶ Resume bar: one click on the last timer when nothing runs. */
 function resumeBar(): HTMLElement | '' {
     if (state.running || !last) return '';
     const l = last;
     const button = el('button', { type: 'button', class: 'running-elsewhere resume-last' }, [
-        el('span', { class: 'resume-play', text: '▶' }),
-        el('span', { class: 'running-elsewhere-text', text: resumeLabel(l) }),
+        resumeText(l),
+        el('span', { class: 'resume-action', text: `▶ ${t(resumeLabelKey(l, today()))}` }),
     ]);
     button.addEventListener('click', resumeLast);
     return button;
@@ -414,24 +423,37 @@ function footer(): HTMLElement {
 
 // ---- overlays ------------------------------------------------------------------
 
-/** Resuming an entry from an earlier day starts a fresh one today; say so first. */
+/**
+ * The last timer is from an earlier day (board #411): resume that entry on its
+ * own date, or start a fresh one today. Only the "when" is bold; the sentence
+ * around it is split on a sentinel, so no data goes through innerHTML.
+ */
 function newDaySheet(): HTMLElement {
-    const cancel = el('button', { type: 'button', class: 'btn-outline', text: t('popup_cancel') });
-    cancel.addEventListener('click', () => {
+    const close = () => {
         confirmNewDay = false;
         render();
-    });
-    const confirm = el('button', { type: 'button', class: 'btn-primary', text: t('newday_confirm') });
-    confirm.addEventListener('click', () => void act(() => call<State>({ type: 'timer:resume-last' }).then((s) => showEntry(s.running)), undefined, confirm));
+    };
+    const x = el('button', { type: 'button', class: 'sheet-close', 'aria-label': t('popup_close'), title: t('popup_close'), text: '×' });
+    x.addEventListener('click', close);
+    const l = last;
+    const resumeOld = el('button', { type: 'button', class: 'btn-outline', text: t('newday_resume_old') });
+    if (l) resumeOld.addEventListener('click', () => void act(() => call<State>({ type: 'timer:resume', entryId: l.entry_id, projectId: l.project_id }).then((s) => showEntry(s.running)), undefined, resumeOld));
+    const startToday = el('button', { type: 'button', class: 'btn-primary', text: t('newday_start_today') });
+    startToday.addEventListener('click', () => void act(() => call<State>({ type: 'timer:resume-last' }).then((s) => showEntry(s.running)), undefined, startToday));
+    const SENTINEL = '\uE000';
+    const [before, after = ''] = t('newday_body', SENTINEL).split(SENTINEL);
+    const when = l ? relativeDay(l.date, today(), chrome.i18n.getUILanguage()) : '';
+    const body = el('p', { class: 'newday-body' }, [before, el('strong', { text: when }), after]);
     const overlay = el('div', { class: 'sheet-overlay' }, [
-        el('div', { class: 'sheet' }, [
-            el('p', { class: 'sheet-title', text: t('newday_title') }),
-            el('p', { class: 'muted', text: t('newday_body', last ? shortDate(last.date) : '') }),
-            el('div', { class: 'sheet-actions' }, [cancel, confirm]),
+        el('div', { class: 'sheet newday-sheet' }, [
+            x,
+            body,
+            l ? el('div', { class: 'newday-head' }, [resumeText(l)]) : '',
+            el('div', { class: 'sheet-actions' }, [resumeOld, startToday]),
         ]),
     ]);
     overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) cancel.click();
+        if (e.target === overlay) close();
     });
     return overlay;
 }

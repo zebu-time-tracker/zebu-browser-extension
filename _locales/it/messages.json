@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Riprendi"
     },
-    "popup_start_working_on": {
-        "message": "Inizia a lavorare su $WORK$",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Avvia nuovo timer"
     },
     "popup_presets": {
         "message": "Modelli"
@@ -458,19 +453,22 @@
     "entry_budget": {
         "message": "Budget"
     },
-    "newday_title": {
-        "message": "Avviare un nuovo timer per oggi?"
-    },
     "newday_body": {
-        "message": "Quella voce è del $1. Oggi parte un nuovo timer con lo stesso progetto, attività e note — l'originale resta invariata.",
+        "message": "Riprendere il vecchio timer di $WHEN$ o avviarne uno nuovo oggi?",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
+    "newday_resume_old": {
+        "message": "Riprendi il vecchio"
+    },
+    "newday_start_today": {
         "message": "Avvia oggi"
+    },
+    "popup_close": {
+        "message": "Chiudi"
     },
     "popup_select_project": {
         "message": "Scegli progetto…"

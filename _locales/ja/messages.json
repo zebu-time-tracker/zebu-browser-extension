@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "再開"
     },
-    "popup_start_working_on": {
-        "message": "$WORK$ の作業を開始",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "新しいタイマーを開始"
     },
     "popup_presets": {
         "message": "プリセット"
@@ -458,19 +453,22 @@
     "entry_budget": {
         "message": "予算"
     },
-    "newday_title": {
-        "message": "今日の新しいタイマーを開始しますか？"
-    },
     "newday_body": {
-        "message": "そのエントリは $1 のものです。同じプロジェクト・タスク・メモで今日から新しいタイマーを開始します。元のエントリはそのまま残ります。",
+        "message": "$WHEN$の古いタイマーを再開しますか？それとも今日新しいタイマーを開始しますか？",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
-        "message": "今日から開始"
+    "newday_resume_old": {
+        "message": "古いタイマーを再開"
+    },
+    "newday_start_today": {
+        "message": "今日開始"
+    },
+    "popup_close": {
+        "message": "閉じる"
     },
     "popup_select_project": {
         "message": "プロジェクトを選択…"
