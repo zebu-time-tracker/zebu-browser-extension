@@ -26,7 +26,7 @@
         "message": "Registrar tempo"
     },
     "button_switch_title": {
-        "message": "Um timer está em execução em $1 — iniciar um aqui vai pará-lo",
+        "message": "Para o timer em $1 e inicia um aqui",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Seu workspace"
     },
     "options_workspace_hint": {
-        "message": "O nome do seu espaço de trabalho — a parte antes de .zebu.work."
+        "message": "A parte antes de .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Desconectar"
     },
     "options_error_workspace": {
-        "message": "Isso não parece um nome de espaço de trabalho — apenas letras, números e hífens."
+        "message": "Use apenas letras, números e hífens."
     },
     "options_error_central": {
-        "message": "Esse é o site principal do Zebu — digite o nome do seu próprio workspace."
+        "message": "Esse é o site principal do Zebu. Digite o nome do seu workspace."
     },
     "options_error_unreachable": {
         "message": "Não é possível acessar esse workspace. Verifique o endereço."
@@ -136,7 +136,7 @@
         "message": "Notas do timer"
     },
     "options_notes_hint": {
-        "message": "Com o que um timer iniciado a partir de uma issue é rotulado."
+        "message": "Notas dos timers iniciados a partir de uma issue."
     },
     "options_notes_identifier_title_url": {
         "message": "Identificador, título e link (ex.: “#123 Corrigir login” + URL)"
@@ -151,7 +151,7 @@
         "message": "Trackers self-hosted"
     },
     "options_sites_hint": {
-        "message": "Usa o GitLab, Jira ou outro tracker no seu próprio domínio? Adicione o endereço dele e escolha o tipo de tracker."
+        "message": "Adicione GitLab, Jira ou outros trackers hospedados no seu domínio."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "O Chrome não concedeu acesso a esse site."
     },
     "options_sites_none": {
-        "message": "Nenhum ainda — os sites públicos do GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp funcionam sem configuração."
+        "message": "Nenhum ainda. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp e Basecamp funcionam sem configuração."
     },
     "options_forget_heading": {
         "message": "Sugestões"
     },
     "options_forget_hint": {
-        "message": "A extensão lembra qual projeto você escolhe para cada repositório ou quadro e o sugere na próxima vez."
+        "message": "O Zebu sugere o último projeto escolhido para cada repositório ou quadro."
     },
     "options_forget": {
         "message": "Esquecer escolhas lembradas"
@@ -305,7 +305,7 @@
         "message": "Atalhos de teclado"
     },
     "options_shortcuts_hint": {
-        "message": "Alterne o timer, inicie um para a página atual ou abra este painel pelo teclado. As teclas são definidas no Chrome."
+        "message": "Inicie ou pare o timer, registre a página atual ou abra o pop-up. Defina as teclas no Chrome."
     },
     "options_shortcuts_open": {
         "message": "Alterar atalhos no Chrome"
@@ -360,7 +360,7 @@
         "message": "Detecção de inatividade"
     },
     "options_idle_hint": {
-        "message": "Enquanto um timer roda, o Chrome percebe quando você para de usar o computador e pergunta se esse tempo deve contar."
+        "message": "Se você se ausentar com um timer rodando, o Zebu pergunta se deve manter esse tempo."
     },
     "options_idle_after": {
         "message": "Detectar inatividade após"

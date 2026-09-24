@@ -26,7 +26,7 @@
         "message": "Registrar tiempo"
     },
     "button_switch_title": {
-        "message": "Hay un temporizador en marcha en $1 — si inicias uno aquí, se detendrá",
+        "message": "Detiene el temporizador de $1 e inicia uno aquí",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Tu espacio de trabajo"
     },
     "options_workspace_hint": {
-        "message": "El nombre de tu espacio de trabajo: la parte antes de .zebu.work."
+        "message": "La parte antes de .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Desconectar"
     },
     "options_error_workspace": {
-        "message": "Eso no parece un nombre de espacio de trabajo: solo letras, números y guiones."
+        "message": "Usa solo letras, números y guiones."
     },
     "options_error_central": {
-        "message": "Ese es el sitio principal de Zebu; escribe el nombre de tu propio espacio de trabajo."
+        "message": "Ese es el sitio principal de Zebu. Escribe el nombre de tu espacio de trabajo."
     },
     "options_error_unreachable": {
         "message": "No se puede contactar con ese espacio de trabajo. Comprueba la dirección."
@@ -136,7 +136,7 @@
         "message": "Notas del temporizador"
     },
     "options_notes_hint": {
-        "message": "Con qué se etiqueta un temporizador iniciado desde una incidencia."
+        "message": "Notas de los temporizadores iniciados desde una incidencia."
     },
     "options_notes_identifier_title_url": {
         "message": "Identificador, título y enlace (p. ej. «#123 Arreglar login» + URL)"
@@ -151,7 +151,7 @@
         "message": "Trackers autoalojados"
     },
     "options_sites_hint": {
-        "message": "¿Usas GitLab, Jira u otro tracker en tu propio dominio? Añade su dirección y elige el tipo de tracker."
+        "message": "Añade GitLab, Jira u otros gestores alojados en tu propio dominio."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome no concedió acceso a ese sitio."
     },
     "options_sites_none": {
-        "message": "Aún ninguno — los sitios públicos de GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp y Basecamp funcionan de inmediato."
+        "message": "Aún ninguno. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp y Basecamp funcionan sin configuración."
     },
     "options_forget_heading": {
         "message": "Sugerencias"
     },
     "options_forget_hint": {
-        "message": "La extensión recuerda qué proyecto eliges para cada repositorio o tablero y lo sugiere la próxima vez."
+        "message": "Zebu sugiere el último proyecto que elegiste para cada repositorio o tablero."
     },
     "options_forget": {
         "message": "Olvidar las elecciones recordadas"
@@ -305,7 +305,7 @@
         "message": "Atajos de teclado"
     },
     "options_shortcuts_hint": {
-        "message": "Alterna el temporizador, inicia uno para la página actual o abre este panel desde el teclado. Las teclas las define Chrome."
+        "message": "Inicia o detén el temporizador, registra la página actual o abre la ventana emergente. Configura las teclas en Chrome."
     },
     "options_shortcuts_open": {
         "message": "Cambiar atajos en Chrome"
@@ -360,7 +360,7 @@
         "message": "Detección de inactividad"
     },
     "options_idle_hint": {
-        "message": "Mientras hay un temporizador activo, Chrome detecta cuándo dejas de usar el equipo y pregunta si ese tiempo debe contar."
+        "message": "Si te ausentas con un temporizador en marcha, Zebu pregunta si conservar ese tiempo."
     },
     "options_idle_after": {
         "message": "Detectar inactividad tras"

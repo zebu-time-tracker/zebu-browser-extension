@@ -26,7 +26,7 @@
         "message": "Suivre le temps"
     },
     "button_switch_title": {
-        "message": "Un minuteur est en cours sur $1 — en démarrer un ici l'arrêtera",
+        "message": "Arrête le minuteur sur $1 et en démarre un ici",
         "placeholders": {
             "1": {
                 "content": "$1"
@@ -92,7 +92,7 @@
         "message": "Votre espace de travail"
     },
     "options_workspace_hint": {
-        "message": "Le nom de votre espace de travail — la partie avant .zebu.work."
+        "message": "La partie avant .zebu.work."
     },
     "options_workspace_placeholder": {
         "message": "studio"
@@ -118,10 +118,10 @@
         "message": "Déconnecter"
     },
     "options_error_workspace": {
-        "message": "Cela ne ressemble pas à un nom d’espace de travail — lettres, chiffres et tirets uniquement."
+        "message": "Utilisez uniquement des lettres, des chiffres et des tirets."
     },
     "options_error_central": {
-        "message": "C’est le site principal de Zebu — saisissez plutôt le nom de votre espace de travail."
+        "message": "C’est le site principal de Zebu. Saisissez le nom de votre espace de travail."
     },
     "options_error_unreachable": {
         "message": "Cet espace de travail est injoignable. Vérifiez l'adresse."
@@ -136,7 +136,7 @@
         "message": "Notes du minuteur"
     },
     "options_notes_hint": {
-        "message": "Ce avec quoi est libellé un minuteur démarré depuis un ticket."
+        "message": "Notes des minuteurs lancés depuis un ticket."
     },
     "options_notes_identifier_title_url": {
         "message": "Identifiant, titre et lien (ex. « #123 Corriger la connexion » + URL)"
@@ -151,7 +151,7 @@
         "message": "Trackers auto-hébergés"
     },
     "options_sites_hint": {
-        "message": "Vous utilisez GitLab, Jira ou un autre tracker sur votre propre domaine ? Ajoutez son adresse et choisissez le type de tracker."
+        "message": "Ajoutez GitLab, Jira ou d’autres outils hébergés sur votre propre domaine."
     },
     "options_sites_origin_placeholder": {
         "message": "https://git.example.com"
@@ -166,13 +166,13 @@
         "message": "Chrome n'a pas accordé l'accès à ce site."
     },
     "options_sites_none": {
-        "message": "Aucun pour l'instant — les sites publics GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp et Basecamp fonctionnent d'emblée."
+        "message": "Aucun pour l’instant. GitHub, GitLab, Jira Cloud, Linear, Asana, Trello, Bitbucket, ClickUp et Basecamp fonctionnent sans configuration."
     },
     "options_forget_heading": {
         "message": "Suggestions"
     },
     "options_forget_hint": {
-        "message": "L'extension mémorise le projet choisi pour chaque dépôt ou tableau et le suggère la fois suivante."
+        "message": "Zebu suggère le dernier projet choisi pour chaque dépôt ou tableau."
     },
     "options_forget": {
         "message": "Oublier les choix mémorisés"
@@ -305,7 +305,7 @@
         "message": "Raccourcis clavier"
     },
     "options_shortcuts_hint": {
-        "message": "Basculer le minuteur, en démarrer un pour la page courante ou ouvrir ce panneau au clavier. Les touches sont définies par Chrome."
+        "message": "Démarrez ou arrêtez le minuteur, suivez la page actuelle ou ouvrez la fenêtre. Les touches se règlent dans Chrome."
     },
     "options_shortcuts_open": {
         "message": "Modifier les raccourcis dans Chrome"
@@ -360,7 +360,7 @@
         "message": "Détection d’inactivité"
     },
     "options_idle_hint": {
-        "message": "Pendant qu’un minuteur tourne, Chrome remarque quand vous cessez d’utiliser l’ordinateur et demande si ce temps doit compter."
+        "message": "Si vous vous absentez pendant qu’un minuteur tourne, Zebu demande s’il faut garder ce temps."
     },
     "options_idle_after": {
         "message": "Détecter l’inactivité après"
