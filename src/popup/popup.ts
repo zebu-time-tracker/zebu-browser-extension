@@ -8,7 +8,8 @@
 // time" button (the sheet open over the day, for that issue). Vanilla DOM on
 // purpose — it starts instantly.
 import { relativeDay, shiftDate, toDateString } from '../dates';
-import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
+import { elapsedMinutes, formatMinutes, parseDuration } from '../duration';
+import { budgetLevel, formatHoursShort } from '../entryStats';
 import { readIdlePrefill } from '../idle';
 import { lastTimerFor, resumeLabelKey, resumeWork, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
@@ -66,7 +67,6 @@ const today = () => toDateString(new Date());
 // running fast would otherwise show work nobody did.
 const now = () => Date.now() - state.skewMs;
 const workspace = () => settings.workspace;
-const units = () => ({ hour: t('unit_hour'), minute: t('unit_minute'), day: t('unit_day'), week: t('unit_week') });
 
 const shortDate = (date: string): string => new Date(`${date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 const headerLabel = (): string => {
@@ -217,7 +217,6 @@ const statsFor = (entry: Entry): ProjectStats | null => {
     return { ...stats, total_minutes: stats.total_minutes + extra, uninvoiced_minutes: stats.uninvoiced_minutes + (r.is_billable ? extra : 0) };
 };
 
-const budgetClass = (pct: number) => (pct > 100 ? 'over' : pct > 80 ? 'high' : pct > 50 ? 'mid' : 'ok');
 
 // ---- the day view --------------------------------------------------------------
 
@@ -334,14 +333,23 @@ function entryRow(entry: Entry): HTMLElement {
         projectLine.append(el('span', { class: `entry-waiting${entry.agent_waiting ? ' live' : ''}`, text: label }));
     }
 
+    // "View project · Uninvoiced: 32h · Budget: 62%" (board #420). The link
+    // sits inside the clickable text, so it stops the click reaching the
+    // edit sheet.
+    const viewProject = el('a', { class: 'entry-view-project', href: `${workspace()}/projects/${entry.project_id}`, target: '_blank', rel: 'noopener', text: t('entry_view_project') });
+    viewProject.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openInTab(viewProject.href);
+    });
     const stats = el('span', { class: 'entry-stats' });
     const drawStats = () => {
         const s = statsFor(entry);
-        stats.replaceChildren();
+        stats.replaceChildren(viewProject);
         if (!s) return;
-        stats.append(el('span', { class: 'entry-stats-dim', text: `${t('entry_total')}: ${formatDurationHuman(s.total_minutes, units())} · ${t('entry_uninvoiced')}: ${formatDurationHuman(s.uninvoiced_minutes, units())}` }));
+        stats.append(el('span', { class: 'entry-stats-dim', text: ` · ${t('entry_uninvoiced')}: ${formatHoursShort(s.uninvoiced_minutes, chrome.i18n.getUILanguage())}` }));
         if (s.budget_pct !== null) {
-            stats.append(el('span', { class: 'entry-stats-dim', text: ' · ' }), el('span', { class: `budget-pill ${budgetClass(s.budget_pct)}`, text: `${t('entry_budget')}: ${s.budget_pct}%` }));
+            stats.append(el('span', { class: 'entry-stats-dim', text: ' · ' }), el('span', { class: `budget-pill ${budgetLevel(s.budget_pct)}`, text: `${t('entry_budget')}: ${s.budget_pct}%` }));
         }
     };
     drawStats();

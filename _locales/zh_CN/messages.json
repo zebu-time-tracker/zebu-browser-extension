@@ -447,8 +447,8 @@
             }
         }
     },
-    "entry_total": {
-        "message": "合计"
+    "entry_view_project": {
+        "message": "查看项目"
     },
     "entry_uninvoiced": {
         "message": "未开票"

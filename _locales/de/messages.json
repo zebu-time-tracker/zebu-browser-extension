@@ -447,8 +447,8 @@
             }
         }
     },
-    "entry_total": {
-        "message": "Gesamt"
+    "entry_view_project": {
+        "message": "Projekt ansehen"
     },
     "entry_uninvoiced": {
         "message": "Offen"

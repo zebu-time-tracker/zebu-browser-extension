@@ -447,8 +447,8 @@
             }
         }
     },
-    "entry_total": {
-        "message": "合計"
+    "entry_view_project": {
+        "message": "プロジェクトを表示"
     },
     "entry_uninvoiced": {
         "message": "未請求"
