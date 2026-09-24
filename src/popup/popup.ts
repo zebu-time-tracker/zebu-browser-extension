@@ -7,7 +7,7 @@
 // underneath when ＋ is pressed) and as a small window from a page's "Track
 // time" button (the sheet open over the day, for that issue). Vanilla DOM on
 // purpose — it starts instantly.
-import { relativeDay, shiftDate, toDateString } from '../dates';
+import { headerDate, relativeDay, shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatMinutes, parseDuration } from '../duration';
 import { budgetLevel, formatHoursShort } from '../entryStats';
 import { readIdlePrefill } from '../idle';
@@ -69,10 +69,10 @@ const now = () => Date.now() - state.skewMs;
 const workspace = () => settings.workspace;
 
 const shortDate = (date: string): string => new Date(`${date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+/** "Today, Thu Sep 24" or "Tue Sep 22" (board #422). */
 const headerLabel = (): string => {
-    const d = new Date(`${selectedDate}T00:00:00`);
-    if (selectedDate === today()) return t('popup_today_date', d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }));
-    return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short' });
+    const day = headerDate(selectedDate, chrome.i18n.getUILanguage());
+    return selectedDate === today() ? t('popup_today_date', day) : day;
 };
 
 /** The Appearance setting, as the desktop applies it: no attribute follows the system. */

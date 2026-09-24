@@ -44,3 +44,15 @@ export function relativeDay(date: string, today: string, locale?: string): strin
     if (months < 12) return rtf.format(-months, 'month');
     return rtf.format(-Math.floor(months / 12), 'year');
 }
+
+/**
+ * A day as the popup header names it (board #422): short weekday, month and
+ * day in `locale`, "Thu Sep 24". Intl's comma after a leading weekday is
+ * dropped, so "Today, Thu Sep 24" carries one comma, not two.
+ */
+export function headerDate(date: string, locale?: string): string {
+    const parts = new Intl.DateTimeFormat(locale, { weekday: 'short', month: 'short', day: 'numeric' }).formatToParts(new Date(`${date}T00:00:00`));
+    return parts
+        .map((p, i) => (p.type === 'literal' && parts[i - 1]?.type === 'weekday' && /^,\s*$/.test(p.value) ? ' ' : p.value))
+        .join('');
+}
