@@ -1,6 +1,6 @@
 {
     "name": "zebu-browser-extension",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "private": true,
     "description": "Track time in Zebu from GitHub, GitLab, Jira, Linear, Asana, Trello, Bitbucket, ClickUp and Basecamp, in Chrome, Firefox and Safari.",
     "type": "module",
