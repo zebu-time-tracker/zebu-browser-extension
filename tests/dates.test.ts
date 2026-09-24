@@ -1,4 +1,4 @@
-import { daysBetween, inWeek, relativeDay, shiftDate, toDateString } from '../src/dates';
+import { daysBetween, headerDate, inWeek, relativeDay, shiftDate, toDateString } from '../src/dates';
 
 test('dates are written the way the API writes them', () => {
     expect(toDateString(new Date(2026, 8, 18))).toBe('2026-09-18');
@@ -32,4 +32,11 @@ test('an older day reads as how long ago it was (board #411)', () => {
     expect(relativeDay('2026-07-01', today, 'en')).toBe('2 months ago');
     expect(relativeDay('2025-06-01', today, 'en')).toBe('last year');
     expect(relativeDay('2026-09-23', today, 'de')).toBe('gestern');
+});
+
+test('the header names the weekday, one comma only (board #422)', () => {
+    expect(headerDate('2026-09-24', 'en-US')).toBe('Thu Sep 24');
+    expect(headerDate('2026-09-22', 'en-US')).toBe('Tue Sep 22');
+    expect(headerDate('2026-09-24', 'de')).toBe('Do. 24. Sept.');
+    expect(headerDate('2026-09-24', 'ja')).toMatch(/9月24日.*木/);
 });
