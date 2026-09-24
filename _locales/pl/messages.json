@@ -3,7 +3,7 @@
         "message": "Zebu Śledzenie czasu"
     },
     "ext_description": {
-        "message": "Uruchom stoper Zebu z GitHub, GitLab, Jira, Linear, Trello i innych — z danymi zgłoszenia i proponowanym projektem."
+        "message": "Uruchamiaj stopery z dowolnej strony lub trackera, jak GitHub, Jira czy Linear — z proponowanym projektem i uzupełnionymi danymi."
     },
     "button_track": {
         "message": "Śledź czas"
@@ -240,6 +240,9 @@
     },
     "popup_resume": {
         "message": "Wznów"
+    },
+    "popup_last_active": {
+        "message": "Ostatnio aktywny projekt"
     },
     "popup_start_new_timer": {
         "message": "Uruchom nowy stoper"

@@ -3,7 +3,7 @@
         "message": "Zebu Tijdregistratie"
     },
     "ext_description": {
-        "message": "Start een Zebu-timer vanuit GitHub, GitLab, Jira, Linear, Trello en meer — issuedetails ingevuld, project voorgesteld."
+        "message": "Start of beheer timers vanaf elke website of tracker zoals GitHub, Jira en Linear — beste project voorgesteld, details ingevuld."
     },
     "button_track": {
         "message": "Tijd registreren"
@@ -240,6 +240,9 @@
     },
     "popup_resume": {
         "message": "Hervatten"
+    },
+    "popup_last_active": {
+        "message": "Laatst actieve project"
     },
     "popup_start_new_timer": {
         "message": "Nieuwe timer starten"

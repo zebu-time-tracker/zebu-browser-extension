@@ -309,7 +309,7 @@ async function openTimerWindow(query = "window=1"): Promise<void> {
   const created = await chrome.windows.create({
     url,
     type: "popup",
-    width: 440,
+    width: 550,
     height: 620,
     focused: true,
   });

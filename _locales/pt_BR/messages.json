@@ -3,7 +3,7 @@
         "message": "Zebu Controle de tempo"
     },
     "ext_description": {
-        "message": "Inicie um timer do Zebu no GitHub, GitLab, Jira, Linear, Trello e mais — com os detalhes da issue e o projeto sugerido."
+        "message": "Inicie ou gerencie timers em qualquer site ou tracker, como GitHub, Jira e Linear — melhor projeto sugerido, detalhes preenchidos."
     },
     "button_track": {
         "message": "Registrar tempo"
@@ -240,6 +240,9 @@
     },
     "popup_resume": {
         "message": "Retomar"
+    },
+    "popup_last_active": {
+        "message": "Último projeto ativo"
     },
     "popup_start_new_timer": {
         "message": "Iniciar novo timer"

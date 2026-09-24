@@ -49,7 +49,7 @@ body {
     color: var(--text);
 }
 body {
-    width: 380px;
+    width: 475px;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 13px;
     line-height: 1.4;
@@ -609,10 +609,10 @@ textarea:focus {
     white-space: nowrap;
 }
 .resume-last {
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 6px 12px 10px;
     background: var(--bg-raised);
     border-color: var(--border);
 }
@@ -620,7 +620,18 @@ textarea:focus {
     border-color: var(--accent);
     background: var(--accent-soft);
 }
-/* Client over project, as an entry row; the action on the right (board #411). */
+/* "Last active project" on top; client over project, as an entry row, with the action on the right (board #411). */
+.resume-heading {
+    text-align: center;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.2;
+}
+.resume-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 .resume-text {
     font-size: 13px;
     gap: 2px;

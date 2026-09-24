@@ -3,7 +3,7 @@
         "message": "Zebu 时间追踪"
     },
     "ext_description": {
-        "message": "从 GitHub、GitLab、Jira、Linear、Trello 等启动 Zebu 计时器 —— 自动填写议题详情并建议项目。"
+        "message": "在任意网站或 GitHub、Jira、Linear 等工具中启动或管理计时器 —— 自动推荐最合适的项目并填写详情。"
     },
     "button_track": {
         "message": "记录时间"
@@ -240,6 +240,9 @@
     },
     "popup_resume": {
         "message": "继续"
+    },
+    "popup_last_active": {
+        "message": "上次使用的项目"
     },
     "popup_start_new_timer": {
         "message": "开始新的计时"
