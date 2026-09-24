@@ -447,8 +447,8 @@
             }
         }
     },
-    "entry_total": {
-        "message": "합계"
+    "entry_view_project": {
+        "message": "프로젝트 보기"
     },
     "entry_uninvoiced": {
         "message": "미청구"

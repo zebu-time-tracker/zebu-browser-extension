@@ -447,8 +447,8 @@
             }
         }
     },
-    "entry_total": {
-        "message": "Totaal"
+    "entry_view_project": {
+        "message": "Project bekijken"
     },
     "entry_uninvoiced": {
         "message": "Ongefactureerd"

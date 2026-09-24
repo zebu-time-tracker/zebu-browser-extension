@@ -447,8 +447,8 @@
             }
         }
     },
-    "entry_total": {
-        "message": "Łącznie"
+    "entry_view_project": {
+        "message": "Zobacz projekt"
     },
     "entry_uninvoiced": {
         "message": "Niezafakturowane"
