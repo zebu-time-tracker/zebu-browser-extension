@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Riprendi"
     },
-    "popup_start_working_on": {
-        "message": "Inizia a lavorare su $WORK$",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Avvia nuovo timer"
     },
     "popup_presets": {
         "message": "Modelli"

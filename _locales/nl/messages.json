@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Hervatten"
     },
-    "popup_start_working_on": {
-        "message": "Aan de slag met $WORK$",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Nieuwe timer starten"
     },
     "popup_presets": {
         "message": "Sjablonen"

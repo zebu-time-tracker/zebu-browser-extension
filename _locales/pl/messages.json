@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Wznów"
     },
-    "popup_start_working_on": {
-        "message": "Rozpocznij pracę: $WORK$",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Uruchom nowy stoper"
     },
     "popup_presets": {
         "message": "Szablony"

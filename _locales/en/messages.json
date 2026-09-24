@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "Resume"
     },
-    "popup_start_working_on": {
-        "message": "Start working on $WORK$",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "Start new timer"
     },
     "popup_presets": {
         "message": "Presets"

@@ -241,13 +241,8 @@
     "popup_resume": {
         "message": "다시 시작"
     },
-    "popup_start_working_on": {
-        "message": "$WORK$ 작업 시작",
-        "placeholders": {
-            "work": {
-                "content": "$1"
-            }
-        }
+    "popup_start_new_timer": {
+        "message": "새 타이머 시작"
     },
     "popup_presets": {
         "message": "프리셋"

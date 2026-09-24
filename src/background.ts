@@ -114,7 +114,7 @@ export async function refresh(force = false): Promise<State> {
     // the running one, else the entry touched last. Older workspaces do
     // not send `active`; the running entry is the next best answer.
     const current = sheet.active ?? sheet.running;
-    if (current) await setLastTimer(lastTimerFrom(current, settings.workspace));
+    if (current) await setLastTimer(lastTimerFrom(current, settings.workspace, sheet.projects));
     // Something changed (here, elsewhere, or pushed): an open idle prompt
     // may have been answered on another device (board #333).
     if (moved) void recheckIdlePrompt();

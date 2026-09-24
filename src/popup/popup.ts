@@ -10,7 +10,7 @@
 import { shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes, parseDuration } from '../duration';
 import { readIdlePrefill } from '../idle';
-import { lastTimerFor, resumeLabelKey, type LastTimer } from '../lastTimer';
+import { lastTimerFor, resumeLabelKey, resumeWork, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
 import { call, CallError, errorText, t } from '../messaging';
 import { pageIssue, withSelection } from '../page';
@@ -269,18 +269,27 @@ function weekStrip(): HTMLElement {
     return strip;
 }
 
-/** The desktop's ▶ Resume bar: one click on the last timer when nothing runs. */
-function resumeLabel(l: LastTimer): string {
-    const work = [l.project, l.task].filter(Boolean).join(' · ');
-    return resumeLabelKey(l, today()) === 'popup_resume' ? `${t('popup_resume')} — ${work}` : t('popup_start_working_on', work);
+/**
+ * The two lines the resume bar and the new-day sheet share (board #411): the
+ * action as a small label, then "Client – Project · Task" on one line.
+ * A value stored before the client was looks it up in today's project list.
+ */
+function resumeLines(l: LastTimer, action: string): HTMLElement {
+    const client = l.client ?? state.projects.find((p) => p.id === l.project_id)?.client ?? null;
+    const work = resumeWork(l, client);
+    return el('span', { class: 'resume-lines' }, [
+        el('span', { class: 'resume-action', text: action }),
+        el('span', { class: 'resume-work', text: work, title: work }),
+    ]);
 }
 
+/** The desktop's ▶ Resume bar: one click on the last timer when nothing runs. */
 function resumeBar(): HTMLElement | '' {
     if (state.running || !last) return '';
     const l = last;
     const button = el('button', { type: 'button', class: 'running-elsewhere resume-last' }, [
         el('span', { class: 'resume-play', text: '▶' }),
-        el('span', { class: 'running-elsewhere-text', text: resumeLabel(l) }),
+        resumeLines(l, t(resumeLabelKey(l, today()))),
     ]);
     button.addEventListener('click', resumeLast);
     return button;
@@ -425,7 +434,7 @@ function newDaySheet(): HTMLElement {
     confirm.addEventListener('click', () => void act(() => call<State>({ type: 'timer:resume-last' }).then((s) => showEntry(s.running)), undefined, confirm));
     const overlay = el('div', { class: 'sheet-overlay' }, [
         el('div', { class: 'sheet' }, [
-            el('p', { class: 'sheet-title', text: t('newday_title') }),
+            last ? el('div', { class: 'newday-head' }, [resumeLines(last, t('newday_title'))]) : el('p', { class: 'sheet-title', text: t('newday_title') }),
             el('p', { class: 'muted', text: t('newday_body', last ? shortDate(last.date) : '') }),
             el('div', { class: 'sheet-actions' }, [cancel, confirm]),
         ]),
