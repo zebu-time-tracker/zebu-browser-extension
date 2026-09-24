@@ -229,6 +229,10 @@
     "popup_save": {
         "message": "保存"
     },
+    "popup_key_ctrl": {
+        "message": "Ctrl",
+        "description": "The Control key as keyboards in this language label it, shown in the save shortcut hint (Ctrl+Enter)."
+    },
     "popup_delete": {
         "message": "削除"
     },
