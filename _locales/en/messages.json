@@ -3,7 +3,7 @@
         "message": "Zebu Time Tracking"
     },
     "ext_description": {
-        "message": "Start a Zebu timer from GitHub, GitLab, Jira, Linear, Trello and more — issue details filled in, project suggested."
+        "message": "Start or manage timers from any website or tracker like GitHub, Jira, Linear and more — best project suggested, details filled in."
     },
     "button_track": {
         "message": "Track time"
@@ -240,6 +240,9 @@
     },
     "popup_resume": {
         "message": "Resume"
+    },
+    "popup_last_active": {
+        "message": "Last active project"
     },
     "popup_start_new_timer": {
         "message": "Start new timer"

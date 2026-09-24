@@ -3,7 +3,7 @@
         "message": "Zebu Suivi du temps"
     },
     "ext_description": {
-        "message": "Démarrez un minuteur Zebu depuis GitHub, GitLab, Jira, Linear, Trello et plus — détails du ticket et projet suggérés."
+        "message": "Lancez ou gérez vos minuteurs depuis tout site ou outil comme GitHub, Jira ou Linear — projet suggéré, détails remplis."
     },
     "button_track": {
         "message": "Suivre le temps"
@@ -240,6 +240,9 @@
     },
     "popup_resume": {
         "message": "Reprendre"
+    },
+    "popup_last_active": {
+        "message": "Dernier projet actif"
     },
     "popup_start_new_timer": {
         "message": "Démarrer un nouveau minuteur"

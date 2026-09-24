@@ -288,8 +288,8 @@ function resumeBar(): HTMLElement | '' {
     if (state.running || !last) return '';
     const l = last;
     const button = el('button', { type: 'button', class: 'running-elsewhere resume-last' }, [
-        resumeText(l),
-        el('span', { class: 'resume-action', text: `▶ ${t(resumeLabelKey(l, today()))}` }),
+        el('span', { class: 'resume-heading', text: t('popup_last_active') }),
+        el('span', { class: 'resume-row' }, [resumeText(l), el('span', { class: 'resume-action', text: `▶ ${t(resumeLabelKey(l, today()))}` })]),
     ]);
     button.addEventListener('click', resumeLast);
     return button;

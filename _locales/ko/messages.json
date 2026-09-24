@@ -3,7 +3,7 @@
         "message": "Zebu 시간 추적"
     },
     "ext_description": {
-        "message": "GitHub, GitLab, Jira, Linear, Trello 등에서 Zebu 타이머를 시작하세요 — 이슈 정보가 채워지고 프로젝트가 제안됩니다."
+        "message": "GitHub, Jira, Linear 등 어떤 웹사이트나 트래커에서도 타이머를 시작하고 관리하세요 — 알맞은 프로젝트 제안, 세부 정보 자동 입력."
     },
     "button_track": {
         "message": "시간 기록"
@@ -240,6 +240,9 @@
     },
     "popup_resume": {
         "message": "다시 시작"
+    },
+    "popup_last_active": {
+        "message": "마지막 활성 프로젝트"
     },
     "popup_start_new_timer": {
         "message": "새 타이머 시작"
