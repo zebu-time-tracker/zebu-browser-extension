@@ -632,6 +632,32 @@ textarea:focus {
     font-weight: 600;
     white-space: nowrap;
 }
+.newday-sheet {
+    position: relative;
+}
+.newday-body {
+    margin: 0;
+    padding-right: 24px;
+    line-height: 1.4;
+}
+.sheet-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+.sheet-close:hover {
+    background: var(--border);
+    color: inherit;
+}
 .newday-head {
     padding: 10px 12px;
     border: 1px solid var(--border);

@@ -453,19 +453,22 @@
     "entry_budget": {
         "message": "预算"
     },
-    "newday_title": {
-        "message": "今天开始新的计时吗？"
-    },
     "newday_body": {
-        "message": "该条目属于 $1。今天将以相同的项目、任务和备注开始新的计时，原条目保持不变。",
+        "message": "继续$WHEN$的旧计时，还是今天开始新的计时？",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
+    "newday_resume_old": {
+        "message": "继续旧计时"
+    },
+    "newday_start_today": {
         "message": "今天开始"
+    },
+    "popup_close": {
+        "message": "关闭"
     },
     "popup_select_project": {
         "message": "选择项目…"

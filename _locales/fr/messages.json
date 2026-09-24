@@ -453,19 +453,22 @@
     "entry_budget": {
         "message": "Budget"
     },
-    "newday_title": {
-        "message": "Démarrer un nouveau minuteur aujourd'hui ?"
-    },
     "newday_body": {
-        "message": "Cette entrée date du $1. Un nouveau minuteur démarre aujourd'hui avec le même projet, la même tâche et les mêmes notes — l'original reste intact.",
+        "message": "Reprendre l’ancien minuteur ($WHEN$) ou en démarrer un nouveau aujourd’hui ?",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
-        "message": "Démarrer aujourd'hui"
+    "newday_resume_old": {
+        "message": "Reprendre l’ancien"
+    },
+    "newday_start_today": {
+        "message": "Démarrer aujourd’hui"
+    },
+    "popup_close": {
+        "message": "Fermer"
     },
     "popup_select_project": {
         "message": "Choisir un projet…"

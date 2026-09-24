@@ -453,19 +453,22 @@
     "entry_budget": {
         "message": "Budżet"
     },
-    "newday_title": {
-        "message": "Uruchomić nowy stoper na dziś?"
-    },
     "newday_body": {
-        "message": "Ten wpis pochodzi z $1. Nowy stoper wystartuje dziś z tym samym projektem, zadaniem i notatkami — oryginał pozostanie bez zmian.",
+        "message": "Wznowić stary stoper ($WHEN$) czy uruchomić dziś nowy?",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
-        "message": "Uruchom dziś"
+    "newday_resume_old": {
+        "message": "Wznów stary"
+    },
+    "newday_start_today": {
+        "message": "Zacznij dziś"
+    },
+    "popup_close": {
+        "message": "Zamknij"
     },
     "popup_select_project": {
         "message": "Wybierz projekt…"

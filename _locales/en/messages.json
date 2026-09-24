@@ -453,19 +453,22 @@
     "entry_budget": {
         "message": "Budget"
     },
-    "newday_title": {
-        "message": "Start a new timer for today?"
-    },
     "newday_body": {
-        "message": "That entry is from $1. A fresh timer starts today with the same project, task and notes — the original stays as it is.",
+        "message": "Resume the old timer from $WHEN$ or start a new timer today?",
         "placeholders": {
-            "1": {
+            "when": {
                 "content": "$1"
             }
         }
     },
-    "newday_confirm": {
-        "message": "Start today's timer"
+    "newday_resume_old": {
+        "message": "Resume old timer"
+    },
+    "newday_start_today": {
+        "message": "Start today"
+    },
+    "popup_close": {
+        "message": "Close"
     },
     "popup_select_project": {
         "message": "Select project…"

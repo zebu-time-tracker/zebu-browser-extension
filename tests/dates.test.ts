@@ -1,4 +1,4 @@
-import { daysBetween, inWeek, shiftDate, toDateString } from '../src/dates';
+import { daysBetween, inWeek, relativeDay, shiftDate, toDateString } from '../src/dates';
 
 test('dates are written the way the API writes them', () => {
     expect(toDateString(new Date(2026, 8, 18))).toBe('2026-09-18');
@@ -19,4 +19,17 @@ test('a timesheet week holds its seven days and nothing else', () => {
     expect(inWeek('2026-09-21', '2026-09-14')).toBe(false);
     expect(inWeek('2026-09-13', '2026-09-14')).toBe(false);
     expect(inWeek('2026-09-13', '')).toBe(false);
+});
+
+test('an older day reads as how long ago it was (board #411)', () => {
+    const today = '2026-09-24';
+    expect(relativeDay('2026-09-24', today, 'en')).toBe('today');
+    expect(relativeDay('2026-09-23', today, 'en')).toBe('yesterday');
+    expect(relativeDay('2026-09-21', today, 'en')).toBe('3 days ago');
+    expect(relativeDay('2026-09-17', today, 'en')).toBe('last week');
+    expect(relativeDay('2026-09-10', today, 'en')).toBe('2 weeks ago');
+    expect(relativeDay('2026-08-20', today, 'en')).toBe('last month');
+    expect(relativeDay('2026-07-01', today, 'en')).toBe('2 months ago');
+    expect(relativeDay('2025-06-01', today, 'en')).toBe('last year');
+    expect(relativeDay('2026-09-23', today, 'de')).toBe('gestern');
 });
