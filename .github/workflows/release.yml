@@ -12,9 +12,9 @@
 # from R2 through `extension/firefox/updates.json`.
 #
 # Every job runs on hosted runners, never on Alan's own machines: the repo is
-# public, so its code must not execute on a private runner. Linux jobs run on
-# Blacksmith; the Safari job needs Xcode's converter and uses GitHub's hosted
-# macOS runner (free for public repositories).
+# public, so its code must not execute on a private runner. Every job runs on
+# Blacksmith, like the desktop app; the Safari job on its macOS runner for
+# Xcode's converter.
 
 # `workflow_dispatch` runs the same build and the same publish without
 # touching anything real: it writes to `extension/_dryrun/<run id>/` instead
@@ -172,7 +172,7 @@ jobs:
     name: Safari app (Xcode project)
     needs: build
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-    runs-on: macos-15
+    runs-on: blacksmith-6vcpu-macos-15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
