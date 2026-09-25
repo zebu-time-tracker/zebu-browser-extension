@@ -127,3 +127,7 @@ npm run build:firefox      # dist/firefox/ is the submitted package, byte for by
 `build.mjs` runs esbuild (pinned in `package-lock.json`) over `src/*.ts` and writes the manifest from
 `manifest.base.json` and `browsers/firefox.json`; nothing is fetched at build time. `npm run build`
 makes the Chrome and Safari packages the same way.
+
+## License
+
+[MIT](LICENSE). The Zebu name and logo are not covered by the license: forks must use their own.
