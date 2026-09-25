@@ -71,7 +71,8 @@ run_manifest() { out=$(node "$MANIFEST_JS" "$@" 2>&1); rc=$?; }
 
 run_manifest --version "$VERSION" --dir "$UPLOAD" --base-url "$BASE_URL" \
     --aliases-out "$TMP/aliases.tsv" --updates-out "$TMP/updates.json" \
-    --pub-date 2026-09-19T17:00:00Z --chrome-store "https://chromewebstore.google.com/detail/zebu/abc"
+    --pub-date 2026-09-19T17:00:00Z --chrome-store "https://chromewebstore.google.com/detail/zebu/abc" \
+    --firefox-store "https://addons.mozilla.org/firefox/addon/zebu-time-tracking/"
 check "manifest builds from a full set of packages" "$rc" "0"
 MANIFEST=$out
 check "names the version being released" "$(json "$MANIFEST" 'm.version')" "$VERSION"
@@ -81,6 +82,8 @@ check "every url sits under the immutable per-version prefix" \
     "$(json "$MANIFEST" 'Object.values(m.builds).every((b) => b.url.startsWith("'"$BASE_URL"'/"))')" "true"
 check "sizes are the real byte counts" "$(json "$MANIFEST" 'm.builds.chrome.size')" "$(wc -c < "$UPLOAD/zebu-chrome-$VERSION.zip" | tr -d ' ')"
 check "the store link rides along for chrome" "$(json "$MANIFEST" 'm.builds.chrome.store')" "https://chromewebstore.google.com/detail/zebu/abc"
+check "…and the AMO listing for firefox" "$(json "$MANIFEST" 'm.builds.firefox.store')" "https://addons.mozilla.org/firefox/addon/zebu-time-tracking/"
+check "safari has no store link yet" "$(json "$MANIFEST" 'String(m.builds.safari.store)')" "undefined"
 check "pub_date is what was given" "$(json "$MANIFEST" 'm.pub_date')" "2026-09-19T17:00:00Z"
 
 check "aliases map the stable names to the versioned files" \
@@ -116,6 +119,17 @@ make_packages "$TMP/unsigned" yes yes
 run_manifest --version "$VERSION" --dir "$TMP/unsigned" --base-url "$BASE_URL" --updates-out "$TMP/u2.json"
 check "updates.json refuses to point firefox at an unsigned zip" "$rc" "1"
 contains "…and says so" "$out" "unsigned"
+
+# A listed version Mozilla has not approved by the time the release runs
+# (docs/release.md): the workflow asks for no updates.json, the release goes
+# out with the source zip and the listing link, and the installs that update
+# from our bucket keep the previous updates.json until a later run brings
+# the signed file.
+run_manifest --version "$VERSION" --dir "$TMP/unsigned" --base-url "$BASE_URL" \
+    --firefox-store "https://addons.mozilla.org/firefox/addon/zebu-time-tracking/"
+check "a release whose firefox review is still open still builds latest.json" "$rc" "0"
+check "…serving the source zip for firefox" "$(json "$out" 'm.builds.firefox.file')" "zebu-firefox-$VERSION.zip"
+check "…with the listing link" "$(json "$out" 'm.builds.firefox.store')" "https://addons.mozilla.org/firefox/addon/zebu-time-tracking/"
 
 # ---------------------------------------------------------------------------
 # publish-r2.sh: the plan, and the order of the real calls

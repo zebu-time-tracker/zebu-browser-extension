@@ -7,8 +7,7 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "extension@zebu.work",
-            "strict_min_version": "128.0",
-            "update_url": "https://app-downloads.zebu.work/extension/firefox/updates.json"
+            "strict_min_version": "128.0"
         }
     }
 }
