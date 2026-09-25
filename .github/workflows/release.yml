@@ -11,12 +11,11 @@
 # R2 copy is the archive and the load-unpacked source; Firefox copies update
 # from R2 through `extension/firefox/updates.json`.
 #
-# Every job runs on the self-hosted macOS runner (the same one the web app
-# deploys from: labels self-hosted, macOS), so a release costs no Actions
-# minutes and the Safari job has the Mac it needs. No `cache: npm` on
-# setup-node: on a persistent machine that would upload the runner's whole
-# ~/.npm (gigabytes) to GitHub's cache after every job, for nothing.
-#
+# Every job runs on hosted runners, never on Alan's own machines: the repo is
+# public, so its code must not execute on a private runner. Linux jobs run on
+# Blacksmith; the Safari job needs Xcode's converter and uses GitHub's hosted
+# macOS runner (free for public repositories).
+
 # `workflow_dispatch` runs the same build and the same publish without
 # touching anything real: it writes to `extension/_dryrun/<run id>/` instead
 # of `extension/` and skips the stores. Nothing in this workflow deletes
@@ -51,14 +50,9 @@ env:
 jobs:
   verify:
     name: Version and release scripts
-    runs-on: [self-hosted, macOS]
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
-      # No `cache: npm` on any job here, deliberately: on the self-hosted Mac
-      # the cache-save step that setup-node adds after the job hung for half an
-      # hour and took the v0.2.1 release with it (board #347). The runner keeps
-      # its own npm cache between runs anyway, so the action's cache buys
-      # nothing and can only cost us a release.
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -87,7 +81,7 @@ jobs:
   build:
     name: Build and sign the packages
     needs: verify
-    runs-on: [self-hosted, macOS]
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
@@ -178,7 +172,7 @@ jobs:
     name: Safari app (Xcode project)
     needs: build
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-    runs-on: [self-hosted, macOS]
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -206,7 +200,7 @@ jobs:
   publish:
     name: Publish to R2
     needs: build
-    runs-on: [self-hosted, macOS]
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     env:
       # The one variable that separates a release from a rehearsal.
       DEST_BASE: ${{ startsWith(github.ref, 'refs/tags/v') && 'extension' || format('extension/_dryrun/{0}', github.run_id) }}
@@ -226,9 +220,12 @@ jobs:
             exit 1
           fi
 
-      - name: AWS CLI (Homebrew on the self-hosted Mac; installed once, then reused)
+      - name: AWS CLI
         run: |
-          command -v aws >/dev/null || brew install awscli
+          if ! command -v aws >/dev/null; then
+            curl -fsSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscli.zip
+            unzip -q /tmp/awscli.zip -d /tmp && sudo /tmp/aws/install
+          fi
           aws --version
 
       - uses: actions/download-artifact@v4
