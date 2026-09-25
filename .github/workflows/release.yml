@@ -2,14 +2,16 @@
 # and Safari (board #287).
 #
 # Trigger: push a tag `vX.Y.Z` (scripts/release.sh does that; docs/release.md).
-# The tag must match the version in package.json. One Linux job builds all
-# three targets from the one source, signs the Firefox package with AMO and
-# uploads the Chrome package to the Web Store; the `publish` job then puts
-# every package in the Cloudflare R2 bucket behind
-# https://app-downloads.zebu.work, where the downloads page and Firefox's
-# updater read from. Chrome copies update through the Web Store only, so the
-# R2 copy is the archive and the load-unpacked source; Firefox copies update
-# from R2 through `extension/firefox/updates.json`.
+# The tag must match the version in package.json. One job builds all three
+# targets from the one source, submits the Firefox package to its public
+# listing on addons.mozilla.org and uploads the Chrome package to the Web
+# Store; the `publish` job then puts every package in the Cloudflare R2
+# bucket behind https://app-downloads.zebu.work, where the downloads page
+# reads from. Chrome copies update through the Web Store only, and Firefox
+# copies through AMO, so the R2 copies are the archive and the load-unpacked
+# source; `extension/firefox/updates.json` on R2 remains for the Firefox
+# copies installed from our bucket before the listing existed (their
+# manifest names it) and moves them onto the listed build (docs/release.md).
 #
 # Every job runs on the self-hosted macOS runner (the same one the web app
 # deploys from: labels self-hosted, macOS), so a release costs no Actions
@@ -23,8 +25,9 @@
 # anything from the bucket.
 #
 # Store credentials are optional and switched on purely by which secrets exist:
-#   Firefox  AMO_JWT_ISSUER, AMO_JWT_SECRET                → signed .xpi + updates.json
-#            (without them the release ships a source zip and no Firefox auto-update)
+#   Firefox  AMO_JWT_ISSUER, AMO_JWT_SECRET                → listed on AMO; once Mozilla
+#            approves, the signed .xpi + updates.json (without them the release
+#            ships a source zip and nothing reaches AMO)
 #   Chrome   CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN, CWS_EXTENSION_ID
 #            → upload + publish to the Web Store
 #   Safari   APPLE_TEAM_ID (+ the desktop's signing secrets later) → the Xcode
@@ -47,6 +50,11 @@ env:
   R2_BUCKET: app-downloads
   PUBLIC_BASE: https://app-downloads.zebu.work
   GECKO_ID: extension@zebu.work
+  # How long the build job waits for Mozilla to approve a listed version
+  # before releasing without the signed file (seconds). Auto-approval takes
+  # minutes; a human review can take days, and the runner is shared with the
+  # web app's deploys, so this is bounded and a re-run picks the file up later.
+  AMO_APPROVAL_WAIT: 900
 
 jobs:
   verify:
@@ -107,34 +115,60 @@ jobs:
           cp dist/zebu-*-"$VERSION".zip upload/
           ls -l upload
 
-      # AMO signs the Firefox build as an unlisted add-on: the .xpi installs
-      # from anywhere and updates from our bucket. Skipped without the
-      # credentials, in which case Firefox users get the source zip only.
-      - name: Sign the Firefox package with AMO
+      # Firefox ships through the public listing on addons.mozilla.org. The
+      # package carries no update_url (the linter refuses one in a listed
+      # package), so a copy running a listed version updates from AMO itself.
+      # web-ext submits the version to the listed channel with the listing
+      # metadata (amo/listing.json) and the source for the reviewers, and
+      # returns at once: Mozilla signs the file only after review, so
+      # scripts/amo.mjs then waits a bounded time for the signed .xpi. With
+      # it, the release also refreshes extension/firefox/updates.json on R2,
+      # the bridge for the copies installed from our bucket before the
+      # listing: their manifest still names updates.json, they install this
+      # signed listed file from R2, and from then on update from AMO. Without
+      # it (review still open) the release goes out anyway with the source
+      # zip; a re-run of the workflow after approval finds the version on AMO,
+      # submits nothing, downloads the file and publishes the bridge.
+      - name: Submit the Firefox package to addons.mozilla.org and fetch the signed file
         env:
           HAS_AMO: ${{ secrets.AMO_JWT_ISSUER != '' && secrets.AMO_JWT_SECRET != '' }}
           WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
           DRY_RUN: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           if [ "$HAS_AMO" != "true" ]; then
-            echo "::warning::AMO_JWT_ISSUER / AMO_JWT_SECRET are not set: the Firefox package is unsigned and will not auto-update. See docs/release.md."
+            echo "::warning::AMO_JWT_ISSUER / AMO_JWT_SECRET are not set: the Firefox package was not submitted to addons.mozilla.org and ships unsigned. See docs/release.md."
             exit 0
           fi
           if [ "$DRY_RUN" = "true" ]; then
-            echo "dry run: not asking AMO to sign"
+            echo "dry run: not submitting to AMO"
             exit 0
           fi
-          VERSION=${{ steps.version.outputs.version }}
-          npx --yes web-ext@8 sign \
-            --source-dir dist/firefox \
-            --artifacts-dir web-ext-artifacts \
-            --channel unlisted \
-            --approval-timeout 1800000
-          xpi=$(ls web-ext-artifacts/*.xpi | head -1)
-          [ -n "$xpi" ] || { echo "::error::AMO returned no .xpi"; exit 1; }
-          cp "$xpi" "upload/zebu-firefox-$VERSION.xpi"
-          ls -l upload
+          xpi="upload/zebu-firefox-$VERSION.xpi"
+          # Already on AMO (a re-run after a review that outlasted the wait)?
+          state=0
+          node scripts/amo.mjs await-signed --id "$GECKO_ID" --version "$VERSION" --out "$xpi" --wait 0 || state=$?
+          if [ "$state" = 3 ]; then
+            # The reviewers rebuild the package from this (README, "Reproducing a build").
+            git archive --format=zip --prefix="zebu-browser-extension-$VERSION/" -o source.zip HEAD
+            npx --yes web-ext@8 sign \
+              --source-dir dist/firefox \
+              --artifacts-dir web-ext-artifacts \
+              --channel listed \
+              --amo-metadata amo/listing.json \
+              --upload-source-code source.zip \
+              --approval-timeout 0
+            node scripts/amo.mjs set-policy --id "$GECKO_ID" --file amo/privacy-policy.md \
+              || echo "::warning::could not set the privacy policy on the AMO listing; set it by hand from amo/privacy-policy.md (developer hub → Edit Product Page)."
+            state=0
+            node scripts/amo.mjs await-signed --id "$GECKO_ID" --version "$VERSION" --out "$xpi" --wait "$AMO_APPROVAL_WAIT" || state=$?
+          fi
+          case $state in
+            0) ls -l upload ;;
+            2) echo "::warning::$VERSION is awaiting Mozilla's review: this release ships the Firefox source zip, and extension/firefox/updates.json keeps its previous version. Re-run this workflow once the version is approved to publish the signed file (docs/release.md)." ;;
+            *) echo "::error::addons.mozilla.org did not accept $VERSION (exit $state)"; exit 1 ;;
+          esac
 
       # The Chrome Web Store is the only place Chrome updates from. Uploads
       # the new package and publishes it; the review happens on Google's side.
@@ -160,6 +194,16 @@ jobs:
             -d client_id="$CWS_CLIENT_ID" -d client_secret="$CWS_CLIENT_SECRET" \
             -d refresh_token="$CWS_REFRESH_TOKEN" -d grant_type=refresh_token \
             | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).access_token')
+          # A re-run of the workflow (to fetch a Firefox file approved after the
+          # first run) must not try to upload the same version twice: the store
+          # refuses a version that is not greater than the one it holds.
+          current=$(curl -fsS "https://www.googleapis.com/chromewebstore/v1.1/items/$CWS_EXTENSION_ID?projection=DRAFT" \
+            -H "Authorization: Bearer $token" -H "x-goog-api-version: 2" \
+            | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).crxVersion || ""') || current=""
+          if [ "$current" = "$VERSION" ]; then
+            echo "the Web Store already holds $VERSION (a re-run): nothing to upload"
+            exit 0
+          fi
           upload=$(curl -fsS -X PUT "https://www.googleapis.com/upload/chromewebstore/v1.1/items/$CWS_EXTENSION_ID" \
             -H "Authorization: Bearer $token" -H "x-goog-api-version: 2" \
             -T "upload/zebu-chrome-$VERSION.zip")
@@ -239,9 +283,15 @@ jobs:
       - name: Build latest.json, the aliases and Firefox's updates.json
         env:
           CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          HAS_AMO: ${{ secrets.AMO_JWT_ISSUER != '' && secrets.AMO_JWT_SECRET != '' }}
         run: |
           store=""
           [ -n "$CWS_EXTENSION_ID" ] && store="--chrome-store https://chromewebstore.google.com/detail/$CWS_EXTENSION_ID"
+          # The listing URL is the slug in amo/listing.json, the one place it is set.
+          [ "$HAS_AMO" = "true" ] && store="$store --firefox-store https://addons.mozilla.org/firefox/addon/$(node -p "require('./amo/listing.json').slug")/"
+          # No signed .xpi (Mozilla's review still open): latest.json serves the
+          # source zip and updates.json is left as it was, so no installed copy
+          # is pointed at a file that does not exist.
           updates=""
           [ -f "upload/zebu-firefox-$VERSION.xpi" ] && updates="--updates-out updates.json"
           # shellcheck disable=SC2086
@@ -278,7 +328,12 @@ jobs:
               echo "- manifest: \`$PUBLIC_BASE/extension/latest.json\`"
               echo "- this build: \`$PUBLIC_BASE/extension/$VERSION/\` (kept forever)"
               echo "- download aliases: \`$PUBLIC_BASE/extension/latest/\`"
-              [ -n "${ALSO:-}" ] && echo "- Firefox updates: \`$PUBLIC_BASE/extension/firefox/updates.json\`"
+              echo "- Firefox listing: \`https://addons.mozilla.org/firefox/addon/$(node -p "require('./amo/listing.json').slug")/\`"
+              if [ -n "${ALSO:-}" ]; then
+                echo "- Firefox bridge for copies installed from the bucket: \`$PUBLIC_BASE/extension/firefox/updates.json\`"
+              else
+                echo "- Firefox: no signed file yet (review open, or no AMO credentials); updates.json unchanged. Re-run after approval."
+              fi
             else
               echo "### Dry run — nothing real was written"
               echo

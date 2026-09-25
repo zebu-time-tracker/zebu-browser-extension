@@ -110,6 +110,20 @@ tracker need no code: users add the origin on the options page and pick the trac
 
 ## Publishing
 
-`scripts/release.sh --minor` tags a release; the workflow builds all three browsers, signs Firefox,
-uploads to the Chrome Web Store and publishes to https://app-downloads.zebu.work/extension/. See
-`docs/release.md`.
+`scripts/release.sh --minor` tags a release; the workflow builds all three browsers, submits Firefox
+to its listing on addons.mozilla.org, uploads to the Chrome Web Store and publishes to
+https://app-downloads.zebu.work/extension/. See `docs/release.md`.
+
+## Reproducing a build
+
+For the addons.mozilla.org reviewers (the Firefox package is bundled and minified, so every
+submission carries this source): with Node 22 and npm 10,
+
+```bash
+npm ci
+npm run build:firefox      # dist/firefox/ is the submitted package, byte for byte
+```
+
+`build.mjs` runs esbuild (pinned in `package-lock.json`) over `src/*.ts` and writes the manifest from
+`manifest.base.json` and `browsers/firefox.json`; nothing is fetched at build time. `npm run build`
+makes the Chrome and Safari packages the same way.
