@@ -24,8 +24,12 @@ Conventions:
 - A browser-specific manifest key goes in `browsers/<target>.json`; an
   array there replaces the base's (Safari lists the permissions it can use).
 - Releases: tag-based, `scripts/release.sh`; nothing here deploys on push.
-  Chrome updates only through the Web Store, Firefox from
-  `extension/firefox/updates.json` on R2, Safari by hand for now.
+  Chrome updates only through the Web Store, Firefox through its public
+  listing on addons.mozilla.org (`amo/listing.json` is the listing, built
+  by `scripts/amo-listing.mjs` from the locales; `extension/firefox/updates.json`
+  on R2 only moves the copies installed before the listing onto it), Safari
+  by hand for now. The Firefox manifest must never carry an `update_url`:
+  AMO refuses it in a listed package.
 
 ## Task board (lite-kan) — shared across the Zebu suite
 

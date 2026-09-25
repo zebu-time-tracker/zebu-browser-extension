@@ -36,13 +36,16 @@ describe('the manifest for each browser', () => {
         expect(m.permissions).toContain('notifications');
     });
 
-    test('firefox runs an event page, carries its gecko id and updates from our bucket', () => {
+    test('firefox runs an event page, carries its gecko id and updates from addons.mozilla.org', () => {
         const m = build('firefox');
         expect(m.background).toEqual({ scripts: ['background.js'] });
         expect(m.background.service_worker).toBeUndefined();
         expect(m.minimum_chrome_version).toBeUndefined();
         expect(m.browser_specific_settings.gecko.id).toBe('extension@zebu.work');
-        expect(m.browser_specific_settings.gecko.update_url).toBe('https://app-downloads.zebu.work/extension/firefox/updates.json');
+        // The listing on AMO is where Firefox updates from; the linter rejects a
+        // listed package that names its own update_url (MANIFEST_UPDATE_URL), and
+        // the gecko id is what ties the copies installed from our bucket to it.
+        expect(m.browser_specific_settings.gecko.update_url).toBeUndefined();
         expect(Number(m.browser_specific_settings.gecko.strict_min_version.split('.')[0])).toBeGreaterThanOrEqual(128);
     });
 

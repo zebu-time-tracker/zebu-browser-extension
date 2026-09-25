@@ -9,11 +9,11 @@
 //     --aliases-out aliases.tsv \
 //     --updates-out updates.json \
 //     [--gecko-id extension@zebu.work] [--chrome-store https://chromewebstore.google.com/detail/…] \
-//     [--pub-date 2026-09-19T17:00:00Z]
+//     [--firefox-store https://addons.mozilla.org/firefox/addon/…/] [--pub-date 2026-09-19T17:00:00Z]
 //
 // Prints latest.json on stdout: `{ version, pub_date, builds: { chrome, firefox,
 // safari } }`, each build a `{ file, url, size }` plus the store link when one is
-// known. Writes the alias table the publisher reads (stable name → versioned
+// known (Chrome's Web Store page, Firefox's addons.mozilla.org listing). Writes the alias table the publisher reads (stable name → versioned
 // file: `zebu-chrome.zip` → `zebu-chrome-0.3.0.zip`) and Firefox's update
 // manifest, the document `browser_specific_settings.gecko.update_url` points at.
 //
@@ -53,7 +53,7 @@ const rank = (name) => (name.endsWith('.xpi') ? 0 : name.endsWith('.zip') ? 1 : 
 /** The stable alias names the downloads page links to, one per built target. */
 export const aliasFor = (target, file) => `zebu-${target}.${file.split('.').pop()}`;
 
-export function buildManifest({ version, baseUrl, files, sizes, pubDate, chromeStore }) {
+export function buildManifest({ version, baseUrl, files, sizes, pubDate, chromeStore, firefoxStore }) {
     if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error(`version '${version}' is not X.Y.Z`);
     if (!baseUrl.endsWith(`/${version}`)) throw new Error(`--base-url must end in /${version} so every link is immutable`);
     const packages = pickPackages(files, version);
@@ -62,6 +62,7 @@ export function buildManifest({ version, baseUrl, files, sizes, pubDate, chromeS
         builds[target] = { file, url: `${baseUrl}/${file}`, size: sizes[file] };
     }
     if (chromeStore) builds.chrome.store = chromeStore;
+    if (firefoxStore) builds.firefox.store = firefoxStore;
     return { version, pub_date: pubDate, builds };
 }
 
@@ -87,7 +88,7 @@ function main() {
 
     const files = readdirSync(args.dir).filter((f) => statSync(join(args.dir, f)).isFile());
     const sizes = Object.fromEntries(files.map((f) => [f, statSync(join(args.dir, f)).size]));
-    const manifest = buildManifest({ version: args.version, baseUrl: args['base-url'], files, sizes, pubDate, chromeStore: args['chrome-store'] });
+    const manifest = buildManifest({ version: args.version, baseUrl: args['base-url'], files, sizes, pubDate, chromeStore: args['chrome-store'], firefoxStore: args['firefox-store'] });
 
     if (args['aliases-out']) {
         const rows = Object.entries(manifest.builds).map(([target, b]) => `${aliasFor(target, b.file)}\t${b.file}`);
