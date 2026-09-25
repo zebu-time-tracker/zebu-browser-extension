@@ -113,3 +113,7 @@ tracker need no code: users add the origin on the options page and pick the trac
 `scripts/release.sh --minor` tags a release; the workflow builds all three browsers, signs Firefox,
 uploads to the Chrome Web Store and publishes to https://app-downloads.zebu.work/extension/. See
 `docs/release.md`.
+
+## License
+
+[MIT](LICENSE). The Zebu name and logo are not covered by the license: forks must use their own.
