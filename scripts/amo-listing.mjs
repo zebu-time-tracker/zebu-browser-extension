@@ -17,8 +17,7 @@
 // required the first time (web-ext command reference, `--amo-metadata`).
 //
 // Two facts that are not in the locales live here as constants: the slug
-// (the listing URL) and the license. The repository has no LICENSE file and
-// is private, so the license is the honest default, all rights reserved;
+// (the listing URL) and the license, MIT like the repository's LICENSE;
 // change it here and nowhere else.
 
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -30,8 +29,8 @@ export const LISTING_FILE = 'amo/listing.json';
 
 /** The listing URL: https://addons.mozilla.org/firefox/addon/<slug>/ */
 export const SLUG = 'zebu-time-tracking';
-/** An AMO license slug for extensions (…/topics/api/licenses.html); the repository carries no LICENSE. */
-export const LICENSE = 'all-rights-reserved';
+/** An AMO license slug for extensions (…/topics/api/licenses.html), matching LICENSE. */
+export const LICENSE = 'MIT';
 /** Firefox extension categories, at most two (…/topics/api/categories.html has no "productivity"). */
 export const CATEGORIES = ['other', 'web-development'];
 export const HOMEPAGE = 'https://zebu.work';

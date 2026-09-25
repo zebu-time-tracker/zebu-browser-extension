@@ -53,7 +53,7 @@
         "en-US": "https://zebu.work/support"
     },
     "version": {
-        "license": "all-rights-reserved",
+        "license": "MIT",
         "approval_notes": "The package is dist/firefox from the attached source: Node 22, `npm ci`, `npm run build:firefox` (esbuild bundles and minifies src/*.ts; see README.md, \"Reproducing a build\"). The extension talks only to the Zebu workspace the user signs in to (<workspace>.zebu.work)."
     }
 }
