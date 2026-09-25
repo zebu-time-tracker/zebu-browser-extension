@@ -1,0 +1,59 @@
+{
+    "default_locale": "en-US",
+    "slug": "zebu-time-tracking",
+    "name": {
+        "de": "Zebu Zeiterfassung",
+        "en-US": "Zebu Time Tracking",
+        "es-ES": "Zebu Control de tiempo",
+        "fr": "Zebu Suivi du temps",
+        "it": "Zebu Tracciamento tempo",
+        "ja": "Zebu 時間トラッキング",
+        "ko": "Zebu 시간 추적",
+        "nl": "Zebu Tijdregistratie",
+        "pl": "Zebu Śledzenie czasu",
+        "pt-BR": "Zebu Controle de tempo",
+        "zh-CN": "Zebu 时间追踪"
+    },
+    "summary": {
+        "de": "Timer auf jeder Website oder in Trackern wie GitHub, Jira, Linear starten und verwalten — Projekt vorgeschlagen, Details ausgefüllt.",
+        "en-US": "Start or manage timers from any website or tracker like GitHub, Jira, Linear and more — best project suggested, details filled in.",
+        "es-ES": "Inicia o gestiona temporizadores desde cualquier web o tracker como GitHub, Jira o Linear — proyecto sugerido, detalles completados.",
+        "fr": "Lancez ou gérez vos minuteurs depuis tout site ou outil comme GitHub, Jira ou Linear — projet suggéré, détails remplis.",
+        "it": "Avvia o gestisci i timer da qualsiasi sito o tracker come GitHub, Jira, Linear e altri — progetto suggerito, dettagli compilati.",
+        "ja": "GitHub、Jira、Linear などあらゆるサイトやトラッカーからタイマーを開始・管理。最適なプロジェクトを提案し、詳細も自動入力。",
+        "ko": "GitHub, Jira, Linear 등 어떤 웹사이트나 트래커에서도 타이머를 시작하고 관리하세요 — 알맞은 프로젝트 제안, 세부 정보 자동 입력.",
+        "nl": "Start of beheer timers vanaf elke website of tracker zoals GitHub, Jira en Linear — beste project voorgesteld, details ingevuld.",
+        "pl": "Uruchamiaj stopery z dowolnej strony lub trackera, jak GitHub, Jira czy Linear — z proponowanym projektem i uzupełnionymi danymi.",
+        "pt-BR": "Inicie ou gerencie timers em qualquer site ou tracker, como GitHub, Jira e Linear — melhor projeto sugerido, detalhes preenchidos.",
+        "zh-CN": "在任意网站或 GitHub、Jira、Linear 等工具中启动或管理计时器 —— 自动推荐最合适的项目并填写详情。"
+    },
+    "description": {
+        "de": "Timer auf jeder Website oder in Trackern wie GitHub, Jira, Linear starten und verwalten — Projekt vorgeschlagen, Details ausgefüllt.\n\n**Ein Klick, und die Uhr läuft** — Starte direkt auf der Seite, auf der du bist. Zebu füllt Projekt und Notiz aus.\n\n**Dein ganzer Tag, in der Symbolleiste** — Alle Einträge des Tages – ein Klick genügt, um weiterzuarbeiten.\n\n**Sieh, wohin die Stunden gehen** — Heute, diese Woche und dieser Monat auf einen Blick, samt offener Beträge.\n\n**Einmal verbinden, in Sekunden** — Melde dich in deinem Zebu-Workspace an und wähle, welche Seiten einen Button bekommen.",
+        "en-US": "Start or manage timers from any website or tracker like GitHub, Jira, Linear and more — best project suggested, details filled in.\n\n**One click, and the clock runs** — Start from the page you are already on. Zebu fills in the project and the notes.\n\n**Your whole day, in the toolbar** — Every entry for the day, and one click to pick any of them back up.\n\n**See where the hours went** — Today, this week and this month at a glance, with what is still uninvoiced.\n\n**Connect once, in seconds** — Sign in to your Zebu workspace and choose which sites offer a Track time button.",
+        "es-ES": "Inicia o gestiona temporizadores desde cualquier web o tracker como GitHub, Jira o Linear — proyecto sugerido, detalles completados.\n\n**Un clic y el reloj corre** — Empieza desde la página en la que estás. Zebu rellena el proyecto y las notas.\n\n**Todo tu día, en la barra** — Cada entrada del día, y un clic para retomar cualquiera de ellas.\n\n**Mira adónde van las horas** — Hoy, esta semana y este mes de un vistazo, con lo que falta por facturar.\n\n**Conecta una vez, en segundos** — Entra en tu espacio de Zebu y elige en qué sitios aparece el botón.",
+        "fr": "Lancez ou gérez vos minuteurs depuis tout site ou outil comme GitHub, Jira ou Linear — projet suggéré, détails remplis.\n\n**Un clic, et le chrono tourne** — Démarrez depuis la page où vous êtes. Zebu remplit le projet et les notes.\n\n**Toute votre journée, dans la barre** — Chaque saisie du jour, et un clic pour reprendre n'importe laquelle.\n\n**Voyez où passent les heures** — Aujourd'hui, cette semaine et ce mois d'un coup d'œil, avec le non facturé.\n\n**Connectez-vous une fois, en quelques secondes** — Reliez votre espace Zebu et choisissez les sites qui affichent le bouton.",
+        "it": "Avvia o gestisci i timer da qualsiasi sito o tracker come GitHub, Jira, Linear e altri — progetto suggerito, dettagli compilati.\n\n**Un clic e il cronometro parte** — Parti dalla pagina in cui sei. Zebu compila progetto e note.\n\n**Tutta la giornata, nella barra** — Ogni voce del giorno, e un clic per riprendere quella che vuoi.\n\n**Guarda dove vanno le ore** — Oggi, questa settimana e questo mese a colpo d'occhio, con il non fatturato.\n\n**Collega una volta, in pochi secondi** — Accedi al tuo spazio Zebu e scegli su quali siti mostrare il pulsante.",
+        "ja": "GitHub、Jira、Linear などあらゆるサイトやトラッカーからタイマーを開始・管理。最適なプロジェクトを提案し、詳細も自動入力。\n\n**ワンクリックで計測が始まる** — 開いているページからそのまま開始。プロジェクトとメモは Zebu が入力します。\n\n**一日の記録を、ツールバーに** — その日のすべての記録を一覧で。ワンクリックで作業を再開できます。\n\n**時間の行き先がわかる** — 今日・今週・今月をひと目で。未請求の分もあわせて確認できます。\n\n**接続は一度きり、数秒で** — Zebu ワークスペースにサインインし、ボタンを表示するサイトを選びます。",
+        "ko": "GitHub, Jira, Linear 등 어떤 웹사이트나 트래커에서도 타이머를 시작하고 관리하세요 — 알맞은 프로젝트 제안, 세부 정보 자동 입력.\n\n**클릭 한 번이면 타이머가 돕니다** — 보고 있던 페이지에서 바로 시작하세요. 프로젝트와 메모는 Zebu가 채웁니다.\n\n**하루 전체를 툴바에서** — 그날의 모든 기록을 한눈에, 클릭 한 번으로 이어서 작업합니다.\n\n**시간이 어디로 갔는지 확인** — 오늘, 이번 주, 이번 달을 한눈에. 미청구 금액까지 함께.\n\n**한 번만 연결하면 끝** — Zebu 워크스페이스에 로그인하고 버튼을 표시할 사이트를 고르세요.",
+        "nl": "Start of beheer timers vanaf elke website of tracker zoals GitHub, Jira en Linear — beste project voorgesteld, details ingevuld.\n\n**Eén klik en de klok loopt** — Start vanaf de pagina waar je bent. Zebu vult project en notitie in.\n\n**Je hele dag, in de werkbalk** — Elke regel van vandaag, met één klik om er weer mee verder te gaan.\n\n**Zie waar de uren heen gaan** — Vandaag, deze week en deze maand in één oogopslag, met wat nog niet gefactureerd is.\n\n**Eén keer koppelen, in seconden** — Meld je aan bij je Zebu-workspace en kies op welke sites de knop verschijnt.",
+        "pl": "Uruchamiaj stopery z dowolnej strony lub trackera, jak GitHub, Jira czy Linear — z proponowanym projektem i uzupełnionymi danymi.\n\n**Jedno kliknięcie i zegar rusza** — Zacznij na stronie, na której jesteś. Zebu uzupełni projekt i notatkę.\n\n**Cały dzień w pasku narzędzi** — Każdy wpis z dnia i jedno kliknięcie, by wrócić do pracy.\n\n**Zobacz, dokąd idą godziny** — Dziś, ten tydzień i ten miesiąc na pierwszy rzut oka, razem z niezafakturowanym.\n\n**Połącz raz, w kilka sekund** — Zaloguj się do przestrzeni Zebu i wybierz, na których stronach pokazać przycisk.",
+        "pt-BR": "Inicie ou gerencie timers em qualquer site ou tracker, como GitHub, Jira e Linear — melhor projeto sugerido, detalhes preenchidos.\n\n**Um clique e o relógio corre** — Comece pela página em que você está. O Zebu preenche projeto e notas.\n\n**O seu dia inteiro, na barra** — Cada lançamento do dia, e um clique para retomar qualquer um deles.\n\n**Veja para onde vão as horas** — Hoje, esta semana e este mês de relance, com o que ainda não foi faturado.\n\n**Conecte uma vez, em segundos** — Entre no seu espaço Zebu e escolha em quais sites mostrar o botão.",
+        "zh-CN": "在任意网站或 GitHub、Jira、Linear 等工具中启动或管理计时器 —— 自动推荐最合适的项目并填写详情。\n\n**一次点击，计时开始** — 从当前页面直接开始，项目和备注由 Zebu 自动填好。\n\n**一整天的记录，就在工具栏** — 当天的每一条记录，点一下就能继续之前的工作。\n\n**看清时间花在哪里** — 今天、本周和本月一目了然，还能看到尚未开票的部分。\n\n**连接一次，只需几秒** — 登录你的 Zebu 工作区，选择要显示按钮的网站。"
+    },
+    "categories": {
+        "firefox": [
+            "other",
+            "web-development"
+        ]
+    },
+    "homepage": {
+        "en-US": "https://zebu.work"
+    },
+    "support_url": {
+        "en-US": "https://zebu.work/support"
+    },
+    "version": {
+        "license": "all-rights-reserved",
+        "approval_notes": "The package is dist/firefox from the attached source: Node 22, `npm ci`, `npm run build:firefox` (esbuild bundles and minifies src/*.ts; see README.md, \"Reproducing a build\"). The extension talks only to the Zebu workspace the user signs in to (<workspace>.zebu.work)."
+    }
+}
