@@ -31,8 +31,8 @@ export const LISTING_FILE = 'amo/listing.json';
 export const SLUG = 'zebu-time-tracking';
 /** An AMO license slug for extensions (…/topics/api/licenses.html), matching LICENSE. */
 export const LICENSE = 'MIT';
-/** Firefox extension categories, at most two (…/topics/api/categories.html has no "productivity"). */
-export const CATEGORIES = ['other', 'web-development'];
+/** Firefox extension categories, at most two (…/topics/api/categories.html has no "productivity"). AMO refuses "other" next to any other category. */
+export const CATEGORIES = ['web-development'];
 export const HOMEPAGE = 'https://zebu.work';
 export const SUPPORT_URL = 'https://zebu.work/support';
 
