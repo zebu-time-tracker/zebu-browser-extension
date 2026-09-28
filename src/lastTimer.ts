@@ -70,4 +70,11 @@ export const resumeLabelKey = (last: Pick<LastTimer, 'date'>, today: string): 'p
  * The bar's project line, "Project · Task" (board #411); the client sits
  * above it on its own line, as on an entry row.
  */
+/**
+ * Whether the day on show lists nothing but the last timer's own entry: the
+ * ▶ bar would then repeat the one row under it (board #450, as the desktop).
+ */
+export const lastTimerIsOnlyEntry = (last: Pick<LastTimer, 'entry_id' | 'date'>, dayEntries: Pick<Entry, 'id'>[], shownDate: string): boolean =>
+    last.date === shownDate && dayEntries.length === 1 && dayEntries[0].id === last.entry_id;
+
 export const resumeWork = (last: Pick<LastTimer, 'project' | 'task'>): string => [last.project, last.task].filter(Boolean).join(' · ');
