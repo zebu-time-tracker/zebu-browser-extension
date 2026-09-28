@@ -495,6 +495,9 @@
     "popup_new_entry": {
         "message": "Nueva entrada"
     },
+    "popup_view_projects": {
+        "message": "Ver proyectos en la web"
+    },
     "settings_appearance": {
         "message": "Apariencia"
     },

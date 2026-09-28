@@ -495,6 +495,9 @@
     "popup_new_entry": {
         "message": "새 시간 항목"
     },
+    "popup_view_projects": {
+        "message": "웹에서 프로젝트 보기"
+    },
     "settings_appearance": {
         "message": "화면 모드"
     },
