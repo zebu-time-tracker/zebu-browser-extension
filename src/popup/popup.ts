@@ -655,8 +655,14 @@ function entrySheet(): HTMLElement {
 
     renderTasks();
 
+    // title left, the projects on the web right (board #446)
+    const projectsLink = el('a', { class: 'sheet-head-link', href: `${workspace()}/projects`, target: '_blank', rel: 'noopener', text: t('popup_view_projects') });
+    projectsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        openInTab(projectsLink.href);
+    });
     const card = el('div', { class: 'sheet' }, [
-        el('p', { class: 'sheet-title', text: editing ? t('popup_edit_entry') : t('popup_new_entry') }),
+        el('div', { class: 'sheet-head' }, [el('p', { class: 'sheet-title', text: editing ? t('popup_edit_entry') : t('popup_new_entry') }), projectsLink]),
         picker.el,
         taskSelect,
         presetButton,
