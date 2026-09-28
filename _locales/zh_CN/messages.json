@@ -246,7 +246,7 @@
         "message": "继续"
     },
     "popup_last_active": {
-        "message": "上次使用的项目"
+        "message": "上一个计时器"
     },
     "popup_start_new_timer": {
         "message": "开始新的计时"

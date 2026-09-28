@@ -246,7 +246,7 @@
         "message": "Reanudar"
     },
     "popup_last_active": {
-        "message": "Último proyecto activo"
+        "message": "Último temporizador"
     },
     "popup_start_new_timer": {
         "message": "Iniciar temporizador nuevo"

@@ -289,6 +289,7 @@ function resumeBar(): HTMLElement | '' {
     const l = last;
     const button = el('button', { type: 'button', class: 'running-elsewhere resume-last' }, [
         el('span', { class: 'resume-heading', text: t('popup_last_active') }),
+        el('span', { class: 're-divider resume-divider' }),
         el('span', { class: 'resume-row' }, [resumeText(l), el('span', { class: 'resume-action', text: `▶ ${t(resumeLabelKey(l, today()))}` })]),
     ]);
     button.addEventListener('click', resumeLast);
@@ -320,6 +321,29 @@ function runningElsewhere(): HTMLElement | '' {
     return banner;
 }
 
+/** A small open-in-browser link to the project in the workspace. */
+function openProjectIcon(projectId: string): HTMLElement {
+    const href = `${workspace()}/projects/${projectId}`;
+    const link = el('a', { class: 'entry-open', href, target: '_blank', rel: 'noopener', title: t('entry_view_project'), 'aria-label': t('entry_view_project') });
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 16 16');
+    svg.setAttribute('width', '11');
+    svg.setAttribute('height', '11');
+    svg.setAttribute('aria-hidden', 'true');
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', 'M9 2.5h4.5V7M13.5 2.5 7 9M11.5 9.5v3a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h3');
+    for (const [k, v] of [['fill', 'none'], ['stroke', 'currentColor'], ['stroke-width', '1.5'], ['stroke-linecap', 'round'], ['stroke-linejoin', 'round']]) path.setAttribute(k, v);
+    svg.append(path);
+    link.append(svg);
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openInTab(href);
+    });
+    return link;
+}
+
 function entryRow(entry: Entry): HTMLElement {
     const editable = !entry.locked && !sheet.weekLocked;
     const running = !!entry.timer_started_at;
@@ -328,27 +352,24 @@ function entryRow(entry: Entry): HTMLElement {
     const projectLine = el('span', { class: 'entry-project' });
     if (project?.code) projectLine.append(el('span', { class: 'entry-code', text: project.code }));
     projectLine.append(entry.project ?? '');
+    // "View project" as an open-in-browser icon at the end of the name
+    // (board #445). It sits inside the clickable text, so it stops the click
+    // reaching the edit sheet.
+    if (entry.project_id) projectLine.append(openProjectIcon(entry.project_id));
     // agentic work: what the Claude Code hook measured on this timer
     if (entry.agent_waiting || (entry.waiting_minutes ?? 0) > 0) {
         const label = entry.agent_waiting && !(entry.waiting_minutes ?? 0) ? t('popup_waiting_now') : `⏳ ${t('popup_waiting', String(entry.waiting_minutes ?? 0))}${entry.agent_waiting ? ' …' : ''}`;
         projectLine.append(el('span', { class: `entry-waiting${entry.agent_waiting ? ' live' : ''}`, text: label }));
     }
 
-    // "View project · Uninvoiced: 32h · Budget: 62%" (board #420). The link
-    // sits inside the clickable text, so it stops the click reaching the
-    // edit sheet.
-    const viewProject = el('a', { class: 'entry-view-project', href: `${workspace()}/projects/${entry.project_id}`, target: '_blank', rel: 'noopener', text: t('entry_view_project') });
-    viewProject.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        openInTab(viewProject.href);
-    });
+    // "Uninvoiced: 32h · Budget: 62%" (board #420).
     const stats = el('span', { class: 'entry-stats' });
     const drawStats = () => {
         const s = statsFor(entry);
-        stats.replaceChildren(viewProject);
+        stats.replaceChildren();
+        stats.hidden = !s;
         if (!s) return;
-        stats.append(el('span', { class: 'entry-stats-dim', text: ` · ${t('entry_uninvoiced')}: ${formatHoursShort(s.uninvoiced_minutes, chrome.i18n.getUILanguage())}` }));
+        stats.append(el('span', { class: 'entry-stats-dim', text: `${t('entry_uninvoiced')}: ${formatHoursShort(s.uninvoiced_minutes, chrome.i18n.getUILanguage())}` }));
         if (s.budget_pct !== null) {
             stats.append(el('span', { class: 'entry-stats-dim', text: ' · ' }), el('span', { class: `budget-pill ${budgetLevel(s.budget_pct)}`, text: `${t('entry_budget')}: ${s.budget_pct}%` }));
         }
