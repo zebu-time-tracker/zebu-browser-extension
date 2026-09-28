@@ -12,7 +12,7 @@ import { elapsedMinutes, formatDurationHuman, formatMinutes } from '../duration'
 import { durationToSave, isApplePlatform, isSaveShortcut, saveShortcutHint } from '../entryForm';
 import { budgetLevel, formatHoursShort } from '../entryStats';
 import { readIdlePrefill } from '../idle';
-import { lastTimerFor, resumeLabelKey, resumeWork, type LastTimer } from '../lastTimer';
+import { lastTimerFor, lastTimerIsOnlyEntry, resumeLabelKey, resumeWork, type LastTimer } from '../lastTimer';
 import { isHeld, POLL } from '../maintenance';
 import { call, CallError, errorText, t } from '../messaging';
 import { pageIssue, withSelection } from '../page';
@@ -284,8 +284,12 @@ function resumeText(l: LastTimer): HTMLElement {
 }
 
 /** The desktop's ▶ Resume bar: one click on the last timer when nothing runs. */
+/** The ▶ bar shows, unless the day on show lists only that timer's own entry (board #450). */
+const showResumeBar = (): boolean =>
+    !state.running && !!last && !lastTimerIsOnlyEntry(last, sheet.entries.filter((e) => e.date === selectedDate), selectedDate);
+
 function resumeBar(): HTMLElement | '' {
-    if (state.running || !last) return '';
+    if (!showResumeBar() || !last) return '';
     const l = last;
     const button = el('button', { type: 'button', class: 'running-elsewhere resume-last' }, [
         el('span', { class: 'resume-heading', text: t('popup_last_active') }),
@@ -413,7 +417,7 @@ function entriesList(): HTMLElement {
     if (errorMessage) list.append(el('p', { class: 'error', text: errorMessage }));
     if (sheet.weekLocked) list.append(el('p', { class: 'muted locked-note', text: t('popup_week_locked') }));
     if (!entries.length) {
-        const empty = el('div', { class: `empty${state.running || last ? ' raised' : ''}` });
+        const empty = el('div', { class: `empty${state.running || showResumeBar() ? ' raised' : ''}` });
         if (!sheet.weekLocked) {
             const add = el('button', { type: 'button', class: 'btn-outline', text: selectedDate === today() ? t('popup_start') : t('popup_add_entry') });
             add.addEventListener('click', () => openForm(null));

@@ -1,4 +1,4 @@
-import { lastTimerFor, lastTimerFrom, resumeLabelKey, resumeWork } from '../src/lastTimer';
+import { lastTimerFor, lastTimerFrom, lastTimerIsOnlyEntry, resumeLabelKey, resumeWork } from '../src/lastTimer';
 import type { Entry, ProjectOption } from '../src/types';
 
 const entry: Entry = { id: 'e1', date: '2026-09-18', minutes: 5, notes: 'Footer', project: 'Billing API', project_id: 'p2', task: 'Development', task_id: 't1', is_billable: true, locked: false, timer_started_at: null };
@@ -39,4 +39,13 @@ test('a value stored before the client was still reads back', () => {
 test('the project line reads project · task, skipping what is missing', () => {
     expect(resumeWork({ project: 'Billing API', task: 'Development' })).toBe('Billing API · Development');
     expect(resumeWork({ project: 'Billing API', task: null })).toBe('Billing API');
+});
+
+test('the ▶ bar is hidden when its entry is the only one on the day shown (board #450)', () => {
+    const last = { entry_id: 'e1', date: '2026-09-28' };
+    expect(lastTimerIsOnlyEntry(last, [{ id: 'e1' }], '2026-09-28')).toBe(true);
+    expect(lastTimerIsOnlyEntry(last, [{ id: 'e1' }, { id: 'e2' }], '2026-09-28')).toBe(false);
+    expect(lastTimerIsOnlyEntry(last, [{ id: 'e2' }], '2026-09-28')).toBe(false);
+    expect(lastTimerIsOnlyEntry(last, [{ id: 'e1' }], '2026-09-29')).toBe(false);
+    expect(lastTimerIsOnlyEntry(last, [], '2026-09-28')).toBe(false);
 });
