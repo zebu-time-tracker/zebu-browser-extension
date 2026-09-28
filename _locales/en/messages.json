@@ -246,7 +246,7 @@
         "message": "Resume"
     },
     "popup_last_active": {
-        "message": "Last active project"
+        "message": "Last timer"
     },
     "popup_start_new_timer": {
         "message": "Start new timer"

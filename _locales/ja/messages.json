@@ -246,7 +246,7 @@
         "message": "再開"
     },
     "popup_last_active": {
-        "message": "最後に使ったプロジェクト"
+        "message": "前回のタイマー"
     },
     "popup_start_new_timer": {
         "message": "新しいタイマーを開始"

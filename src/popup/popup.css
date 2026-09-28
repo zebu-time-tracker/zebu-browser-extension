@@ -446,7 +446,6 @@ textarea:focus {
 .entry-stats {
     color: var(--muted);
     font-size: 10px;
-    font-variant-numeric: tabular-nums;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -471,18 +470,23 @@ textarea:focus {
 .budget-pill.over {
     color: var(--danger);
 }
-.entry-view-project {
-    color: inherit;
-    text-decoration: none;
-    opacity: 0.8;
+/* "open in browser" at the end of the project name (board #445) */
+.entry-open {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: -1px;
+    margin-left: 4px;
+    padding: 1px;
+    color: var(--muted);
+    border-radius: 3px;
+    opacity: 0.7;
 }
-.entry-text.editable:has(.entry-view-project:hover) .entry-project {
+.entry-text.editable:has(.entry-open:hover) .entry-project {
     text-decoration: none;
 }
-.entry-view-project:hover,
-.entry-view-project:focus-visible {
+.entry-open:hover,
+.entry-open:focus-visible {
     color: var(--accent);
-    text-decoration: underline;
     opacity: 1;
 }
 .entry-time {
@@ -628,7 +632,11 @@ textarea:focus {
     border-color: var(--accent);
     background: var(--accent-soft);
 }
-/* "Last active project" on top; client over project, as an entry row, with the action on the right (board #411). */
+/* "Last timer" on top; client over project, as an entry row, with the action on the right (board #411). */
+.resume-divider {
+    border-top-color: var(--border);
+    margin: 0 -12px;
+}
 .resume-heading {
     text-align: center;
     color: var(--muted);
