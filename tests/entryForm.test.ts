@@ -1,4 +1,4 @@
-import { durationToSave, isApplePlatform, isSaveShortcut, saveShortcutHint, type KeyPress } from '../src/entryForm';
+import { durationToSave, isApplePlatform, isSaveShortcut, saveShortcutHint, saveShortcutKeys, type KeyPress } from '../src/entryForm';
 
 const press = (key: string, mods: Partial<Omit<KeyPress, 'key'>> = {}): KeyPress => ({ key, metaKey: false, ctrlKey: false, altKey: false, isComposing: false, ...mods });
 
@@ -55,4 +55,9 @@ test('the hint follows the platform and the locale', () => {
     expect(isApplePlatform('Linux x86_64')).toBe(false);
     expect(saveShortcutHint(true, 'Ctrl')).toBe('⌘↵');
     expect(saveShortcutHint(false, 'Strg')).toBe('Strg+↵');
+});
+
+test('the save shortcut as one keycap per key (board #517)', () => {
+    expect(saveShortcutKeys(true, 'Ctrl')).toEqual(['⌘', '↵']);
+    expect(saveShortcutKeys(false, 'Strg')).toEqual(['Strg', '↵']);
 });

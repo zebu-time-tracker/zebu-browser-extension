@@ -9,7 +9,7 @@
 // purpose — it starts instantly.
 import { headerDate, relativeDay, shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes } from '../duration';
-import { durationToSave, isApplePlatform, isSaveShortcut, saveShortcutHint } from '../entryForm';
+import { durationToSave, isApplePlatform, isSaveShortcut, saveShortcutKeys } from '../entryForm';
 import { budgetLevel, formatHoursShort } from '../entryStats';
 import { readIdlePrefill } from '../idle';
 import { lastTimerFor, lastTimerIsOnlyEntry, resumeLabelKey, resumeWork, type LastTimer } from '../lastTimer';
@@ -509,7 +509,11 @@ function entrySheet(): HTMLElement {
     const submitLabel = el('span');
     const submit = el('button', { type: 'button', class: 'btn-primary', 'aria-keyshortcuts': apple ? 'Meta+Enter' : 'Control+Enter' }, [
         submitLabel,
-        el('kbd', { class: 'kbd-hint', 'aria-hidden': 'true', text: saveShortcutHint(apple, t('popup_key_ctrl')) }),
+        el(
+            'span',
+            { class: 'kbd-keys', 'aria-hidden': 'true' },
+            saveShortcutKeys(apple, t('popup_key_ctrl')).map((key) => el('kbd', { class: 'kbd-hint', text: key })),
+        ),
     ]);
     const notice = el('p', { class: 'muted notice' });
 
