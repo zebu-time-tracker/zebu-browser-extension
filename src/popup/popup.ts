@@ -48,6 +48,8 @@ let sheet: WeekSheet = { entries: [], weekStart: '', weekLocked: false, projectS
 let errorMessage = '';
 let formOpen = false;
 let editing: Entry | null = null;
+// the row's time was clicked: the sheet opens with the duration selected (board #520)
+let focusDuration = false;
 let confirmNewDay = false;
 let presetsOpen = false;
 let settingsOpen = false;
@@ -194,9 +196,10 @@ const resumeLast = () => {
     void act(() => call<State>({ type: 'timer:resume-last' }).then((s) => showEntry(s.running)));
 };
 
-const openForm = (entry: Entry | null) => {
+const openForm = (entry: Entry | null, focus?: 'duration') => {
     if (entry && (entry.locked || sheet.weekLocked)) return;
     editing = entry;
+    focusDuration = focus === 'duration';
     formOpen = true;
     presetsOpen = false;
     settingsOpen = false;
@@ -388,7 +391,11 @@ function entryRow(entry: Entry): HTMLElement {
     ]);
     if (editable) text.addEventListener('click', () => openForm(entry));
 
-    const time = el('span', { class: 'entry-time', text: formatMinutes(elapsedMinutes(entry, now())) });
+    // the time is a way into the same sheet, landing in the time field (board #520)
+    const time = editable
+        ? el('button', { type: 'button', class: 'entry-time editable', title: t('popup_edit_entry'), text: formatMinutes(elapsedMinutes(entry, now())) })
+        : el('span', { class: 'entry-time', text: formatMinutes(elapsedMinutes(entry, now())) });
+    if (editable) time.addEventListener('click', () => openForm(entry, 'duration'));
     if (state.running && (running || state.running.project_id === entry.project_id)) {
         tickers.push(() => {
             time.textContent = formatMinutes(elapsedMinutes(entry, now()));
@@ -688,9 +695,12 @@ function entrySheet(): HTMLElement {
     });
     queueMicrotask(() => {
         autosize();
+        const wantDuration = focusDuration;
+        focusDuration = false;
         // Land in the project search, so a new timer is "＋, type, Enter"; a
         // suggested project is already the answer, so leave it and land on the notes.
-        if (!projectId) picker.open();
+        if (wantDuration) duration.select();
+        else if (!projectId) picker.open();
         else if (!editing && date.value !== today()) duration.focus();
         else if (!editing) notes.focus();
     });
