@@ -81,3 +81,31 @@ test('linear, trello, bitbucket, asana, clickup and basecamp', () => {
         title: 'Order stickers',
     });
 });
+
+// GitHub's issue header (2025–), trimmed to what the anchor reads: the actions
+// row twice, for wide and narrow windows, each a wrapped primary "New issue"
+// and a copy-link button.
+const githubHeader = (newIssueHref: string) => {
+    const row = (copy: string) => `
+        <div class="${copy}"><div class="menuActions">
+            <div class="buttonContainer"><a data-component="Button" data-variant="primary" href="${newIssueHref}">New issue</a></div>
+            <button data-component="IconButton" data-variant="invisible">copy</button>
+        </div></div>`;
+    return `<div data-testid="issue-header"><h1>Fix login</h1>${row('wide')}${row('narrow')}</div>`;
+};
+
+test('github: the button goes just before "New issue" (board #207)', () => {
+    for (const href of ['/acme/api/issues/new/choose', '/login?return_to=https://github.com/acme/api/issues/123']) {
+        detect('github', 'https://github.com/acme/api/issues/123', 'Fix login · Issue #123 · acme/api', githubHeader(href));
+        const anchor = ADAPTERS.find((a) => a.id === 'github')!.anchor!(document)!;
+        expect(anchor.className).toBe('menuActions');
+        const button = document.createElement('button');
+        anchor.prepend(button);
+        expect(button.nextElementSibling?.textContent?.trim()).toBe('New issue');
+    }
+});
+
+test('github: a pull request, or the older issue page, keeps its header actions', () => {
+    detect('github', 'https://github.com/acme/api/pull/7', 'Speed up CI · Pull Request #7 · acme/api', '<div class="gh-header-actions"><button>Edit</button></div>');
+    expect(ADAPTERS.find((a) => a.id === 'github')!.anchor!(document)?.className).toBe('gh-header-actions');
+});

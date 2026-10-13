@@ -36,6 +36,9 @@ const first = (doc: Document, selectors: string[]): Element | null => {
     return null;
 };
 
+/** Laid out on the page, not display:none (jsdom lays nothing out, so tests see every element as hidden). */
+const shown = (el: Element): boolean => el.getClientRects().length > 0;
+
 /** document.title minus the site's suffix pattern. */
 const fromTitle = (doc: Document, strip: RegExp): string => doc.title.replace(strip, '').trim();
 
@@ -67,7 +70,19 @@ export const ADAPTERS: Adapter[] = [
                 url: `${url.origin}/${owner}/${repo}/${kind}/${number}`,
             });
         },
-        anchor: (doc) => first(doc, ['.gh-header-actions', '[data-testid="issue-header"] [data-testid="issue-metadata-sticky"]', '.gh-header-show .gh-header-actions']),
+        anchor(doc) {
+            // An issue: beside "New issue", the header's one primary button,
+            // where Harvest puts its own (board #207). GitHub renders the
+            // header actions twice, for wide and narrow windows, and hides
+            // one; the shown copy is the place. The row is the button's
+            // wrapper's parent, so the button lands just before "New issue".
+            const primaries = Array.from(doc.querySelectorAll('[data-testid="issue-header"] [data-variant="primary"]'));
+            const newIssue = primaries.find(shown) ?? primaries[0];
+            const row = newIssue?.parentElement?.parentElement;
+            if (row) return row;
+            // A pull request, or the older issue page.
+            return first(doc, ['.gh-header-actions', '[data-testid="issue-header"] [data-testid="issue-metadata-sticky"]', '.gh-header-show .gh-header-actions']);
+        },
     },
     {
         id: 'gitlab',
