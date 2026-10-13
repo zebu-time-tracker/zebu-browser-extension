@@ -105,7 +105,17 @@ test('github: the button goes just before "New issue" (board #207)', () => {
     }
 });
 
-test('github: a pull request, or the older issue page, keeps its header actions', () => {
+test('github: on a pull request, the page header\'s actions slot (board #208)', () => {
+    detect(
+        'github',
+        'https://github.com/acme/api/pull/7',
+        'Speed up CI · Pull Request #7 · acme/api',
+        '<div data-component="PageHeader"><div data-component="TitleArea"><h1>Speed up CI</h1></div><div data-component="PH_Actions" class="slot"><button>Edit</button><button>Code</button></div></div>',
+    );
+    expect(ADAPTERS.find((a) => a.id === 'github')!.anchor!(document)?.className).toBe('slot');
+});
+
+test('github: the older pull request and issue pages keep their header actions', () => {
     detect('github', 'https://github.com/acme/api/pull/7', 'Speed up CI · Pull Request #7 · acme/api', '<div class="gh-header-actions"><button>Edit</button></div>');
     expect(ADAPTERS.find((a) => a.id === 'github')!.anchor!(document)?.className).toBe('gh-header-actions');
 });
