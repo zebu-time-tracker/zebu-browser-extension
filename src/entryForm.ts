@@ -59,3 +59,6 @@ export const isSaveShortcut = (e: KeyPress, apple: boolean): boolean =>
 
 /** The keycap shown in the save button; `ctrl` is the locale's name for the Control key. */
 export const saveShortcutHint = (apple: boolean, ctrl: string): string => (apple ? '⌘↵' : `${ctrl}+↵`);
+
+/** The same shortcut as one keycap per key (board #517): ⌘ ↵ on a Mac, the locale's Ctrl name and ↵ elsewhere. */
+export const saveShortcutKeys = (apple: boolean, ctrl: string): string[] => [apple ? '⌘' : ctrl, '↵'];

@@ -822,8 +822,14 @@ textarea:focus {
     margin-right: auto;
 }
 /* the save shortcut, as a quiet keycap inside the button (board #398) */
-.kbd-hint {
+/* one keycap per key, side by side (board #517) */
+.kbd-keys {
+    display: inline-flex;
+    gap: 2px;
     margin-left: 6px;
+    vertical-align: 1px;
+}
+.kbd-hint {
     padding: 0 4px;
     font: inherit;
     font-size: 10px;
