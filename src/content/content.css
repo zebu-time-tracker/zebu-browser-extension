@@ -30,22 +30,17 @@
     outline: 2px solid #197300;
     outline-offset: 2px;
 }
-.zebu-track__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #197300;
+.zebu-track__mark {
+    display: block;
+    width: 16px;
+    height: 16px;
     flex: none;
-}
-.zebu-track:hover .zebu-track__dot {
-    background: #fff;
 }
 .zebu-track--running {
     background: #197300;
     color: #fff;
 }
-.zebu-track--running .zebu-track__dot {
-    background: #fff;
+.zebu-track--running .zebu-track__mark {
     animation: zebu-pulse 1.4s ease-in-out infinite;
 }
 .zebu-track--running:hover {
@@ -86,4 +81,41 @@
         background: #197300;
         color: #fff;
     }
+}
+
+/* On GitHub, beside "New issue" (board #207): dressed as GitHub's own
+   default button, the way Harvest's sits there. GitHub's Primer variables
+   carry its light, dark and high-contrast themes, so the button follows
+   whichever one the page is in; the fallbacks are its light theme. (`all:
+   initial` above leaves custom properties alone, so they still inherit.) */
+.zebu-track[data-site='github']:not(.zebu-track--floating) {
+    height: 32px;
+    padding: 0 12px;
+    gap: 8px;
+    margin: 0;
+    border: 1px solid var(--button-default-borderColor-rest, var(--borderColor-default, #d1d9e0));
+    border-radius: 6px;
+    background: var(--button-default-bgColor-rest, #f6f8fa);
+    color: var(--button-default-fgColor-rest, var(--fgColor-default, #25292e));
+    font:
+        500 14px/20px -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        'Noto Sans',
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+.zebu-track[data-site='github']:not(.zebu-track--floating):hover {
+    background: var(--button-default-bgColor-hover, #eff2f5);
+    border-color: var(--button-default-borderColor-hover, var(--borderColor-default, #d1d9e0));
+    color: var(--button-default-fgColor-rest, var(--fgColor-default, #25292e));
+}
+.zebu-track[data-site='github'].zebu-track--running:not(.zebu-track--floating) {
+    color: var(--fgColor-success, #1a7f37);
+    font-variant-numeric: tabular-nums;
+}
+.zebu-track[data-site='github']:not(.zebu-track--floating):focus-visible {
+    outline: 2px solid var(--focus-outlineColor, #0969da);
+    outline-offset: -2px;
 }

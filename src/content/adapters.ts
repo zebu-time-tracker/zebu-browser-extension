@@ -36,6 +36,17 @@ const first = (doc: Document, selectors: string[]): Element | null => {
     return null;
 };
 
+/** Laid out on the page, not display:none. */
+const shown = (el: Element): boolean => el.getClientRects().length > 0;
+
+/**
+ * The first of these the page shows. A page that lays nothing out at all is
+ * jsdom (the tests), where the first one stands in; a real page that shows
+ * none of them gets none, so the button floats rather than hiding inside a
+ * container the site keeps out of sight.
+ */
+const firstShown = (doc: Document, els: Element[]): Element | undefined => (doc.body && shown(doc.body) ? els.find(shown) : els[0]);
+
 /** document.title minus the site's suffix pattern. */
 const fromTitle = (doc: Document, strip: RegExp): string => doc.title.replace(strip, '').trim();
 
@@ -67,7 +78,24 @@ export const ADAPTERS: Adapter[] = [
                 url: `${url.origin}/${owner}/${repo}/${kind}/${number}`,
             });
         },
-        anchor: (doc) => first(doc, ['.gh-header-actions', '[data-testid="issue-header"] [data-testid="issue-metadata-sticky"]', '.gh-header-show .gh-header-actions']),
+        anchor(doc) {
+            // An issue: beside "New issue", the header's one primary button,
+            // where Harvest puts its own (board #207). GitHub renders the
+            // header actions twice, for wide and narrow windows, and hides
+            // one; the shown copy is the place. The row is the button's
+            // wrapper's parent, so the button lands just before "New issue".
+            const newIssue = firstShown(doc, Array.from(doc.querySelectorAll('[data-testid="issue-header"] [data-variant="primary"]')));
+            const row = newIssue?.parentElement?.parentElement;
+            if (row) return row;
+            // A pull request (board #208): the same PageHeader, whose actions
+            // slot holds Edit and Code when signed in. Signed out it is empty,
+            // and GitHub hides it even with the button inside, so only a shown
+            // slot will do — which also passes over the sticky header's copy.
+            const slot = firstShown(doc, Array.from(doc.querySelectorAll('[data-component="PageHeader"] [data-component="PH_Actions"]')));
+            if (slot) return slot;
+            // The older issue and pull request pages.
+            return first(doc, ['.gh-header-actions', '[data-testid="issue-header"] [data-testid="issue-metadata-sticky"]', '.gh-header-show .gh-header-actions']);
+        },
     },
     {
         id: 'gitlab',

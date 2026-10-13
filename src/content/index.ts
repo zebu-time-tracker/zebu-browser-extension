@@ -14,6 +14,16 @@ let state: State | null = null;
 let button: HTMLButtonElement | null = null;
 let tickTimer: number | undefined;
 
+// The Zebu mark (board #207): the white Z on the app's green, as the favicon
+// and the toolbar icon draw it, small enough to sit where a site's own
+// buttons put an icon.
+const MARK =
+    '<svg class="zebu-track__mark" viewBox="0 0 1022 1022" width="16" height="16" aria-hidden="true">' +
+    '<rect width="1022" height="1022" rx="180" fill="#16a34a"/>' +
+    '<line x1="700.463" y1="748.512" x2="330.463" y2="282.512" stroke-width="50" stroke="#fff" opacity="0.45"/>' +
+    '<path fill="#fff" d="M300.309 802V741.33L631.599 259.962L657.144 296.683H309.889V227.232H713.823V287.902L384.13 767.674L359.383 732.549H720.209V802H300.309Z"/>' +
+    '</svg>';
+
 async function resolveAdapter(): Promise<Adapter | null> {
     const { settings } = await chrome.storage.local.get('settings');
     return adapterFor(location.hostname, settings?.customSites ?? [], location.origin);
@@ -73,9 +83,11 @@ function mount(): void {
         button = document.createElement('button');
         button.type = 'button';
         button.className = 'zebu-track';
-        button.innerHTML = '<span class="zebu-track__dot" aria-hidden="true"></span><span class="zebu-track__label"></span>';
+        button.innerHTML = `${MARK}<span class="zebu-track__label"></span>`;
         button.addEventListener('click', onClick);
     }
+    // Which site, so the stylesheet can dress the button as that site's own.
+    button.dataset.site = adapter.id;
     const anchor = adapter.anchor?.(document) ?? null;
     if (anchor) {
         button.classList.remove('zebu-track--floating');
@@ -151,6 +163,13 @@ async function refreshState(): Promise<void> {
         // The popup and the context menu ask what this page is about, so a
         // tracker page keeps its adapter's identity when tracked from there.
         if (message.type === 'page:issue') sendResponse({ issue: current });
+    });
+    // A site that shows different header actions at different widths (GitHub)
+    // hides the copy the button sat in once the window crosses the line.
+    let resizeTimer: number | undefined;
+    window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(mount, 200);
     });
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') void refreshState();
