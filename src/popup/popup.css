@@ -494,6 +494,16 @@ textarea:focus {
     font-size: 14px;
     font-weight: 600;
 }
+.entry-time.editable {
+    border-radius: 3px;
+}
+.entry-time.editable:hover {
+    text-decoration: underline;
+}
+.entry-time.editable:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+}
 .entry.running .entry-time {
     color: var(--accent);
     animation: pulse-dot 1.6s ease-in-out infinite;
