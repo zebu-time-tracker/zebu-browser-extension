@@ -2,8 +2,8 @@
 // from the brand SVGs in their own 1022 × 1022 space and supersampled for
 // smooth edges. Run `npm run icons`.
 //
-//   icons/{16,32,48,128}.png       the app icon (board #328): the Z and a
-//                                  faint diagonal in light ink on the green
+//   icons/{16,32,48,128}.png       the app icon (board #328, #495): the Z and
+//                                  its diagonal in light ink on the green
 //   icons/idle-{16,32,48,128}.png  the toolbar icon while no timer runs
 //                                  (board #353): the same mark hollow — a
 //                                  stroked square on nothing, the Z in green,
@@ -41,13 +41,19 @@ const chunk = (type, data) => {
 // The mark's geometry in its own 1022 × 1022 space, scaled to 0..1 below.
 const SIDE = 1022;
 const CORNER = 180 / SIDE;
+// The app icon draws the Z and its diagonal 1.22× larger about the Z's centre,
+// the diagonal bolder and brighter, so the mark still reads at 16 px (board #495).
+const GROW = 1.22;
+const grow = (x, y) => [511 + (x - 511) * GROW, 514.6 + (y - 514.6) * GROW];
 // The Z, as the closed polygon of the brand SVG's path.
 const Z = [
     [300.31, 802], [300.31, 741.33], [606.327, 296.684], [309.889, 296.684], [309.889, 227.232],
     [713.823, 227.232], [713.823, 287.902], [408.267, 732.549], [720.209, 732.549], [720.209, 802],
-].map(([x, y]) => [x / SIDE, y / SIDE]);
-// The faint diagonal behind the Z: the ink at 40 % over the ground.
-const LINE = { x1: 330.463 / SIDE, y1: 282.512 / SIDE, x2: 700.463 / SIDE, y2: 748.512 / SIDE, half: 49.893 / SIDE / 2 };
+].map(([x, y]) => grow(x, y).map((c) => c / SIDE));
+// The diagonal behind the Z: 70 wide, the ink at 70 % over the ground.
+const [LX1, LY1] = grow(330.463, 282.512);
+const [LX2, LY2] = grow(700.463, 748.512);
+const LINE = { x1: LX1 / SIDE, y1: LY1 / SIDE, x2: LX2 / SIDE, y2: LY2 / SIDE, half: (70 * GROW) / SIDE / 2 };
 
 // ---- the hollow toolbar icon (board #353), from Chrome Icon - Inactive.svg
 // The square is stroked, not filled: a rect inset 20 with corner radius 160,
@@ -63,7 +69,7 @@ const HOLLOW = {
         [764.842, 152], [764.842, 227.683], [383.673, 782.363], [772.808, 782.363], [772.808, 869],
     ].map(([x, y]) => [x / SIDE, y / SIDE]),
 };
-const LINE_OPACITY = 0.4;
+const LINE_OPACITY = 0.7;
 const LINE_MIX = GREEN.map((g, i) => Math.round(g + (INK[i] - g) * LINE_OPACITY));
 
 function insidePolygon(poly, u, v) {
