@@ -150,9 +150,9 @@ export function projectPicker(opts: PickerOptions): Picker {
                 const p = rows[active];
                 if (p) choose(p);
             } else if (e.key === 'Escape') {
-                // the sheet underneath listens for Escape too: this one is the picker's
+                // and on to the sheet underneath, which closes too: the search
+                // opens with the sheet, so one Escape closes both (board #532)
                 e.preventDefault();
-                e.stopPropagation();
                 open = false;
                 render();
             }

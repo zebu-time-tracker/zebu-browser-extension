@@ -163,6 +163,9 @@ async function act(fn: () => Promise<unknown>, error?: HTMLElement, busy?: HTMLB
     }
 }
 
+/** An entry the sheet just put on another day, lit up there for a moment (board #532). */
+let flash: { id: string; at: number } | null = null;
+
 /** Starting or resuming a timer jumps to the entry's day, so the running row is on screen. */
 const showEntry = (entry: Entry | null | undefined) => {
     if (entry && entry.date !== selectedDate) selectedDate = entry.date;
@@ -415,7 +418,13 @@ function entryRow(entry: Entry): HTMLElement {
     }
     if (entry.locked) children.push(el('span', { class: 'entry-lock', title: t('popup_invoiced'), text: '🔒' }));
 
-    return el('div', { class: `entry${running ? ' running' : ''}` }, children);
+    const row = el('div', { class: `entry${running ? ' running' : ''}`, 'data-entry': entry.id }, children);
+    if (flash?.id === entry.id) {
+        // a redraw mid-fade picks the fade up where it was rather than restarting it
+        row.classList.add('flash');
+        row.style.animationDelay = `-${Date.now() - flash.at}ms`;
+    }
+    return row;
 }
 
 function entriesList(): HTMLElement {
@@ -526,6 +535,11 @@ function entrySheet(): HTMLElement {
 
     const date = el('input', { type: 'date', class: 'sheet-date' });
     date.value = editing ? editing.date : selectedDate;
+    const todayButton = el('button', { type: 'button', class: 'link sheet-today', tabindex: '-1', text: t('header_today') });
+    todayButton.addEventListener('click', () => {
+        date.value = today();
+        date.dispatchEvent(new Event('change'));
+    });
     // The prefill: only a changed duration rebases a live timer.
     const openedDuration = editing ? formatMinutes(elapsedMinutes(editing, now())) : idleEntry ? formatMinutes(idleEntry.minutes) : '';
     const duration = el('input', { type: 'text', class: `duration${editing?.timer_started_at ? ' live' : ''}`, placeholder: '0:00', autocomplete: 'off' });
@@ -546,6 +560,7 @@ function entrySheet(): HTMLElement {
         submit.disabled = !projectId;
         notice.textContent = t('popup_switch_note', state.running?.project ?? '');
         notice.hidden = !(state.running && !editing && !logging);
+        todayButton.disabled = date.value === today();
     };
     duration.addEventListener('input', syncSubmit);
     date.addEventListener('change', syncSubmit);
@@ -636,11 +651,20 @@ function entrySheet(): HTMLElement {
                 return;
             }
             issue = null;
+            // saved onto another day: go there and light the row up
+            const moved = !!entry && (editing || minutes !== null) && entry.date !== selectedDate;
             showEntry(entry);
             await reload();
             errorMessage = '';
             closeOverlays();
+            if (moved && entry) {
+                const lit = (flash = { id: entry.id, at: Date.now() });
+                setTimeout(() => {
+                    if (flash === lit) flash = null;
+                }, 2000);
+            }
             render();
+            if (moved && entry) document.querySelector(`[data-entry="${entry.id}"]`)?.scrollIntoView({ block: 'nearest' });
         } catch (e) {
             error.textContent = errorText(e);
             submit.disabled = false;
@@ -681,7 +705,7 @@ function entrySheet(): HTMLElement {
         picker.el,
         taskSelect,
         presetButton,
-        el('div', { class: 'sheet-row' }, [date, editing?.timer_started_at ? el('span', { class: 'sheet-dot', title: t('popup_timer_running') }) : '', duration]),
+        el('div', { class: 'sheet-row' }, [date, todayButton, editing?.timer_started_at ? el('span', { class: 'sheet-dot', title: t('popup_timer_running') }) : '', duration]),
         notes,
         notice,
         error,
