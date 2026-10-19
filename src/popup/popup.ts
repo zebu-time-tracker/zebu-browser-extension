@@ -7,7 +7,7 @@
 // underneath when ＋ is pressed) and as a small window from a page's "Track
 // time" button (the sheet open over the day, for that issue). Vanilla DOM on
 // purpose — it starts instantly.
-import { headerDate, relativeDay, shiftDate, toDateString } from '../dates';
+import { followToday, headerDate, relativeDay, shiftDate, toDateString } from '../dates';
 import { elapsedMinutes, formatDurationHuman, formatMinutes } from '../duration';
 import { durationToSave, isApplePlatform, isSaveShortcut, saveShortcutKeys } from '../entryForm';
 import { budgetLevel, formatHoursShort } from '../entryStats';
@@ -1043,10 +1043,27 @@ export function nextWatchIn(state: Pick<State, 'running' | 'downUntil' | 'live'>
     return state.running ? POLL.running : POLL.idle;
 }
 
+// The detached window can stay open overnight: coming back to it after
+// midnight, today's view moves to the new today.
+let shownToday = today();
+async function catchUpToday(): Promise<void> {
+    const now = today();
+    if (now === shownToday) return;
+    const moved = followToday(selectedDate, shownToday, now);
+    shownToday = now;
+    if (moved === selectedDate || !state.connected) return;
+    selectedDate = moved;
+    await loadSheet().catch(() => undefined);
+    render();
+}
+
 document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) watchTimer();
-    else window.clearTimeout(watch);
+    if (!document.hidden) {
+        watchTimer();
+        void catchUpToday();
+    } else window.clearTimeout(watch);
 });
+window.addEventListener('focus', () => void catchUpToday());
 
 (async () => {
     settings = await getSettings();

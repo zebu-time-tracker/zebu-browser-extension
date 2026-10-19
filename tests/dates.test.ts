@@ -1,4 +1,4 @@
-import { daysBetween, headerDate, inWeek, relativeDay, shiftDate, toDateString } from '../src/dates';
+import { daysBetween, followToday, headerDate, inWeek, relativeDay, shiftDate, toDateString } from '../src/dates';
 
 test('dates are written the way the API writes them', () => {
     expect(toDateString(new Date(2026, 8, 18))).toBe('2026-09-18');
@@ -39,4 +39,10 @@ test('the header names the weekday, one comma only (board #422)', () => {
     expect(headerDate('2026-09-22', 'en-US')).toBe('Tue Sep 22');
     expect(headerDate('2026-09-24', 'de')).toBe('Do. 24. Sept.');
     expect(headerDate('2026-09-24', 'ja')).toMatch(/9月24日.*木/);
+});
+
+test("a window left open past midnight moves today's view, not a day picked by hand", () => {
+    expect(followToday('2026-10-18', '2026-10-18', '2026-10-19')).toBe('2026-10-19');
+    expect(followToday('2026-10-14', '2026-10-18', '2026-10-19')).toBe('2026-10-14');
+    expect(followToday('2026-10-18', '2026-10-18', '2026-10-18')).toBe('2026-10-18');
 });

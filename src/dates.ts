@@ -56,3 +56,11 @@ export function headerDate(date: string, locale?: string): string {
         .map((p, i) => (p.type === 'literal' && parts[i - 1]?.type === 'weekday' && /^,\s*$/.test(p.value) ? ' ' : p.value))
         .join('');
 }
+
+/**
+ * What the selected day becomes when the calendar moves from `wasToday` to
+ * `today` with a window still open: today's view follows, a day picked by
+ * hand stays.
+ */
+export const followToday = (selected: string, wasToday: string, today: string): string =>
+    selected === wasToday ? today : selected;
