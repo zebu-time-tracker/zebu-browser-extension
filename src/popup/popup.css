@@ -391,6 +391,16 @@ textarea:focus {
 .entry.running {
     background: var(--accent-soft);
 }
+.entry.flash {
+    animation: entry-flash 2s ease-out;
+}
+@keyframes entry-flash {
+    0%,
+    30% {
+        background: var(--accent-soft);
+        box-shadow: inset 3px 0 0 var(--accent);
+    }
+}
 .entry-text {
     flex: 1;
     min-width: 0;
@@ -784,6 +794,10 @@ textarea:focus {
 }
 .sheet-date {
     flex: 1;
+    font-size: 12px;
+}
+.sheet-today {
+    flex: none;
     font-size: 12px;
 }
 .duration {
