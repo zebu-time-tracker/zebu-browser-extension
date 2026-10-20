@@ -1,6 +1,7 @@
 // Thin client for the Zebu workspace API — the same endpoints the desktop
 // app uses. The workspace base URL and the Sanctum token come from settings;
 // requests only run from the service worker and the extension pages.
+import { toDateString } from './dates';
 import { getSettings, saveSettings } from './storage';
 import type { IdleAction, IdleSpan, IdleState } from './idle';
 import type { Entry, ProjectOption, ProjectStats, Summary } from './types';
@@ -104,7 +105,9 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     return response.json() as Promise<T>;
 }
 
-const today = () => new Date().toISOString().slice(0, 10);
+// The local day, as the popup counts it: toISOString() is UTC, which is
+// yesterday or tomorrow for hours around midnight anywhere but London.
+const today = () => toDateString(new Date());
 
 export const api = {
     deviceStart: async (workspace: string) => {
